@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="3.0.2"
+VER="3.1.0"
 
 # Root user의 권한으로 작동시켜야 함
 #
@@ -23,6 +23,7 @@ install -m 644 ./filter.conf ${ETCDIR}/filter.conf
 install -m 644 ./masq.conf ${ETCDIR}/masq.conf
 install -m 644 ./forward.conf ${ETCDIR}/forward.conf
 install -m 644 ./client.conf ${ETCDIR}/client.conf
+install -m 644 ./string.conf ${ETCDIR}/string.conf
 
 mkdir -p ${DOCDIR}
 install -m 644 ./COPYING ${DOCDIR}/COPYING
@@ -42,6 +43,7 @@ echo "install -m 644 ./filter.conf ${ETCDIR}/filter.conf" >> ${DOCDIR}/install.l
 echo "install -m 644 ./masq.conf ${ETCDIR}/masq.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./forward.conf ${ETCDIR}/forward.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./client.conf ${ETCDIR}/client.conf" >> ${DOCDIR}/install.log
+echo "install -m 644 ./string.conf ${ETCDIR}/string.conf" >> ${DOCDIR}/install.log
 echo "" >> ${DOCDIR}/install.log
 echo "mkdir -p ${DOCDIR}" >> ${DOCDIR}/install.log
 echo "install -m 644 ./COPYING ${DOCDIR}/COPYING" >> ${DOCDIR}/install.log

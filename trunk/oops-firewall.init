@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init,v 1.11 2004-08-04 14:46:50 oops Exp $
+# $Id: oops-firewall.init,v 1.12 2004-08-04 14:49:09 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
@@ -25,6 +25,8 @@ case "$1" in
       ${IPTABLES} -Z
       ${IPTABLES} -P INPUT ACCEPT
       ${IPTABLES} -F INPUT
+      ${IPTABLES} -P FORWARD ACCEPT
+      ${IPTABLES} -F FORWARD
       ${IPTABLES} -P OUTPUT ACCEPT
       ${IPTABLES} -F OUTPUT
       ${IPTABLES} -t nat -Z
@@ -49,6 +51,10 @@ case "$1" in
     ${IPTABLES} -Z
     ${IPTABLES} -P INPUT ACCEPT
     ${IPTABLES} -F INPUT
+    ${IPTABLES} -P FORWARD ACCEPT
+    ${IPTABLES} -F FORWARD
+    ${IPTABLES} -P OUTPUT ACCEPT
+    ${IPTABLES} -F OUTPUT
     ${IPTABLES} -t nat -Z
     ${IPTABLES} -t nat -P PREROUTING ACCEPT
     ${IPTABLES} -t nat -F PREROUTING
