@@ -2,7 +2,7 @@
 
 NAME=oops-firewall
 GCOL=40
-VERSION=4.0.0
+VERSION=4.0.1
 OS=$(uname)
 LOCALDIR=/usr/local
 CHKDIR="/bin /sbin /usr/bin /usr/sbin ${LOCALDIR}/bin ${LOCALDIR}/sbin"
@@ -813,7 +813,6 @@ ${perl} -pi -e "s!\@MODPROBE\@!${modprobe}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@SED\@!${sed}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@GREP\@!${grep}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@AWK\@!${awk}!g" oops-firewall oops-firewall.init
-${perl} -pi -e "s!\@UNAME\@!${uname}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@CAT\@!${cat}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@TOUCH\@!${touch}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@IPTABLES\@!${iptables}!g" oops-firewall oops-firewall.init

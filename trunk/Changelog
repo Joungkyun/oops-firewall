@@ -1,3 +1,7 @@
+2003.06.18 update 4.0.1
+           fixed builtin module error on ins_mod function
+           added i18N text in oops-firewall.h
+
 2003.06.18 update 4.0.0
            fixed typo
            added -n option on init status mode
