@@ -1,6 +1,6 @@
 # OOPS Firewall 에서 사용되는 함수
 #
-# $Id: oops-firewall.h,v 1.7 2004-08-18 10:46:44 oops Exp $
+# $Id: oops-firewall.h,v 1.8 2004-08-18 11:05:26 oops Exp $
 #
 # 사용자 실행을 위한 함수
 user_cmd () {
@@ -211,7 +211,7 @@ kernelCheck() {
 
   # 2.4.0 보다 작으면 작동 멈춤
   if [ ${dontpoint} -gt ${version_r} ]; then
-    echo "Enable to use over kernel 2.4.0"
+    echo $"Enable to use over kernel 2.4.0"
     exit 1
   # 2.4.18 보다 작으면 mangle table 확장 사용 안함
   elif [ ${chkpoint} -gt ${version_r} ]; then
