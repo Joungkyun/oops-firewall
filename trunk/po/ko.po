@@ -6,7 +6,7 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.4 2004-08-18 11:35:07 oops Exp $
+# $Id: ko.po,v 1.5 2004-08-18 11:43:25 oops Exp $
 #
 #, fuzzy
 msgid ""
@@ -47,9 +47,9 @@ msgid "  * Deny Ping at BroadCast"
 msgstr "  * BroadCast 로의 Ping 을 거부"
 
 #: oops-firewall.in.sh:159
-#, fuzzy, sh-format
+#, sh-format
 msgid "  * ETH${i} Information"
-msgstr "  * ETH1 정보"
+msgstr "  * ETH${i} 정보"
 
 #: oops-firewall.in.sh:701
 msgid "  * ICMP service"
@@ -334,17 +334,14 @@ msgid "Usage: $0 {start|stop|restart|status}"
 msgstr "사용법: $0 {start|stop|restart|status}"
 
 #: oops-firewall.init.in.sh:133
-#, fuzzy
 msgid "[ Legualar Table ]"
 msgstr "[ 기본 테이블 ]"
 
 #: oops-firewall.init.in.sh:149
-#, fuzzy
 msgid "[ MANGLE Table ]"
 msgstr "[ MANGLE 테이블 ]"
 
 #: oops-firewall.init.in.sh:141
-#, fuzzy
 msgid "[ NAT Table ]"
 msgstr "[ NAT 테이블 ]"
 
