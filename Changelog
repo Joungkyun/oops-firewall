@@ -1,5 +1,6 @@
 2004.09.07
            added check private config file mine.conf that no include package
+           added RELATED status on ftp active mode port
 
 2004.08.26 update 4.2.0
            fixed to use ppp device for masq function
