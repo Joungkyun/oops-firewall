@@ -1,0 +1,16 @@
+2001.04.26 update verson 2.3
+           adjusted privite ip address in masq
+           modified forwarding chains
+
+2001.04.25 update verson 2.2
+           added masq start address
+
+2001.04. 3 update version 2.1
+           added masquerade configurations
+           added port forward configurations
+
+2001.03.21 version 2.0 with iptables in kernel 2.4.x
+
+2000.08.17 added DNS entry
+
+2000.08.16 version 1.0 with ipchains in kernel 2.2.x
