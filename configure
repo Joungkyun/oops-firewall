@@ -2,7 +2,7 @@
 
 NAME=oops-firewall
 GCOL=40
-VERSION=4.2.0
+VERSION=4.2.1
 OS=$(uname)
 LOCALDIR=/usr/local
 CHKDIR="/bin /sbin /usr/bin /usr/sbin ${LOCALDIR}/bin ${LOCALDIR}/sbin"
