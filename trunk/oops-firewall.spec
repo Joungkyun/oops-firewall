@@ -1,9 +1,9 @@
 Summary: Individaul Firewall with IPTABLES
 Summary(ko): IPTABLES 를 이용한 개별 방화벽
 Name: oops-firewall
-Version: 4.1.0
+Version: 4.2.0
 Release: 1
-Epoch: 9
+Epoch: 10
 Copyright: GPL
 Group: Applications/Security
 URL: http://www.oops.org/?t=lecture&sb=firewall&n=1
@@ -91,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.DIALPAD CREDIT COPYING Changelog
 
 %changelog
+* Wed Aug 26 2004 JoungKyun Kim <http://www.oops.org> 10:4.2.0-1
+- update 4.2.0
+
 * Wed Aug 18 2004 JoungKyun Kim <http://www.oops.org> 9:4.1.0-1
 - update 4.1.0
 - support kernel 2.6
