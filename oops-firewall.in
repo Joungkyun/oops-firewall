@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.16 2004-08-26 19:17:24 oops Exp $
+# $Id: oops-firewall.in,v 1.17 2004-09-06 16:40:43 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -147,8 +147,12 @@ if [ "$1" = "" ]; then
     fi
   done
 
+  if [ -f "${CONF}/mine.conf" ]; then
+    addCfg="mine.conf"
+  fi
+
   # 설정 파일을 불러들임
-  for i in filter.conf masq.conf forward.conf string.conf tos.conf
+  for i in filter.conf masq.conf forward.conf string.conf tos.conf ${addCfg}
   do
     conf_context=
     conf_context=$(${sed} -n -f @INCLUDEDIR@/config.sed ${CONFS}/${i})

@@ -1,3 +1,6 @@
+2004.09.07
+           added check private config file mine.conf that no include package
+
 2004.08.26 update 4.2.0
            fixed to use ppp device for masq function
            fixed to forward master device problem in some case
