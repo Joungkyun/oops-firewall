@@ -1,4 +1,11 @@
-2001.11.15 fixed ftp connection in serveral ethernet device
+2002.02.25 patch version 3.1.2
+           added check of ethernet device that eth0 don't exist
+             and eth1 exists in ethernet device exsits one card
+             on system
+           fixed bug of refuse OUTPUT packet with put log logic
+
+2001.11.15 patch version 3.1.1
+           fixed ftp connection in serveral ethernet device
 
 2001.11.13 update 3.1.0
            added TCPMSS target For MASQ and ADSL
