@@ -1,3 +1,12 @@
+2003.01.18 update 3.2.3 2th
+           fix typo
+
+2002.12.16 update 3.2.3
+           modified init file for redhat kernel
+
+2002.12.09 update 3.2.2
+           removed udp state option
+
 2002.06.14 update 3.2.1
            fixed IFS bug
 

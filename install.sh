@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="3.2.1"
+VER="3.2.3"
 
 # Root user의 권한으로 작동시켜야 함
 #
@@ -15,14 +15,14 @@ if [ "$UID" != "0" ]; then
 fi
 
 ETCDIR="/etc/oops-firewall"
-DOCDIR="/usr/share/doc/oops-firewall-${VER}"
+DOCDIR="/usr/doc/oops-firewall-${VER}"
 
 [ -f "/sbin/oops-firewall" ] && rm -f /sbin/oops-firewall
 [ -f "/sbin/oops_firewall" ] && rm -f /sbin/oops_firewall
 
 mkdir ${ETCDIR}
 if [ -d "/etc/oops_firewall" ]; then
-  mv -f /etc/oops_fireall /etc/${ETCDIR}/backup
+  mv -f /etc/oops_fireall /etc/oops_firewall/backup
 fi
 
 install -m 700 ./oops-firewall /usr/sbin/oops-firewall
