@@ -13,5 +13,6 @@ fi
 
 rm -f /etc/oops_firewall/oops_firewall.conf
 rm -rf /sbin/oops_firewall
+rm -rf /usr/doc/oops_firewall-2.1
 
 exit 0
