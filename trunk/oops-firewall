@@ -1,8 +1,10 @@
 #!/bin/sh
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 3.1.2
+# $Id: oops-firewall,v 1.16 2004-08-04 14:54:04 oops Exp $
+#
+# OOPS Firewall 네트워크 서버 방화벽 설정 3.2.0
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2002.02.25
+# 날짜 : 2002.02.27
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -30,7 +32,42 @@
 # --sport 출추의 포트 정의
 #
 
-VER="3.1.2"
+VER="3.2.0"
+
+# 사용자 실행을 위한 함수
+user_cmd () {
+  case "$*" in
+    pre)
+      USERCHK=$(cat ${CONFS}/user.conf | sed -n '/^!/p')
+      USERMENT="USER PRE COMMAND (!) Not Config"
+      IFS='!'
+      ;;
+    post)
+      USERCHK=$(cat ${CONFS}/user.conf | sed -n '/^@/p')
+      USERMENT="USER POST COMMAND (@) Not Config"
+      IFS='@'
+      ;;
+    *)
+      USERMENT="Unknown parameter"
+      ;;
+  esac
+
+  if [ ! -z "${USERCHK}" ]; then
+    for uvalue in ${USERCHK}
+    do
+      IFS=' '
+      if [ -z "${uvalue}" ]; then
+        continue;
+      fi
+      uvalue=$(echo ${uvalue} | sed '/\n/d')
+      echo "  * ${uvalue}"
+      ${uvalue}
+    done
+  else
+    IFS=' '
+    echo "  * ${USERMENT}"
+  fi
+}
 
 if [ "$1" = "" ]; then
 
@@ -60,9 +97,19 @@ if [ "$1" = "" ]; then
     echo "OK"
   fi
 
+  # 커널이 2.4.18 을 기준으로 어떻게 되는지 체크
+  # 2.4.18 부터는 mangle hooker 가 2 개에서 5개로 증가
+  KERCHK=$(uname -r | sed -e 's/2.4.\([0-9]\{1,3\}\).*/\1/g')
+  if [ "${KERCHK}" -gt 17 ]; then
+    KERNEL_UP=1
+  fi
+
   ##############################################################################
   # Default 변수 설정
   ##############################################################################
+
+  # 설정 파일의 위치 디렉토리
+  CONFS=/etc/oops-firewall
 
   # 방화벽에 사용되는 프로그램의 경로 지정
   IPTABLES=/sbin/iptables
@@ -119,11 +166,11 @@ if [ "$1" = "" ]; then
   fi
 
   # 설정 파일을 불러들임
-  . /etc/oops_firewall/filter.conf
-  . /etc/oops_firewall/masq.conf
-  . /etc/oops_firewall/forward.conf
-  . /etc/oops_firewall/client.conf
-  . /etc/oops_firewall/string.conf
+  . ${CONFS}/filter.conf
+  . ${CONFS}/masq.conf
+  . ${CONFS}/forward.conf
+  . ${CONFS}/string.conf
+  . ${CONFS}/tos.conf
 
   ##############################################################################
   # GLOBAL 설정
@@ -138,27 +185,27 @@ if [ "$1" = "" ]; then
   echo "  * Reset Basic Table"
   ${IPTABLES} -Z
   CHKCHAIN=$?
-  echo -n "  Reset Chain Counter          : "
+  echo -n "  Reset Chain Counter           : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -P INPUT ACCEPT
   CHKCHAIN=$?
-  echo -n "  Accept All INPUT Chain       : "
+  echo -n "  Accept All INPUT Chain        : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -F INPUT
   CHKCHAIN=$?
-  echo -n "  Remove rule of INPUT Chain   : "
+  echo -n "  Remove rule of INPUT Chain    : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -P OUTPUT ACCEPT
   CHKCHAIN=$?
-  echo -n "  Accept All FORWARD Chain       : "
+  echo -n "  Accept All FORWARD Chain      : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -F FORWARD
   CHKCHAIN=$?
-  echo -n "  Remove rule of FORWARD Chain   : "
+  echo -n "  Remove rule of FORWARD Chain  : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -P FORWARD ACCEPT
@@ -176,27 +223,27 @@ if [ "$1" = "" ]; then
   echo "  * Reset NAT Table"
   ${IPTABLES} -t nat -Z
   CHKCHAIN=$?
-  echo -n "  Reset NAT Tabel Counter      : "
+  echo -n "  Reset NAT Tabel Counter       : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -t nat -P PREROUTING ACCEPT
   CHKCHAIN=$?
-  echo -n "  Accept All PREROUTING Chain  : "
+  echo -n "  Accept All PREROUTING Chain   : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -t nat -F PREROUTING
   CHKCHAIN=$?
-  echo -n "  Remove rule of PREROUTING    : "
+  echo -n "  Remove rule of PREROUTING     : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -t nat -P POSTROUTING ACCEPT
   CHKCHAIN=$?
-  echo -n "  Accept All POSTROUTING Chain : "
+  echo -n "  Accept All POSTROUTING Chain  : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -t nat -F POSTROUTING
   CHKCHAIN=$?
-  echo -n "  Remove rule of POSTROUTING   : "
+  echo -n "  Remove rule of POSTROUTING    : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
 
@@ -204,29 +251,74 @@ if [ "$1" = "" ]; then
   echo "  * Reset Mangle Table"
   ${IPTABLES} -t mangle -Z
   CHKCHAIN=$?
-  echo -n "  Reset MANGLE Tabel Counter      : "
+  echo -n "  Reset MANGLE Tabel Counter    : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
   ${IPTABLES} -t mangle -P PREROUTING ACCEPT
   CHKCHAIN=$?
-  echo -n "  Accept All PREROUTING Chain  : "
+  echo -n "  Accept All PREROUTING Chain   : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
   ${IPTABLES} -t mangle -F PREROUTING
   CHKCHAIN=$?
-  echo -n "  Remove rule of PREROUTING    : "
+  echo -n "  Remove rule of PREROUTING     : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
   ${IPTABLES} -t mangle -P OUTPUT ACCEPT
   CHKCHAIN=$?
-  echo -n "  Accept All OUTPUT Chain      : "
+  echo -n "  Accept All OUTPUT Chain       : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
   ${IPTABLES} -t mangle -F OUTPUT
   CHKCHAIN=$?
-  echo -n "  Remove rule of OUTPUT        : "
+  echo -n "  Remove rule of OUTPUT         : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
+  # 커널 2.4.18 이상에서 작동
+  if [ "${KERNEL_UP}" = "1" ]; then
+    ${IPTABLES} -t mangle -P INPUT ACCEPT
+    CHKCHAIN=$?
+    echo -n "  Accept All INPUT Chain        : "
+    [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+    [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
+    ${IPTABLES} -t mangle -F INPUT
+    CHKCHAIN=$?
+    echo -n "  Remove rule of INPUT          : "
+    [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+    [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
+    ${IPTABLES} -t mangle -P FORWARD ACCEPT
+    CHKCHAIN=$?
+    echo -n "  Accept All FORWARD Chain      : "
+    [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+    [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
+    ${IPTABLES} -t mangle -F FORWARD
+    CHKCHAIN=$?
+    echo -n "  Remove rule of FORWARD        : "
+    [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+    [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
+    ${IPTABLES} -t mangle -P POSTROUTING ACCEPT
+    CHKCHAIN=$?
+    echo -n "  Accept All POSTROUTING Chain  : "
+    [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+    [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+
+    ${IPTABLES} -t mangle -F POSTROUTING
+    CHKCHAIN=$?
+    echo -n "  Remove rule of POSTROUTING    : "
+    [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+    [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+  fi
+
+
 
   echo
   echo "4. Basic Kernel Parameter Configuration"
@@ -255,6 +347,20 @@ if [ "$1" = "" ]; then
     dev=$(echo ${pfile} | sed -e 's/\/proc\/sys\/net\/ipv4\/conf\/\(.\+\)\/rp_filter/\1/g')
     echo 1 > $pfile
     KPCHK=$?
+    case "${dev}" in
+      all)
+        dev="${dev}     "
+        ;;
+      default)
+        dev="${dev} "
+        ;;
+      eth*)
+        dev="${dev}    "
+        ;;
+      lo)
+        dev="${dev}      "
+        ;;
+    esac
     echo -n "  * CHK IP SPOOFING ${dev}    : "
     [ "${KPCHK}" -eq 0 ] && echo "OK"
     [ "${KPCHK}" -ne 0 ] && echo "Failed"
@@ -314,11 +420,20 @@ if [ "$1" = "" ]; then
   ${IPTABLES} -A OUTPUT -m state --state ${nI} -j DROP
 
   ##############################################################################
+  # 사용자 실행 ("!" 명령어 실행)
+  ##############################################################################
+  echo
+  echo "6. EXECUTE USER PRE COMMAND"
+  echo
+  user_cmd "pre"
+
+
+  ##############################################################################
   # 문자열 체크 거부 설정
   ##############################################################################
 
   echo
-  echo "6. Check String in Packet"
+  echo "7. Check String in Packet"
   echo
 
   if [ "${USE_STRING_MATCH}" = "1" ]; then
@@ -375,7 +490,7 @@ if [ "$1" = "" ]; then
   ##############################################################################
 
   echo
-  echo "7. Allow All Service"
+  echo "8. Allow All Service"
   echo
 
   echo "  * iptables -A INPUT -i lo -j ACCEPT"
@@ -410,7 +525,7 @@ if [ "$1" = "" ]; then
   ##############################################################################
 
   echo
-  echo "8. Allow External Service"
+  echo "9. Allow External Service"
   echo
 
   # TCP 정책
@@ -463,7 +578,7 @@ if [ "$1" = "" ]; then
 
 
   echo
-  echo "9. Allow Internal Service (FOR SERVER AND DAEMON)"
+  echo "10. Allow Internal Service (FOR SERVER AND DAEMON)"
 
   ##############################################################################
   # TCP 설정
@@ -554,7 +669,7 @@ if [ "$1" = "" ]; then
   ##############################################################################
 
   echo
-  echo "10. Masqurade Configuration"
+  echo "11. Masqurade Configuration"
   echo
 
   # MSSQ 시나 접속 지연 현상을 향상 시키기 위한 옵션
@@ -608,19 +723,6 @@ if [ "$1" = "" ]; then
       # Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정
       echo "  * iptables -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}"
       ${IPTABLES} -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}
-
-      # dial pad 를 사용하기 위한 설정
-      if [ "${MASQ_DIAL}" != "" ]; then
-        for value in ${MASQ_DIAL}
-        do
-          echo "  * iptables -t nat -A PREROUTING -p tcp --dport 51210 -j DNAT --to ${value}:51210"
-          ${IPTABLES} -t nat -A PREROUTING -p tcp --dport 51210 -j DNAT --to ${value}:51210
-          echo "  * iptables -t nat -A PREROUTING -p udp --dport 51200 -j DNAT --to ${value}:51200"
-          ${IPTABLES} -t nat -A PREROUTING -p udp --dport 51200 -j DNAT --to ${value}:51200
-          echo "  * iptables -t nat -A PREROUTING -p udp --dport 51201 -j DNAT --to ${value}:51201"
-          ${IPTABLES} -t nat -A PREROUTING -p udp --dport 51201 -j DNAT --to ${value}:51201
-        done
-      fi
     else
       echo "Ethernet Device 는 eth1 까지만 지원합니다."
       echo "방화벽 설정을 초기화 합니다."
@@ -640,8 +742,12 @@ if [ "$1" = "" ]; then
   ##############################################################################
 
   echo
-  echo "11. Forwarding Configuration"
+  echo "12. Forwarding Configuration"
   echo
+
+  if [ ! -z "${TCP_FORWARD_TO}" ] || [ ! -z "${UDP_FORWARD_TO}" ] || [ ! -z "${ALL_FORWARD_TO}" ]; then
+    FORWARD_USED=yes
+  fi
 
   # masq device 가 존재할 경우 즉 ethernet device 가 여러개일 경우
   # masq device 로 지정된 device 의 주소를 외부로 나갈 주소로 지정
@@ -693,7 +799,7 @@ if [ "$1" = "" ]; then
   ##############################################################################
 
   echo
-  echo "12. Config Deny Ruleset"
+  echo "13. Config Deny Ruleset"
   echo
 
   # 모든 서비스를 거부
@@ -734,18 +840,59 @@ if [ "$1" = "" ]; then
   #
   echo
   echo "14. TOS Configuration"
-  echo
 
-  echo "  * iptables -t mangle -A OUTPUT -p tcp -s 0/0 --sport 80 -j TOS --set-tos 0x10"
-  ${IPTABLES} -t mangle -A OUTPUT -p tcp -s 0/0 --sport 80 -j TOS --set-tos 0x10
-  echo "  * iptables -t mangle -A OUTPUT -p tcp -d 0/0 --dport 21 -j TOS --set-tos 0x10"
-  ${IPTABLES} -t mangle -A OUTPUT -p tcp -d 0/0 --dport 21 -j TOS --set-tos 0x10
-  echo "  * iptables -t mangle -A OUTPUT -p tcp -d 0/0 --dport 22 -j TOS --set-tos 0x10"
-  ${IPTABLES} -t mangle -A OUTPUT -p tcp -d 0/0 --dport 22 -j TOS --set-tos 0x10
-  echo "  * iptables -t mangle -A OUTPUT -p tcp -d 0/0 --dport 23 -j TOS --set-tos 0x10"
-  ${IPTABLES} -t mangle -A OUTPUT -p tcp -d 0/0 --dport 23 -j TOS --set-tos 0x10
-  echo "  * iptables -t mangle -A OUTPUT -p tcp -s 0/0 --sport 20 -j TOS --set-tos 0x08"
-  ${IPTABLES} -t mangle -A OUTPUT -p tcp -s 0/0 --sport 20 -j TOS --set-tos 0x08
+  if [ ! -z "${USE_TOS}" ]; then
+    # TOS 를 설정할 테이블을 정의
+    if [ "${KERNEL_UP}" = "1" ]; then
+      TOS_TABLE="INPUT OUTPUT"
+    else
+      TOS_TABLE="OUTPUT"
+    fi
+
+    if [ "${MASQ_USED}" = "yes" ] && [ "${KERNEL_UP}" = "1" ]; then
+      TOS_TABLE="${TOS_TABLE} POSTROUTING"
+    fi
+
+    if [ "${FORWARD_USED}" = "yes" ];then
+      TOS_TABLE="${TOS_TABLE} PREROUTING"
+    fi
+
+    if [ "${FORWARD_USED}" = "yes" ] || [ "${FORWARD_USED}" = "yes" ]; then
+      if [ "${KERNEL_UP}" = "1" ]; then
+        TOS_TABLE="${TOS_TABLE} FORWARD"
+      fi
+    fi
+
+    # TOS 설정
+    for tostb in ${TOS_TABLE}
+    do
+      echo
+      echo "  = TOS CONFIG IN ${tostb} TABLE"
+      for values in ${USE_TOS}
+      do
+        echo ${values} | {
+          IFS=':' read port tosv
+          [ "${tport}" = "" ] && tport=dport
+          echo "  * iptables -t mangle -A ${tostb} -p tcp --dport ${port} -j TOS --set-tos ${tosv}"
+          ${IPTABLES} -t mangle -A ${tostb} -p tcp --dport ${port} -j TOS --set-tos ${tosv}
+          echo "  * iptables -t mangle -A ${tostb} -p tcp --sport ${port} -j TOS --set-tos ${tosv}"
+          ${IPTABLES} -t mangle -A ${tostb} -p tcp --sport ${port} -j TOS --set-tos ${tosv}
+        }
+      done
+    done
+  else
+    echo
+    echo "  * TOS Not Config"
+  fi
+
+  ##############################################################################
+  # 사용자 실행 ("!" 명령어 실행)
+  ##############################################################################
+  echo
+  echo "16. EXECUTE USER POST COMMAND"
+  echo
+  user_cmd "post"
+  echo
 
 elif [ "$1" = "-v" ];then
   last=$(date +%Y)
