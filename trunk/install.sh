@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="3.1.0"
+VER="3.1.1"
 
 # Root user의 권한으로 작동시켜야 함
 #
@@ -17,8 +17,10 @@ fi
 ETCDIR="/etc/oops_firewall"
 DOCDIR="/usr/doc/oops_firewall-${VER}"
 
+[ -f "/sbin/oops_firewall" ] && rm -f /sbin/oops_firewall
+
 mkdir ${ETCDIR}
-install -m 700 ./oops-firewall /sbin/oops_firewall
+install -m 700 ./oops-firewall /usr/sbin/oops_firewall
 install -m 644 ./filter.conf ${ETCDIR}/filter.conf
 install -m 644 ./masq.conf ${ETCDIR}/masq.conf
 install -m 644 ./forward.conf ${ETCDIR}/forward.conf
@@ -38,7 +40,7 @@ install -m 755 ./uninstall.sh ${DOCDIR}/uninstall.sh
 install -m 755 ./oops-firewall.init ${DOCDIR}/oops_firewall.init
 
 echo "mkdir ${ETCDIR}" >> ${DOCDIR}/install.log
-echo "install -m 700 ./oops-firewall /sbin/oops_firewall" >> ${DOCDIR}/install.log
+echo "install -m 700 ./oops-firewall /usr/sbin/oops_firewall" >> ${DOCDIR}/install.log
 echo "install -m 644 ./filter.conf ${ETCDIR}/filter.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./masq.conf ${ETCDIR}/masq.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./forward.conf ${ETCDIR}/forward.conf" >> ${DOCDIR}/install.log
