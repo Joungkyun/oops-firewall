@@ -1,8 +1,10 @@
 #!/bin/sh
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 4.0.3
+# $Id: oops-firewall.in,v 1.6 2004-08-04 15:06:44 oops Exp $
+#
+# OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2003.07.31
+# 날짜 : 2004.08.04
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -697,12 +699,30 @@ if [ "$1" = "" ]; then
 
   echo 
   echo $"  * ICMP service"
+  echo
+
   # 특정 호스트에 ping 을 열어줄때
+  echo "  => for ping"
   if [ "${ICMP_HOSTPERPING}" != "" ]; then
     for values in ${ICMP_HOSTPERPING}
     do
       echo "  iptables -A INPUT -s ${values} -p icmp --icmp-type echo-request -j ACCEPT"
       ${IPTABLES} -A INPUT -s ${values} -p icmp --icmp-type echo-request -j ACCEPT
+    done
+  fi
+
+  # 특정 호스트에 traceroute 을 열어줄때
+  # Unix 의 traceroute 는 한 홉스당 3개의 udp 패킷을 전달하며, traceroute 가 기본으로
+  # 30 홉스를 사용하므로, udp prot 33434 부터 30 * 3 개의 포트를 더 열여줘야 함
+  echo
+  echo "  => for traceroute"
+  if [ "${ICMP_HOSTPERTRACE}" != "" ]; then
+    for values in ${ICMP_HOSTPERTRACE}
+    do
+      echo "  iptables -A OUTPUT -s ${values} -p icmp --icmp-type time-exceeded -j ACCEPT"
+      echo "  iptables -A INPUT -s ${values} -p udp -dport 33434 -j ACCEPT"
+      ${IPTABLES} -A OUTPUT -s ${values} -p icmp --icmp-type time-exceeded -j ACCEPT
+      ${IPTABLES} -A INPUT -s ${values} -p udp --dport 33434:33525 -j ACCEPT
     done
   fi
 
@@ -877,14 +897,18 @@ if [ "$1" = "" ]; then
   echo "  iptables -A INPUT -p udp --dport 1:65535 -j DROP"
   ${IPTABLES} -A INPUT -p udp --dport 1:65535 -j DROP
 
-  echo "  * Prevented internal ping request"
+  echo "  * Prevented internal ping and traceroute request"
   # PING 을 막음
   if [ "${USE_LOG}" = "1" ]; then
-    echo "  iptables -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING Refuse'"
-    ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING Refuse'
+    echo "  iptables -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING request Refuse'"
+    echo "  iptables -A OUTPUT -p icmp --icmp-type time-exceeded ${LOGFORMAT} --log-prefix 'Traceroute Refuse'"
+    ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING request Refuse'
+    ${IPTABLES} -A OUTPUT -p icmp --icmp-type time-exceeded ${LOGFORMAT} --log-prefix 'Traceroute Refuse'
   fi
   echo "  iptables -A INPUT -p icmp --icmp-type echo-request -j REJECT"
+  echo "  iptables -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT"
   ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT
+  ${IPTABLES} -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT
 
   # TOS 설정
   #

@@ -1,3 +1,7 @@
+2004.08.05 update 4.0.5
+           add traceroute direction
+           fixed block traceroute problem on default
+
 2004.02.26 update 4.0.4
            support ethernet over 2 EA
 

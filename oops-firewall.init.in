@@ -1,5 +1,7 @@
 #!/bin/sh
 #
+# $Id: oops-firewall.init.in,v 1.6 2004-08-04 15:06:44 oops Exp $
+#
 # Startup script for the OOPS FireWall
 #
 # chkconfig: 345 99 10
