@@ -1,4 +1,11 @@
-2001.10.16 pache version 3.0.1
+2001.10.26 patch version 3.0.2
+           patched udp states at client udp service
+           typo log messages
+           added rule that protected output invalied packet
+           separated display of firewall state as tables
+           modified README.SORIBADA
+
+2001.10.16 patch version 3.0.1
            change var name STRINT to STRING
            patched wrong udp command
 
