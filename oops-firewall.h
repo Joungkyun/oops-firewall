@@ -1,6 +1,6 @@
 # OOPS Firewall 에서 사용되는 함수
 #
-# $Id: oops-firewall.h,v 1.10 2004-08-26 14:06:57 oops Exp $
+# $Id: oops-firewall.h,v 1.11 2004-08-26 14:22:26 oops Exp $
 #
 # 사용자 실행을 위한 함수
 user_cmd () {
@@ -338,7 +338,7 @@ WordToUpper() {
   ORGVAR=$2
 
   toU=
-  ORGTMP=$(echo $ORGTEXT | sed 's/\(.\)/\1 /g')
+  ORGTMP=$(echo $ORGTEXT | ${sed} 's/\(.\)/\1 /g')
 
   for i in $ORGTMP
   do
@@ -357,7 +357,7 @@ WordToLower() {
   ORGVAR=$2
 
   toL=
-  ORGTMP=$(echo $ORGTEXT | sed 's/\(.\)/\1 /g')
+  ORGTMP=$(echo $ORGTEXT | ${sed} 's/\(.\)/\1 /g')
 
   for i in $ORGTMP
   do
