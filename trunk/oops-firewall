@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.4 2004-08-04 14:35:26 oops Exp $
+# $Id: oops-firewall,v 1.5 2004-08-04 14:36:57 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 2.3
+# OOPS Firewall 네트워크 서버 방화벽 설정 2.4
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2003.04.26
+# 날짜 : 2003.05.01
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -328,13 +328,13 @@ if [ "$1" = "" ]; then
     do
       echo ${values} | {
         IFS=':' read lports raddr rports
-        echo "${IPTABLES} -t nat -A PREROUTING -p tcp -d ${INCOM_ADDR} --dport ${lports} -j DNAT --to ${raddr}:${rports}"
-        ${IPTABLES} -t nat -A PREROUTING -p tcp -d ${INCOM_ADDR} --dport ${lports} -j DNAT --to ${raddr}:${rports}
+        echo "${IPTABLES} -t nat -A PREROUTING -p udp -d ${INCOM_ADDR} --dport ${lports} -j DNAT --to ${raddr}:${rports}"
+        ${IPTABLES} -t nat -A PREROUTING -p udp -d ${INCOM_ADDR} --dport ${lports} -j DNAT --to ${raddr}:${rports}
       }
     done
   fi
 elif [ "$1" = "-v" ];then
-  echo "OOPS FIREWALL v.2.3 by JoungKyun Kim"
+  echo "OOPS FIREWALL v.2.4 by JoungKyun Kim"
   echo "Copyright by GPL Since 2000-2001"
 else
   echo "USAGE : $0 [-v]"

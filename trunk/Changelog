@@ -1,3 +1,6 @@
+2001.05.01 update version 2.4
+           modified udp forward table
+
 2001.04.26 update verson 2.3
            adjusted privite ip address in masq
            modified forwarding chains
