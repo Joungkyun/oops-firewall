@@ -1,3 +1,7 @@
+2003.08.16 update 4.0.2
+           fixed ftp active mode access problem
+           fixed mis load module in nat mode
+
 2003.06.18 update 4.0.1
            fixed builtin module error on ins_mod function
            added i18N text in oops-firewall.h

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.2 2004-08-04 15:02:50 oops Exp $
+# $Id: oops-firewall.in,v 1.3 2004-08-04 15:03:41 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.1
 # 작성 : 김정균 http://www.oops.org
@@ -698,7 +698,7 @@ if [ "$1" = "" ]; then
 
   if [ "${MASQ_USED}" = "yes" ]; then
     echo
-    ins_mod ip_conntrack_ftp
+    ins_mod ip_nat_ftp
     echo
 
     if [ "${MASQ_DEVICE}" = "eth0" ] || [ "${MASQ_DEVICE}" = "eth1" ]; then
