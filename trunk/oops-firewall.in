@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.10 2004-08-18 10:46:44 oops Exp $
+# $Id: oops-firewall.in,v 1.11 2004-08-18 11:28:57 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -59,7 +59,7 @@ if [ "$1" = "" ]; then
   clear
   echo "############################################################################"
   echo $"# OOPS Firewall - Network Firewall Program v ${VER}"
-  echo $"# by Dec 11 2003 JoungKyun Kim <http://www.oops.org>"
+  echo $"# by Aug 18 2004 JoungKyun Kim <http://www.oops.org>"
   echo "############################################################################"
   echo
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init.in,v 1.8 2004-08-18 10:59:46 oops Exp $
+# $Id: oops-firewall.init.in,v 1.9 2004-08-18 11:28:57 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
@@ -129,19 +129,25 @@ case "$1" in
   status)
     echo
     echo
-    echo $"[1;31m[ Legualar Table ][7;0m"
+    echo -n "[1;31m"
+    echo -n $"[ Legualar Table ]"
+    echo "[7;0m"
     echo "[1;31m-----------------------------------------------------------------------[7;0m"
     echo
     ${IPTABLES} -L -v -n
     echo
     echo
-    echo $"[1;31m[ NAT Table ][7;0m"
+    echo -n "[1;31m"
+    echo -n $"[ NAT Table ]"
+    echo "[7;0m"
     echo "[1;31m-----------------------------------------------------------------------[7;0m"
     echo
     ${IPTABLES} -t nat -L -v -n
     echo
     echo
-    echo $"[1;31m[ MANGLE Table ][7;0m"
+    echo -n "[1;31m"
+    echo -n $"[ MANGLE Table ]"
+    echo "[7;0m"
     echo "[1;31m-----------------------------------------------------------------------[7;0m"
     echo
     ${IPTABLES} -t mangle -L -v -n
