@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.11 2004-08-18 11:28:57 oops Exp $
+# $Id: oops-firewall.in,v 1.12 2004-08-18 11:30:44 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -971,7 +971,7 @@ if [ "$1" = "" ]; then
 elif [ "$1" = "-v" ];then
   last=$(date +%Y)
   echo $"* OOPS FIREWALL v.${VER} by JoungKyun Kim"
-  echo $"* Copyright by GPL Since 2000-$last"
+  echo $"* Copyright by GPL2 Since 2000-$last"
   echo $"* See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
 else
   echo $"USAGE : $0 [-v]"
