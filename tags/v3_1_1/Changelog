@@ -1,0 +1,62 @@
+2001.11.15 fixed ftp connection in serveral ethernet device
+
+2001.11.13 update 3.1.0
+           added TCPMSS target For MASQ and ADSL
+           added string check for MASQ packet
+           modifed to use sport and dport in string check
+
+2001.10.26 patch version 3.0.2
+           patched udp states at client udp service
+           typo log messages
+           added rule that protected output invalied packet
+           separated display of firewall state as tables
+           modified README.SORIBADA
+
+2001.10.16 patch version 3.0.1
+           change var name STRINT to STRING
+           patched wrong udp command
+
+2001.10.11 major upgrade 3.0
+           separated daemon service and client service
+           closed all port (change from 1-1024 to 1-65535)
+           controled network state (NEW,ESTABLISHED,RELATED,INVALID)
+
+2001.09.19 update version 2.9
+           added tos rule
+
+2001.08.13 update version 2.8
+           prefix ftp access problem
+           added log function
+
+2001.08.11 update version 2.7
+           modified ftp client configuration
+           added iptable string match rule (require iptables include ipt_string)
+
+2001.08.06 update version 2.6
+           fixed ftp access ploblems
+           added option -h
+           modified deny rule
+
+2001.06.27 update version 2.5
+           fixed iptables path in oops_firewal script
+           added zero count option
+
+2001.05.01 update version 2.4
+           modified udp forward table
+
+2001.04.26 update version 2.3
+           adjusted privite ip address in masq
+           modified forwarding chains
+
+2001.04.25 update verson 2.2
+           added masq start address
+
+2001.04. 3 update version 2.1
+           added masquerade configurations
+           added port forward configurations
+
+2001.03.21 version 2.0 with iptables in kernel 2.4.x
+
+2000.08.17 added DNS entry
+
+2000.08.16 version 1.0 with ipchains in kernel 2.2.x
