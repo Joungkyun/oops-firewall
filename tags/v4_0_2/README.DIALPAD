@@ -1,0 +1,22 @@
+OOPS Firewall 하에서 다이얼 패드를 사용하기 위한 설정
+
+작성: 2002.02.27
+김정균 http://www.oops.org
+
+3.1.2 이하 버젼에서는 OOPS Firewall 을 이용한 MASQ 시에 클라이언트에서 다이어 패
+드를 사용하기 위해서는 masq.conf 에서 설정을 해 주면 되었다. 하지만 3.2.0 부터는
+이 기능이 없어졌으며, 새로 추가된 user command mode 로 설정을 해 줘야 한다.
+
+user command mode 는 /etc/oops-firewall/user.conf 에서 설정을 할 수 있으며, 다이
+얼 패드를 사용하기 위해서는 다음의 설정을 user.conf 에 넣어주면 된다.
+
+@/$PATH/iptables -t nat -A PREROUTING -p tcp --dport 51210 -j DNAT --to $CLIENT_IP:51210
+@/$PATH/iptables -t nat -A PREROUTING -p udp --dport 51200 -j DNAT --to $CLIENT_IP:51200
+@/$PATH/iptables -t nat -A PREROUTING -p udp --dport 51201 -j DNAT --to $CLIENT_IP:51201
+
+$PATH 와 $CLIENT_IP는 각자의 서버의 환경과 사용할 클라이언트의 ip 를 지정해 주면
+된다. 아직까지 여러대에서 다이얼 패드를 사용하는 방법을 필자는 알지를 못한다.
+
+P.S
+명령줄 앞에 @ 을 붙여야 한다는 것을 주의한다.  이것에 대해서는 user.conf 의 주석
+을 읽어보기 바란다.
