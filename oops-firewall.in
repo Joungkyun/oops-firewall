@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.12 2004-08-18 11:30:44 oops Exp $
+# $Id: oops-firewall.in,v 1.13 2004-08-26 13:31:30 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -36,6 +36,7 @@ TEXTDOMAINDIR=@SHAREDDIR@/locale
 
 VER="@VERSION@"
 GCOL=40
+TESTMODE=0
 
 # 사용 명령어
 depmod=@DEPMOD@
@@ -112,30 +113,12 @@ if [ "$1" = "" ]; then
   echo
 
   # device list 를 구함
-  devlist=$(${grep} 'eth[0-9]\+:' /proc/net/dev | ${awk} -F ':' '{print $1}')
+  getDeviceList devlist
 
+  # device 정보를 파싱
   for dv in ${devlist}
   do
-    # 이더넷 디바이스 번호
-    dvno=$(echo ${dv} | sed 's/eth//g')
-
-    # 이더넷 디바이스에 할당된 IP 주소
-    val_IP=$(${SIFCONFIG} ${dv} 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $2}' | ${sed} -e 's/.*://')
-    var_IP="ETH${dvno}_IPADDR=${val_IP}"
-
-    if [ -n "${var_IP}" ]; then
-      eval ${var_IP}
-
-      # 이더넷 디바이스에 할당된 서브넷 마스크
-      val_SN=$(${SIFCONFIG} ${dv} 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $4}' | ${sed} -e 's/.*://')
-      var_SN="ETH${dvno}_SUBNET=${val_SN}"
-      eval ${var_SN}
-  
-      # 이더넷 디바이스에 할당된 네트워크
-      val_NT=$(${ipcalc} -s -n ${val_IP} ${val_SN} | awk -F '=' '{print $2}')
-      var_NT="ETH${dvno}_NET=${val_NT}"
-      eval ${var_NT}
-    fi
+    makeDeviceEnv ${dv}
   done
 
   # 디바이스 정보 출력
@@ -145,18 +128,15 @@ if [ "$1" = "" ]; then
     chkSN=
     chkNT=
   
-    i=$(echo ${dv} | sed 's/eth//g')
-    chk_IP="chkIP=\${ETH${i}_IPADDR}"
-    eval ${chk_IP}
+    parseDevice "${dv}" devName devNum
+    eval "chkIP=\${${devName}${devNum}_IPADDR}"
 
     if [ -n "${chkIP}" ]; then
 
-      chk_SN="chkSN=\${ETH${i}_SUBNET}"
-      chk_NT="chkNT=\${ETH${i}_NET}"
-      eval ${chk_SN}
-      eval ${chk_NT}
+      eval "chkSN=\${${devName}${devNum}_SUBNET}"
+      eval "chkNT=\${${devName}${devNum}_NET}"
 
-      echo $"  * ETH${i} Information"
+      echo $"  * ${devName}${devNum} Information"
       echo -n $"  IP ADDRESS"
       print_result 0 "${chkIP}" "yellow"
       echo -n $"  SUBNET MASK"
@@ -189,114 +169,160 @@ if [ "$1" = "" ]; then
 
   # 서비스를 시작하기전 초기화
   echo $"  * Reset Basic Table"
-  ${IPTABLES} -Z
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -Z
+    CHKCHAIN=$?
+  fi
   echo -n $"  Reset Chain Counter "
   print_result ${CHKCHAIN}
-  ${IPTABLES} -P INPUT ACCEPT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -P INPUT ACCEPT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Accept All INPUT Chain"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -F INPUT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -F INPUT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Remove rule of INPUT Chain"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -P OUTPUT ACCEPT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -P OUTPUT ACCEPT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Accept All OUTPUT Chain"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -F FORWARD
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -F FORWARD
+    CHKCHAIN=$?
+  fi
   echo -n $"  Remove rule of FORWARD Chain"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -P FORWARD ACCEPT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -P FORWARD ACCEPT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Accept All FORWARD Chain"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -F OUTPUT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -F OUTPUT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Remove rule of OUTPUT Chain"
   print_result ${CHKCHAIN}
 
   echo
   echo $"  * Reset NAT Table"
-  ${IPTABLES} -t nat -Z
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t nat -Z
+    CHKCHAIN=$?
+  fi
   echo -n $"  Reset NAT Tabel Counter"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -t nat -P PREROUTING ACCEPT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t nat -P PREROUTING ACCEPT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Accept All PREROUTING Chain"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -t nat -F PREROUTING
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t nat -F PREROUTING
+    CHKCHAIN=$?
+  fi
   echo -n $"  Remove rule of PREROUTING"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -t nat -P POSTROUTING ACCEPT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Accept All POSTROUTING Chain"
   print_result ${CHKCHAIN}
-  ${IPTABLES} -t nat -F POSTROUTING
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t nat -F POSTROUTING
+    CHKCHAIN=$?
+  fi
   echo -n $"  Remove rule of POSTROUTING"
   print_result ${CHKCHAIN}
 
   echo
   echo $"  * Reset Mangle Table"
-  ${IPTABLES} -t mangle -Z
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t mangle -Z
+    CHKCHAIN=$?
+  fi
   echo -n $"  Reset MANGLE Tabel Counter"
   print_result ${CHKCHAIN}
 
-  ${IPTABLES} -t mangle -P PREROUTING ACCEPT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t mangle -P PREROUTING ACCEPT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Accept All PREROUTING Chain"
   print_result ${CHKCHAIN}
 
-  ${IPTABLES} -t mangle -F PREROUTING
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t mangle -F PREROUTING
+    CHKCHAIN=$?
+  fi
   echo -n $"  Remove rule of PREROUTING"
   print_result ${CHKCHAIN}
 
-  ${IPTABLES} -t mangle -P OUTPUT ACCEPT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t mangle -P OUTPUT ACCEPT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Accept All OUTPUT Chain"
   print_result ${CHKCHAIN}
 
-  ${IPTABLES} -t mangle -F OUTPUT
-  CHKCHAIN=$?
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -t mangle -F OUTPUT
+    CHKCHAIN=$?
+  fi
   echo -n $"  Remove rule of OUTPUT"
   print_result ${CHKCHAIN}
 
   # 커널 2.4.18 이상에서 작동
   if [ "${KERNEL_UP}" = "1" ]; then
-    ${IPTABLES} -t mangle -P INPUT ACCEPT
-    CHKCHAIN=$?
+    if [ "${TESTMODE}" = 0 ]; then
+      ${IPTABLES} -t mangle -P INPUT ACCEPT
+      CHKCHAIN=$?
+    fi
     echo -n $"  Accept All INPUT Chain"
     print_result ${CHKCHAIN}
 
-    ${IPTABLES} -t mangle -F INPUT
-    CHKCHAIN=$?
+    if [ "${TESTMODE}" = 0 ]; then
+      ${IPTABLES} -t mangle -F INPUT
+      CHKCHAIN=$?
+    fi
     echo -n $"  Remove rule of INPUT"
     print_result ${CHKCHAIN}
 
-    ${IPTABLES} -t mangle -P FORWARD ACCEPT
-    CHKCHAIN=$?
+    if [ "${TESTMODE}" = 0 ]; then
+      ${IPTABLES} -t mangle -P FORWARD ACCEPT
+      CHKCHAIN=$?
+    fi
     echo -n $"  Accept All FORWARD Chain"
     print_result ${CHKCHAIN}
 
-    ${IPTABLES} -t mangle -F FORWARD
-    CHKCHAIN=$?
+    if [ "${TESTMODE}" = 0 ]; then
+      ${IPTABLES} -t mangle -F FORWARD
+      CHKCHAIN=$?
+    fi
     echo -n $"  Remove rule of FORWARD"
     print_result ${CHKCHAIN}
 
-    ${IPTABLES} -t mangle -P POSTROUTING ACCEPT
-    CHKCHAIN=$?
+    if [ "${TESTMODE}" = 0 ]; then
+      ${IPTABLES} -t mangle -P POSTROUTING ACCEPT
+      CHKCHAIN=$?
+    fi
     echo -n $"  Accept All POSTROUTING Chain"
     print_result ${CHKCHAIN}
 
-    ${IPTABLES} -t mangle -F POSTROUTING
-    CHKCHAIN=$?
+    if [ "${TESTMODE}" = 0 ]; then
+      ${IPTABLES} -t mangle -F POSTROUTING
+      CHKCHAIN=$?
+    fi
     echo -n $"  Remove rule of POSTROUTING"
     print_result ${CHKCHAIN}
   fi
@@ -377,17 +403,21 @@ if [ "$1" = "" ]; then
     echo "  * iptables -A INPUT -m state --state ${nI} \\"
     echo "             ${LOGFORMAT} \\"
     echo "             --log-prefix 'ANY Packet Refuse'"
+    [ "${TESTMODE}" = 0 ] && \
     ${IPTABLES} -A INPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'ANY Packet Refuse'
 
     echo "  * iptables -A OUTPUT -m state --state ${nI} \\"
     echo "             ${LOGFORMAT} \\"
     echo "             --log-prefix 'OUTPUT ANY Packet Refuse'"
+    [ "${TESTMODE}" = 0 ] && \
     ${IPTABLES} -A OUTPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'OUTPUT ANY Packet Refuse'
   fi
   echo "  * iptables -A INPUT -m state --state ${nI} -j DROP"
+  [ "${TESTMODE}" = 0 ] && \
   ${IPTABLES} -A INPUT -m state --state ${nI} -j DROP
 
   echo "  * iptables -A OUTPUT -m state --state ${nI} -j DROP"
+  [ "${TESTMODE}" = 0 ] && \
   ${IPTABLES} -A OUTPUT -m state --state ${nI} -j DROP
 
 
@@ -427,6 +457,7 @@ if [ "$1" = "" ]; then
           echo "  * iptables -A INPUT -p tcp --tcp-flags ${flag} --${tagport} ${port} \\"
           echo "             -m string --string \"${string}\" \\"
           echo "             -j REJECT --reject-with tcp-reset"
+          [ "${TESTMODE}" = 0 ] && \
           ${IPTABLES} -A INPUT -p tcp --tcp-flags ${flag} --${tagport} ${port} -m string \
                       --string "${string}" -j REJECT --reject-with tcp-reset
         }
@@ -446,6 +477,7 @@ if [ "$1" = "" ]; then
           echo "  * iptables -A FORWARD -p tcp --tcp-flags ${flag} --${tagport} ${port} \\"
           echo "             -m string --string \"${string}\" \\"
           echo "             -j REJECT --reject-with tcp-reset"
+          [ "${TESTMODE}" = 0 ] && \
           ${IPTABLES} -A FORWARD -p tcp --tcp-flags ${flag} --${tagport} ${port} -m string \
                       --string "${string}" -j REJECT --reject-with tcp-reset
         }
@@ -466,6 +498,7 @@ if [ "$1" = "" ]; then
   echo
 
   echo "  * iptables -A INPUT -i lo -j ACCEPT"
+  [ "${TESTMODE}" = 0 ] && \
   ${IPTABLES} -A INPUT -i lo -j ACCEPT
 
   for dv in ${devlist}
@@ -482,6 +515,7 @@ if [ "$1" = "" ]; then
 
       if [ -n "${varNT}" -a -n "${varSN}" ]; then
         echo "  * iptables -A INPUT -s ${varNT}/${varSN} -j ACCEPT"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -A INPUT -s ${varNT}/${varSN} -j ACCEPT
       fi
     else
@@ -491,6 +525,7 @@ if [ "$1" = "" ]; then
 
       if [ -n "${varIP}" ]; then
         echo "  * iptables -A INPUT -s ${varIP} -j ACCEPT"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -A INPUT -s ${varIP} -j ACCEPT
       fi
     fi
@@ -500,6 +535,7 @@ if [ "$1" = "" ]; then
     for values in ${ALLOWALL}
     do
       echo "  * iptables -A INPUT -s ${values} -j ACCEPT"
+      [ "${TESTMODE}" = 0 ] && \
       ${IPTABLES} -A INPUT -s ${values} -j ACCEPT
     done
   fi
@@ -545,13 +581,16 @@ if [ "$1" = "" ]; then
         # ftp service 를 위한 20 번 포트 개방
         if [ "${ftp_chk}" = "1" ]; then
           echo "  iptables -A INPUT -p tcp --sport 20 -m state --state ${nE},${nR} -j ACCEPT"
+          [ "${TESTMODE}" = 0 ] && \
           ${IPTABLES} -A INPUT -p tcp --sport 20 -m state --state ${nE},${nR} -j ACCEPT
           echo "  iptables -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} \\"
           echo "           -m state --state ${nE} -j ACCEPT"
+          [ "${TESTMODE}" = 0 ] && \
           ${IPTABLES} -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE} -j ACCEPT
         fi
 
         echo "  iptables -A INPUT -p tcp --sport ${oport} -m state --state ${tconnect} -j ACCEPT"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -A INPUT -p tcp --sport ${oport} -m state --state ${tconnect} -j ACCEPT
       }
     done
@@ -574,6 +613,7 @@ if [ "$1" = "" ]; then
         oport=$(echo "${oport}" | ${sed} -e 's/-/:/g')
 
         echo "  iptables -A INPUT -p udp --sport ${oport} -j ACCEPT"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -A INPUT -p udp --sport ${oport} -j ACCEPT
       }
     done
@@ -585,6 +625,7 @@ if [ "$1" = "" ]; then
   echo
   echo $"  * Name Service Config"
   echo "  iptables -A INPUT -p udp --sport 53 -j ACCEPT"
+  [ "${TESTMODE}" = 0 ] && \
   ${IPTABLES} -A INPUT -p udp --sport 53 -j ACCEPT
 
 
@@ -629,14 +670,17 @@ if [ "$1" = "" ]; then
       if [ "${ftp_chk}" = "1" ]; then
         if [ "${chk_data_port}" != "1" ]; then
           echo "  iptables -A INPUT -p tcp --dport 20 -m state --state ${nE} -j ACCEPT"
+          [ "${TESTMODE}" = 0 ] && \
           ${IPTABLES} -A INPUT -p tcp --dport 20 -m state --state ${nE} -j ACCEPT
         fi
         echo "  iptables -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} \\"
         echo "           -m state --state ${nE},${nR} -j ACCEPT"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE},${nR} -j ACCEPT
       fi
 
       echo "  iptables -A INPUT -p tcp --dport ${values} -m state --state NEW,ESTABLISHED -j ACCEPT"
+      [ "${TESTMODE}" = 0 ] && \
       ${IPTABLES} -A INPUT -p tcp --dport ${values} -m state --state NEW,ESTABLISHED  -j ACCEPT
     done
   fi
@@ -658,6 +702,7 @@ if [ "$1" = "" ]; then
 
         echo "  iptables -A INPUT -s ${hosts} -p tcp --dport ${ports} \\"
         echo "           -m state --state NEW,ESTABLISHED -j ACCEPT"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -A INPUT -s ${hosts} -p tcp --dport ${ports} -m state --state NEW,ESTABLISHED -j ACCEPT
       }
     done
@@ -675,6 +720,7 @@ if [ "$1" = "" ]; then
     do
       values=$(echo ${values} | ${sed} -e 's/-/:/g')
       echo "  iptables -A INPUT -p udp --dport ${values} -j ACCEPT"
+      [ "${TESTMODE}" = 0 ] && \
       ${IPTABLES} -A INPUT -p udp --dport ${values} -j ACCEPT
     done
   fi  
@@ -688,6 +734,7 @@ if [ "$1" = "" ]; then
         IFS=':' read hosts ports
         ports=$(echo "${ports}" | ${sed} -e 's/-/:/g')
         echo "  iptables -A INPUT -s ${hosts} -p udp --dport ${ports} -j ACCEPT"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -A INPUT -s ${hosts} -p udp --dport ${ports} -j ACCEPT
       }
     done
@@ -707,6 +754,7 @@ if [ "$1" = "" ]; then
     for values in ${ICMP_HOSTPERPING}
     do
       echo "  iptables -A INPUT -s ${values} -p icmp --icmp-type echo-request -j ACCEPT"
+      [ "${TESTMODE}" = 0 ] && \
       ${IPTABLES} -A INPUT -s ${values} -p icmp --icmp-type echo-request -j ACCEPT
     done
   fi
@@ -721,8 +769,10 @@ if [ "$1" = "" ]; then
     do
       echo "  iptables -A OUTPUT -s ${values} -p icmp --icmp-type time-exceeded -j ACCEPT"
       echo "  iptables -A INPUT -s ${values} -p udp -dport 33434:33525 -j ACCEPT"
-      ${IPTABLES} -A OUTPUT -s ${values} -p icmp --icmp-type time-exceeded -j ACCEPT
-      ${IPTABLES} -A INPUT -s ${values} -p udp --dport 33434:33525 -j ACCEPT
+      if [ "${TESTMODE}" = 0 ]; then
+        ${IPTABLES} -A OUTPUT -s ${values} -p icmp --icmp-type time-exceeded -j ACCEPT
+        ${IPTABLES} -A INPUT -s ${values} -p udp --dport 33434:33525 -j ACCEPT
+      fi
     done
   fi
 
@@ -737,6 +787,7 @@ if [ "$1" = "" ]; then
 
   # MSSQ 시나 접속 지연 현상을 향상 시키기 위한 옵션
   echo "  * ${IPTABLES} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu"
+  [ "${TESTMODE}" = 0 ] && \
   ${IPTABLES} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
   # 주의사항
@@ -748,62 +799,63 @@ if [ "$1" = "" ]; then
     ins_mod ip_nat_ftp
     echo
 
-    if [ "${MASQ_DEVICE}" = "eth0" ] || [ "${MASQ_DEVICE}" = "eth1" ]; then
-      if [ "${MASQ_DEVICE}" = "eth0" ]; then
-        MASQ_IPADDR="${ETH0_IPADDR}"
-        PRIV_DEVICE="eth1"
-        PRIV_IPADDR="${ETH1_IPADDR}"
-      elif [ "${MASQ_DEVICE}" = "eth1" ]; then
-        MASQ_IPADDR="${ETH1_IPADDR}"
-        PRIV_DEVICE="eth0"
-        PRIV_IPADDR="${ETH0_IPADDR}"
-      fi
-      # packet forwarding 을 가능하게 함
-      if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
-        echo 1 > /proc/sys/net/ipv4/ip_forward
-      fi
+    WordToUpper ${MASQ_DEVICE} MASQ_DEVICE_UPPER
 
-      # 외부로 나가는 출발점을 지정하도록 함. 값은 적용사설ip:출발지주소 의 형태를
-      # 취하며 적용사설ip의 값이 0 일경우에는 everywhere 로 적용함.
-      if [ -n "${MASQ_MATCH_START}" ]; then
-        for values in ${MASQ_MATCH_START}
-        do
-          echo ${values} | {
-            IFS=':' read pc output
-            if [ "${pc}" = "0" ]; then
-              MASQ_WHOLE_ADJ=1
-              echo "  * iptables -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${output}"
-              ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${output}
-            else
-              echo "  * iptables -t nat -A POSTROUTING -s ${pc} -o ${MASQ_DEVICE} -j SNAT --to ${output}"
-              ${IPTABLES} -t nat -A POSTROUTING -s ${pc} -o ${MASQ_DEVICE} -j SNAT --to ${output}
-            fi
-          }
-        done
-      fi
+    eval "MASQ_IPADDR=\"\$${MASQ_DEVICE_UPPER}_IPADDR\""
 
-      # 출발지 주소 지정에서 사설 IP가 everywhere 이 적용 안될 경우 everywhere 을
-      # masq device 로 지정
-      if [ "${MASQ_WHOLE_ADJ}" != "1" ]; then
-        echo "  * iptables -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}"
-        ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}
-      fi
-
-      # Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정
-      echo "  * iptables -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}"
-      ${IPTABLES} -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}
-    else
-      echo $"Supported only eth0 and eth1. Shutdown firewall"
-      ${IPTABLES} -Z
-      ${IPTABLES} -P INPUT ACCEPT
-      ${IPTABLES} -F INPUT
-      ${IPTABLES} -t nat -P POSTROUTING ACCEPT
-      ${IPTABLES} -t nat -F POSTROUTING
-      #if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
-      #  echo 0 > /proc/sys/net/ipv4/ip_forward
-      #fi
-      exit 1
+    if [ -z "${MASQ_CLIENT_DEVICE}" ]; then
+      MASQ_CLIENT_DEVICE=eth1
     fi
+
+    # packet forwarding 을 가능하게 함
+    if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
+      echo 1 > /proc/sys/net/ipv4/ip_forward
+    fi
+
+    # 외부로 나가는 출발점을 지정하도록 함. 값은 적용사설ip:출발지주소 의 형태를
+    # 취하며 적용사설ip의 값이 0 일경우에는 everywhere 로 적용함.
+    if [ -n "${MASQ_MATCH_START}" ]; then
+      for values in ${MASQ_MATCH_START}
+      do
+        masqStartCheck ${values} MASQ_WHOLE_ADJ
+
+        echo ${values} | {
+          IFS=':' read pc output
+          if [ "${pc}" = "0" ]; then
+            echo "  * iptables -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${output}"
+            [ "${TESTMODE}" = 0 ] && \
+            ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${output}
+          else
+            echo "  * iptables -t nat -A POSTROUTING -s ${pc} -o ${MASQ_DEVICE} -j SNAT --to ${output}"
+            [ "${TESTMODE}" = 0 ] && \
+            ${IPTABLES} -t nat -A POSTROUTING -s ${pc} -o ${MASQ_DEVICE} -j SNAT --to ${output}
+          fi
+        }
+      done
+    fi
+
+    # 출발지 주소 지정에서 사설 IP가 everywhere 이 적용 안될 경우 everywhere 을
+    # masq device 로 지정
+    if [ "${MASQ_WHOLE_ADJ}" != "1" ]; then
+      echo "  * iptables -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}"
+      ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}
+    fi
+
+    # Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정
+    for cdv in ${MASQ_CLIENT_DEVICE}
+    do
+      TMP_CLIENT=
+      WordToUpper ${cdv} TMP_CLIENT
+
+      PRIV_DEVICE=$cdv
+      eval "PRIV_IPADDR=\"\$${TMP_CLIENT}_IPADDR\""
+
+      if [ -n "${PRIV_IPADDR}" ]; then
+        echo "  * iptables -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}"
+        [ "${TESTMODE}" = 0 ] && \
+        ${IPTABLES} -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}
+      fi
+    done
   fi
 
 
@@ -823,7 +875,16 @@ if [ "$1" = "" ]; then
   # masq device 로 지정된 device 의 주소를 외부로 나갈 주소로 지정
   #
   if [ "${MASQ_USED}" = "no" ] || [ "${MASQ_DEVICE}" = "" ]; then
-    INCOM_ADDR=${ETH0_IPADDR}
+    if [ -n "${FORWARD_MASTER}" ]; then
+      WordToUpper ${FORWARD_MASTER} FORWARD_MASTER
+      eval "INCOM_ADDR=\"\$${FORWARD_MASTER}_IPADDR\""
+
+      if [ -z "${INCOM_ADDR}" ]; then
+        INCOM_ADDR=${ETH0_IPADDR}
+      fi
+    else
+      INCOM_ADDR=${ETH0_IPADDR}
+    fi
   else
     INCOM_ADDR=${MASQ_IPADDR}
   fi
@@ -835,7 +896,21 @@ if [ "$1" = "" ]; then
         IFS=':' read lports raddr rports
         echo "  * iptables -t nat -A PREROUTING -p tcp -d ${INCOM_ADDR} \\"
         echo "                   --dport ${lports} -j DNAT --to ${raddr}:${rports}"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -t nat -A PREROUTING -p tcp -d ${INCOM_ADDR} --dport ${lports} -j DNAT --to ${raddr}:${rports}
+      }
+    done
+  fi
+
+  if [ "${TCP_FORWARD_TO_S}" != "" ]; then
+    for values in ${TCP_FORWARD_TO_S}
+    do 
+      echo ${values} | {
+        IFS=':' read laddr lports raddr rports
+        echo "  * iptables -t nat -A PREROUTING -p tcp -d ${laddr} \\"
+        echo "                   --dport ${lports} -j DNAT --to ${raddr}:${rports}"
+        [ "${TESTMODE}" = 0 ] && \
+        ${IPTABLES} -t nat -A PREROUTING -p tcp -d ${laddr} --dport ${lports} -j DNAT --to ${raddr}:${rports}
       }
     done
   fi
@@ -847,7 +922,21 @@ if [ "$1" = "" ]; then
         IFS=':' read lports raddr rports
         echo "  * iptables -t nat -A PREROUTING -p udp -d ${INCOM_ADDR} \\"
         echo "                   --dport ${lports} -j DNAT --to ${raddr}:${rports}"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -t nat -A PREROUTING -p udp -d ${INCOM_ADDR} --dport ${lports} -j DNAT --to ${raddr}:${rports}
+      }
+    done
+  fi
+
+  if [ "${UDP_FORWARD_TO}" != "" ]; then
+    for values in ${UDP_FORWARD_TO}
+    do
+      echo ${values} | { 
+        IFS=':' read laddr lports raddr rports
+        echo "  * iptables -t nat -A PREROUTING -p udp -d ${laddr} \\"
+        echo "                   --dport ${lports} -j DNAT --to ${raddr}:${rports}"
+        [ "${TESTMODE}" = 0 ] && \
+        ${IPTABLES} -t nat -A PREROUTING -p udp -d ${laddr} --dport ${lports} -j DNAT --to ${raddr}:${rports}
       }
     done
   fi
@@ -859,6 +948,7 @@ if [ "$1" = "" ]; then
       echo ${values} | {
         IFS=':' read dest target
         echo "  * iptables -t nat -A PREROUTING -d ${dest}  -j DNAT --to ${target}"
+        [ "${TESTMODE}" = 0 ] && \
         ${IPTABLES} -t nat -A PREROUTING -d ${dest} -j DNAT --to ${target}
       }
     done
@@ -876,25 +966,31 @@ if [ "$1" = "" ]; then
   echo "  * Reject All Syn Packet"
   if [ "${USE_LOG}" = "1" ]; then
     echo "  iptables -A INPUT -p tcp --syn ${LOGFORMAT} --log-prefix 'SYN Refuse'"
+    [ "${TESTMODE}" = 0 ] && \
     ${IPTABLES} -A INPUT -p tcp --syn ${LOGFORMAT} --log-prefix 'SYN Refuse'
   fi
   echo "  iptables -A INPUT -p tcp --syn -j REJECT"
+  [ "${TESTMODE}" = 0 ] && \
   ${IPTABLES} -A INPUT -p tcp --syn -j REJECT
 
   echo "  * Drop All TCP packet"
   if [ "${USE_LOG}" = "1" ]; then
     echo "  iptables -A INPUT -p tcp --dport 1:65535 ${LOGFORMAT} --log-prefix 'TCP Refuse'"
+    [ "${TESTMODE}" = 0 ] && \
     ${IPTABLES} -A INPUT -p tcp --dport 1:65535 ${LOGFORMAT} --log-prefix 'TCP Refuse'
   fi
   echo "  iptables -A INPUT -p tcp --dport 1:65535 -j DROP"
+  [ "${TESTMODE}" = 0 ] && \
   ${IPTABLES} -A INPUT -p tcp --dport 1:65535 -j DROP
 
   echo "  * Drop All UDP packet"
   if [ "${USE_LOG}" = "1" ]; then
     echo "  iptables -A INPUT -p udp --dport 1:65535 ${LOGFORMAT} --log-prefix 'UDP Refuse'"
+    [ "${TESTMODE}" = 0 ] && \
     ${IPTABLES} -A INPUT -p udp --dport 1:65535 ${LOGFORMAT} --log-prefix 'UDP Refuse'
   fi
   echo "  iptables -A INPUT -p udp --dport 1:65535 -j DROP"
+  [ "${TESTMODE}" = 0 ] && \
   ${IPTABLES} -A INPUT -p udp --dport 1:65535 -j DROP
 
   echo "  * Prevented internal ping and traceroute request"
@@ -902,13 +998,17 @@ if [ "$1" = "" ]; then
   if [ "${USE_LOG}" = "1" ]; then
     echo "  iptables -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING request Refuse'"
     echo "  iptables -A OUTPUT -p icmp --icmp-type time-exceeded ${LOGFORMAT} --log-prefix 'Traceroute Refuse'"
-    ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING request Refuse'
-    ${IPTABLES} -A OUTPUT -p icmp --icmp-type time-exceeded ${LOGFORMAT} --log-prefix 'Traceroute Refuse'
+    if [ "${TESTMODE}" = 0 ]; then
+      ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING request Refuse'
+      ${IPTABLES} -A OUTPUT -p icmp --icmp-type time-exceeded ${LOGFORMAT} --log-prefix 'Traceroute Refuse'
+    fi
   fi
   echo "  iptables -A INPUT -p icmp --icmp-type echo-request -j REJECT"
   echo "  iptables -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT"
-  ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT
-  ${IPTABLES} -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT
+  if [ "${TESTMODE}" = 0 ]; then
+    ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT
+    ${IPTABLES} -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT
+  fi
 
   # TOS 설정
   #
@@ -948,9 +1048,11 @@ if [ "$1" = "" ]; then
           IFS=':' read port tosv
           [ "${tport}" = "" ] && tport=dport
           echo "  * iptables -t mangle -A ${tostb} -p tcp --dport ${port} -j TOS --set-tos ${tosv}"
-          ${IPTABLES} -t mangle -A ${tostb} -p tcp --dport ${port} -j TOS --set-tos ${tosv}
           echo "  * iptables -t mangle -A ${tostb} -p tcp --sport ${port} -j TOS --set-tos ${tosv}"
-          ${IPTABLES} -t mangle -A ${tostb} -p tcp --sport ${port} -j TOS --set-tos ${tosv}
+          if [ "${TESTMODE}" = 0 ]; then
+            ${IPTABLES} -t mangle -A ${tostb} -p tcp --dport ${port} -j TOS --set-tos ${tosv}
+            ${IPTABLES} -t mangle -A ${tostb} -p tcp --sport ${port} -j TOS --set-tos ${tosv}
+          fi
         }
       done
     done

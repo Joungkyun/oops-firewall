@@ -6,7 +6,7 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.5 2004-08-18 11:43:25 oops Exp $
+# $Id: ko.po,v 1.6 2004-08-26 13:31:30 oops Exp $
 #
 #, fuzzy
 msgid ""
@@ -48,8 +48,8 @@ msgstr "  * BroadCast 로의 Ping 을 거부"
 
 #: oops-firewall.in.sh:159
 #, sh-format
-msgid "  * ETH${i} Information"
-msgstr "  * ETH${i} 정보"
+msgid "  * ${devName}${devNum} Information"
+msgstr "  * ${devName}${devNum} 정보"
 
 #: oops-firewall.in.sh:701
 msgid "  * ICMP service"
