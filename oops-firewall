@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.12 2004-08-04 14:46:50 oops Exp $
+# $Id: oops-firewall,v 1.13 2004-08-04 14:49:09 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 3.0.2
+# OOPS Firewall 네트워크 서버 방화벽 설정 3.1.0
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2001.10.26
+# 날짜 : 2001.11.13
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -32,13 +32,13 @@
 # --sport 출추의 포트 정의
 #
 
-VER="3.0.2"
+VER="3.1.0"
 
 if [ "$1" = "" ]; then
 
   echo "############################################################################"
   echo "# OOPS Firewall - Network Firewall Program v ${VER}"
-  echo "# by Oct 26 2001 JoungKyun Kim <http://www.oops.org>"
+  echo "# by Nov 13 2001 JoungKyun Kim <http://www.oops.org>"
   echo "############################################################################"
   echo
 
@@ -115,6 +115,7 @@ if [ "$1" = "" ]; then
   . /etc/oops_firewall/masq.conf
   . /etc/oops_firewall/forward.conf
   . /etc/oops_firewall/client.conf
+  . /etc/oops_firewall/string.conf
 
   ##############################################################################
   # GLOBAL 설정
@@ -143,6 +144,16 @@ if [ "$1" = "" ]; then
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -P OUTPUT ACCEPT
+  CHKCHAIN=$?
+  echo -n "  Accept All FORWARD Chain       : "
+  [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+  [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+  ${IPTABLES} -F FORWARD
+  CHKCHAIN=$?
+  echo -n "  Remove rule of FORWARD Chain   : "
+  [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+  [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+  ${IPTABLES} -P FORWARD ACCEPT
   CHKCHAIN=$?
   echo -n "  Accept All OUTPUT Chain       : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
@@ -185,7 +196,7 @@ if [ "$1" = "" ]; then
   echo "  * Reset Mangle Table"
   ${IPTABLES} -t mangle -Z
   CHKCHAIN=$?
-  echo -n "  Reset NAT Tabel Counter      : "
+  echo -n "  Reset MANGLE Tabel Counter      : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -t mangle -P PREROUTING ACCEPT
@@ -310,24 +321,45 @@ if [ "$1" = "" ]; then
       insmod ${STRING_MODULE}
     fi
 
+    # 서버로 들어오는 문자열 체크
     if [ "${STRING_MATCH}" != "" ]; then
       for values in ${STRING_MATCH}
       do
         values=$(echo ${values} | sed -e 's/+/ /g')
         echo ${values} | {
-          IFS=':' read flag port string
-          echo "  * iptables -A INPUT -p tcp --tcp-flags ${flag} --dport ${port} \\"
+          IFS=':' read flag port string tagport
+          [ "${tagport}" = "" ] && tagport=dport
+          echo "  * iptables -A INPUT -p tcp --tcp-flags ${flag} --${tagport} ${port} \\"
           echo "             -m string --string \"${string}\" \\"
           echo "             -j REJECT --reject-with tcp-reset"
-          ${IPTABLES} -A INPUT -p tcp --tcp-flags ${flag} --dport ${port} -m string \
+          ${IPTABLES} -A INPUT -p tcp --tcp-flags ${flag} --${tagport} ${port} -m string \
                       --string "${string}" -j REJECT --reject-with tcp-reset
         }
       done
     else
-      echo "  * Not Config"
+      echo "  * STRING MATCH Not Config"
+    fi
+
+    # MASQ 하의 클라이언트들로 오가는 패킷의 문자열 체크
+    if [ "${STRING_MASQ_MATCH}" != "" ]; then
+      for values in ${STRING_MASQ_MATCH}
+      do
+        value=$(echo ${values} | sed -e 's/+/ /g')
+        echo ${value} | {
+          IFS=':' read flag port string tagport
+          [ "${tagport}" = "" ] && tagport=dport
+          echo "  * iptables -A FORWARD -p tcp --tcp-flags ${flag} --${tagport} ${port} \\"
+          echo "             -m string --string \"${string}\" \\"
+          echo "             -j REJECT --reject-with tcp-reset"
+          ${IPTABLES} -A FORWARD -p tcp --tcp-flags ${flag} --${tagport} ${port} -m string \
+                      --string "${string}" -j REJECT --reject-with tcp-reset
+        }
+      done
+    else
+      echo "  * MASQ STRING MATCH Not Config"
     fi
   else
-    echo "  * Not Config"
+    echo "  * STRING MATCH Not Use"
   fi
 
   ##############################################################################
@@ -516,6 +548,10 @@ if [ "$1" = "" ]; then
   echo
   echo "10. Masqurade Configuration"
   echo
+
+  # MSSQ 시나 접속 지연 현상을 향상 시키기 위한 옵션
+  echo "  * ${IPTABLES} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu"
+  ${IPTABLES} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
   # 주의사항
   # masq client 에서 외부의 dns 를 설정하기 위해서는 위의 TCP_ALLPROT 와
