@@ -1,6 +1,6 @@
 # OOPS Firewall 에서 사용되는 함수
 #
-# $Id: oops-firewall.h,v 1.2 2004-08-04 15:02:50 oops Exp $
+# $Id: oops-firewall.h,v 1.3 2004-08-04 15:03:41 oops Exp $
 #
 # 사용자 실행을 위한 함수
 user_cmd () {
@@ -142,7 +142,7 @@ ins_mod() {
   if [ -z "${1}" ]; then
     echo $"  * Load Netfilter Module"
 
-    list="ip_conntrack ip_tables"
+    list="ip_conntrack ip_tables ip_conntrack_ftp"
 
     for i in ${list}
     do
