@@ -145,7 +145,7 @@ msgid "  Remove rule of FORWARD Chain"
 msgstr ""
 
 #: oops-firewall-4.0.0:54 
-msgid "# by Jul 31 2003 JoungKyun Kim <http://www.oops.org>"
+msgid "# by Dec 11 2003 JoungKyun Kim <http://www.oops.org>"
 msgstr ""
 
 #: oops-firewall-4.0.0:682 

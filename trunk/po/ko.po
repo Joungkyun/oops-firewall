@@ -169,8 +169,8 @@ msgid "  Remove ${1} module"
 msgstr "  ${i} ¸ðµâ Á¦°Å"
 
 #: oops-firewall.in:58 
-msgid "# by Jul 31 2003 JoungKyun Kim <http://www.oops.org>"
-msgstr "# 2003.07.31 ±èÁ¤±Õ <http://www.oops.org>"
+msgid "# by Dec 11 2003 JoungKyun Kim <http://www.oops.org>"
+msgstr "# 2003.12.11 ±èÁ¤±Õ <http://www.oops.org>"
 
 #: oops-firewall.in:686 
 msgid "11. Masqurade Configuration"

@@ -1,3 +1,6 @@
+2003.12.11 update 4.0.3
+           removed ip_forward and log_martians on proc
+
 2003.08.16 update 4.0.2
            fixed ftp active mode access problem
            fixed mis load module in nat mode
