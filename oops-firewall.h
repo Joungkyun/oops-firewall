@@ -1,17 +1,17 @@
 # OOPS Firewall 에서 사용되는 함수
 #
-# $Id: oops-firewall.h,v 1.6 2004-08-04 15:06:44 oops Exp $
+# $Id: oops-firewall.h,v 1.7 2004-08-18 10:46:44 oops Exp $
 #
 # 사용자 실행을 위한 함수
 user_cmd () {
   case "$*" in
     pre)
-      USERCHK=$(cat ${CONFS}/user.conf | sed -n '/^%/p')
+      USERCHK=$(${cat} ${CONFS}/user.conf | ${sed} -n '/^%/p')
       USERMENT="USER PRE COMMAND (%) Not Config"
       IFS='%'
       ;;
     post)
-      USERCHK=$(cat ${CONFS}/user.conf | sed -n '/^@/p')
+      USERCHK=$(${cat} ${CONFS}/user.conf | ${sed} -n '/^@/p')
       USERMENT="USER POST COMMAND (@) Not Config"
       IFS='@'
       ;;
@@ -24,7 +24,7 @@ user_cmd () {
       if [ -z "${uvalue}" ]; then
         continue;
       fi
-      uvalue=$(echo ${uvalue} | sed -e '/\n/d' -e 's/^[^ ]*iptables//g' -e 's/#.*//g')
+      uvalue=$(echo ${uvalue} | ${sed} -e '/\n/d' -e 's/^[^ ]*iptables//g' -e 's/#.*//g')
       echo "  * ${IPTABLES} ${uvalue}"
       ${IPTABLES} ${uvalue}
     done
@@ -187,5 +187,36 @@ ins_mod() {
       echo -n $"  Load ${1} module"
       print_result 1 "Already Loading" "yellow"
     fi
+  fi
+}
+
+kernelCheck() {
+  dontpoint=2004000000
+  chkpoint=2004018000
+  version_t=$(${uname} -r | ${sed} -e 's/-.*//g' -e 's/[^0-9.]//g')
+  rele_t=$(echo ${version_t} | ${awk} -F . '{print $4}')
+  patch_t=$(echo ${version_t} | ${awk} -F . '{print $3}')
+  minor_t=$(echo ${version_t} | ${awk} -F . '{print $2}')
+  major_t=$(echo ${version_t} | ${awk} -F . '{print $1}')
+
+  rele=${rele_t:=0}
+  patch_r=${patch_t:=0}
+  minor_r=${minor_t:=0}
+  major_r=${major_t:=0}
+
+  patch=$[ ${patch_t} * 1000 ]
+  minor=$[ ${minor_t} * 1000000 ]
+  major=$[ ${major_t} * 1000000000 ]
+  version_r=$[ ${major} + ${minor} + ${patch} + ${rele} ]
+
+  # 2.4.0 보다 작으면 작동 멈춤
+  if [ ${dontpoint} -gt ${version_r} ]; then
+    echo "Enable to use over kernel 2.4.0"
+    exit 1
+  # 2.4.18 보다 작으면 mangle table 확장 사용 안함
+  elif [ ${chkpoint} -gt ${version_r} ]; then
+    return 0
+  else
+    return 1
   fi
 }

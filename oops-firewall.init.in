@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init.in,v 1.6 2004-08-04 15:06:44 oops Exp $
+# $Id: oops-firewall.init.in,v 1.7 2004-08-18 10:46:44 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
@@ -30,10 +30,8 @@ rm=@RM@
 sed=@SED@
 
 # check of kernel version
-KERCHK=$(${uname} -r | ${sed} -e 's/2.4.\([0-9]\{1,3\}\).*/\1/g')
-if [ "${KERCHK}" -gt 17 ]; then
-  KERNEL_UP=1
-fi
+kernelCheck
+KERNEL_UP=$?
 
 KERNLIB=$(${uname} -r)
 KERNLIBPATH="/lib/modules/${KERNLIB}/kernel/net/ipv4/netfilter"
