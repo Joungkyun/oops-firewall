@@ -1,3 +1,6 @@
+2002.06.14 update 3.2.1
+           fixed IFS bug
+
 2002.02.27 update 3.2.0
            changed package name to oops-firewall from oops_firewall
            supported kernel 2.4.18

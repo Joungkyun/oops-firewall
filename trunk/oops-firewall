@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.16 2004-08-04 14:54:04 oops Exp $
+# $Id: oops-firewall,v 1.17 2004-08-04 14:56:01 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 3.2.0
+# OOPS Firewall 네트워크 서버 방화벽 설정 3.2.1
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2002.02.27
+# 날짜 : 2002.06.14
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -32,15 +32,15 @@
 # --sport 출추의 포트 정의
 #
 
-VER="3.2.0"
+VER="3.2.1"
 
 # 사용자 실행을 위한 함수
 user_cmd () {
   case "$*" in
     pre)
-      USERCHK=$(cat ${CONFS}/user.conf | sed -n '/^!/p')
-      USERMENT="USER PRE COMMAND (!) Not Config"
-      IFS='!'
+      USERCHK=$(cat ${CONFS}/user.conf | sed -n '/^%/p')
+      USERMENT="USER PRE COMMAND (%) Not Config"
+      IFS='%'
       ;;
     post)
       USERCHK=$(cat ${CONFS}/user.conf | sed -n '/^@/p')
@@ -73,7 +73,7 @@ if [ "$1" = "" ]; then
 
   echo "############################################################################"
   echo "# OOPS Firewall - Network Firewall Program v ${VER}"
-  echo "# by Feb 25 2002 JoungKyun Kim <http://www.oops.org>"
+  echo "# by Jun 14 2002 JoungKyun Kim <http://www.oops.org>"
   echo "############################################################################"
   echo
 
