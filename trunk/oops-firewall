@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.6 2004-08-04 14:37:41 oops Exp $
+# $Id: oops-firewall,v 1.7 2004-08-04 14:38:35 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 2.5
+# OOPS Firewall 네트워크 서버 방화벽 설정 2.6
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2003.05.01
+# 날짜 : 2001.08.06
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -137,6 +137,10 @@ if [ "$1" = "" ]; then
     done
   fi
 
+  # ftp 접속을 원할하게 하기 위해 상대방의 20번 포트에서의 접속을 허락
+  echo "${IPTABLES} -A INPUT -p tcp --sport 20 -j ACCEPT"
+  ${IPTABLES} -A INPUT -p tcp --sport 20 -j ACCEPT
+
   ##############################################################################
   # TCP 설정
   ##############################################################################
@@ -201,28 +205,6 @@ if [ "$1" = "" ]; then
       ${IPTABLES} -A INPUT -s ${values} -p icmp --icmp-type echo-request -j ACCEPT
     done
   fi
-
-  ##############################################################################
-  # DENY 정책
-  ##############################################################################
-
-  # 모든 서비스를 거부
-  if [ "${TCP_DENYPORT}" != "" ]; then
-    echo "${IPTABLES} -A INPUT -p tcp --syn -j DROP"
-    ${IPTABLES} -A INPUT -p tcp --syn -j REJECT
-    echo "${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} -j DROP"
-    ${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} -j DROP
-  fi
-  if [ "${UDP_DENYPORT}" != "" ]; then
-    echo "${IPTABLES} -A INPUT -p udp --dport 1:${UDP_DENYPORT} -j DROP"
-    ${IPTABLES} -A INPUT -p udp --dport 1:${UDP_DENYPORT} -j DROP
-  fi
-  echo "${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT"
-  ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT
-
-  # 어떤 이유로 확인할수 없는 패킷들을 drop 시킴
-  echo "${IPTABLES} -A INPUT -m state --state INVALID -j DROP"
-  ${IPTABLES} -A INPUT -m state --state INVALID -j DROP
 
 
   ##############################################################################
@@ -337,10 +319,35 @@ if [ "$1" = "" ]; then
       }
     done
   fi
+
+  ##############################################################################
+  # DENY 정책
+  ##############################################################################
+
+  # 모든 서비스를 거부
+  if [ "${TCP_DENYPORT}" != "" ]; then
+    echo "${IPTABLES} -A INPUT -p tcp --syn -j DROP"
+    ${IPTABLES} -A INPUT -p tcp --syn -j REJECT
+    echo "${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} -j DROP"
+    ${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} -j DROP
+  fi
+  if [ "${UDP_DENYPORT}" != "" ]; then
+    echo "${IPTABLES} -A INPUT -p udp --dport 1:${UDP_DENYPORT} -j DROP"
+    ${IPTABLES} -A INPUT -p udp --dport 1:${UDP_DENYPORT} -j DROP
+  fi
+  echo "${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT"
+  ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT
+
+  # 어떤 이유로 확인할수 없는 패킷들을 drop 시킴
+  echo "${IPTABLES} -A INPUT -m state --state INVALID -j DROP"
+  ${IPTABLES} -A INPUT -m state --state INVALID -j DROP
 elif [ "$1" = "-v" ];then
   last=$(date +%Y)
-  echo "OOPS FIREWALL v.2.5 by JoungKyun Kim"
+  echo "OOPS FIREWALL v.2.6 by JoungKyun Kim"
   echo "Copyright by GPL Since 2000-$last"
+elif [ "$1" = "-v" ];then
+  echo "OOPS FIREWALL v.2.6 by JoungKyun Kim"
+  echo "See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
 else
   echo "USAGE : $0 [-v]"
   echo "   -v print version"
