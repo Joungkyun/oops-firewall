@@ -1,0 +1,335 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 4.0.0\n"
+"PO-Revision-Date: 2003-08-01 19:02+0900\n"
+"Last-Translator: JoungKyun Kim <http://www.oops.org>\n"
+"Language-Team: OOPS Development Organization <http://devel.oops.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=EUC-KR\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: oops-firewall.in:172 
+msgid "  * Reset Basic Table"
+msgstr "  * ±âº» Å×ÀÌºí ÃÊ±âÈ­"
+
+#: oops-firewall.in:435 
+msgid "  * MASQ STRING MATCH Not Config"
+msgstr "  * ¸Å½ºÄõ·¹ÀÌµå STRING MATCH ¼³Á¤ ¾ÈµÊ"
+
+#: oops-firewall.h:116 
+msgid "  * Netfilter Module Shutdown"
+msgstr "  * ³ÝÇÊÅÍ ¸ðµâ Á¾·á"
+
+#: oops-firewall.in:481 
+msgid "9. Allow External Service"
+msgstr "9. ¿ÜºÎ·Î ³ª°¡´Â ¼­ºñ½º Çã°¡"
+
+#: oops-firewall.in:332 
+msgid "  * Logged Spoofing check"
+msgstr "  * ½ºÇªÇÎ ½Ãµµ¸¦ ·Î±ëÇÏµµ·Ï Ã¼Å©"
+
+#: oops-firewall.in:561 
+msgid "10. Allow Internal Service (FOR SERVER AND DAEMON)"
+msgstr "10. ³»ºÎ·Î µé¾î¿À´Â ¼­ºñ½º Çã°¡ (¼­¹ö ¶Ç´Â µ¥¸ó)"
+
+#: oops-firewall.in:187 oops-firewall.in:244 
+msgid "  Accept All OUTPUT Chain"
+msgstr "  ¸ðµç OUTPUT »ç½½À» Çã°¡"
+
+#: oops-firewall.in:920 
+msgid "* OOPS FIREWALL v.${VER} by JoungKyun Kim"
+msgstr "* OOPS FIREWALL v.${VER} by ±èÁ¤±Õ"
+
+#: oops-firewall.h:36 
+msgid "  * USER POST COMMAND (@) Not Config"
+msgstr "  * ½ÇÇà ÈÄ À¯Àú ¸í·É(@)ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾ÊÀ½"
+
+#: oops-firewall.in:199 
+msgid "  Remove rule of OUTPUT Chain"
+msgstr "  OUTPUT »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
+
+#: oops-firewall.in:485 oops-firewall.in:568 
+msgid "  * TCP service"
+msgstr "  * TCP ¼­ºñ½º"
+
+#: oops-firewall.in:206 
+msgid "  Reset NAT Tabel Counter"
+msgstr "  NAT Å×ÀÌºí Ä«¿îÅÍ ÃÊ±âÈ­"
+
+#: oops-firewall.in:271 
+msgid "  Remove rule of FORWARD"
+msgstr ""
+
+#: oops-firewall.in:203 
+msgid "  * Reset NAT Table"
+msgstr "  * NAT Å×ÀÌºí ÃÊ±âÈ­"
+
+#: oops-firewall.h:39 
+msgid "  * Unknown parameter"
+msgstr "  * ¾Ë¼ö ¾ø´Â ÆÄ¶ó¹ÌÅÍ"
+
+#: oops-firewall.in:195 oops-firewall.in:266 
+msgid "  Accept All FORWARD Chain"
+msgstr "  ¸ðµç FORWARD »ç½½ Çã°¡"
+
+#: oops-firewall.in:183 
+msgid "  Remove rule of INPUT Chain"
+msgstr "  INPUT »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
+
+#: oops-firewall.in:294 
+msgid "  * Deny IP Forward"
+msgstr "  * IP Forward °ÅºÎ"
+
+#: oops-firewall.in:555 
+msgid "  * Name Service Config"
+msgstr "  * DNS ¼­ºñ½º ¼³Á¤"
+
+#: oops-firewall.in:416 
+msgid "  * STRING MATCH Not Config"
+msgstr "  * STRING MATCH ¼³Á¤ÀÌ ¾ÈµÇ¾î ÀÖÀ½"
+
+#: oops-firewall.h:124 
+msgid "  Remove ${i} module"
+msgstr "  ${i} ¸ðµâ Á¦°Å"
+
+#: oops-firewall.h:162 oops-firewall.h:165 
+msgid "  Load ${i} module"
+msgstr "  ${i} ¸ðµâ ¿Ã¸²"
+
+#: oops-firewall.in:69 
+msgid "  * Check Result"
+msgstr "  * Ã¼Å© °á°ú"
+
+#: oops-firewall.init.in:138 
+msgid "[1;31m[ NAT Table ][7;0m"
+msgstr "[1;31m[ NAT Å×ÀÌºí ][7;0m"
+
+#: oops-firewall.in:924 
+msgid "USAGE : $0 [-v]"
+msgstr "»ç¿ë¹ý : $0 [-v]"
+
+#: oops-firewall.in:379 
+msgid "6. EXECUTE USER PRE COMMAND"
+msgstr "6. ½ÇÇàÀü »ç¿ëÀÚ ¸í·É"
+
+#: oops-firewall.in:286 
+msgid "4. Basic Kernel Parameter Configuration"
+msgstr "4. ±âº» Ä¿³Î ÆÄ¶ó¹ÌÅÍ ¼³Á¤"
+
+#: oops-firewall.in:863 
+msgid "14. TOS Configuration"
+msgstr "14. TOS ¼³Á¤"
+
+#: oops-firewall.in:131 
+msgid "  * ETH1 Information"
+msgstr "  * ETH1 Á¤º¸"
+
+#: oops-firewall.in:906 
+msgid "  * TOS Not Config"
+msgstr "  * TOS ¼³Á¤ÀÌ ¾ÈµÇ¾î ÀÖÀ½"
+
+#: oops-firewall.in:261 
+msgid "  Remove rule of INPUT"
+msgstr "  INPUT ±ÔÄ¢À» Á¦°Å"
+
+#: oops-firewall.in:57 
+msgid "# OOPS Firewall - Network Firewall Program v ${VER}"
+msgstr "# OOPS Firewall - ³×Æ®¿öÅ© ¹æÈ­º® ÇÁ·Î±×·¥ v ${VER}"
+
+#: oops-firewall.in:922 
+msgid "* See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
+msgstr "* http://www.oops.org/?t=lecture&sb=firewall&n=2 ¸¦ ÂüÁ¶"
+
+#: oops-firewall.in:226 
+msgid "  * Reset Mangle Table"
+msgstr "  * Mangle Å×ÀÌºí ÃÊ±âÈ­"
+
+#: oops-firewall.in:389 
+msgid "7. Check String in Packet"
+msgstr "7. ÆÐÅ¶ÀÇ ¹®ÀÚ¿­ Ã¼Å©"
+
+#: oops-firewall.in:126 oops-firewall.in:136 
+msgid "  NETWORK"
+msgstr "  ³×Æ®¿öÅ©"
+
+#: oops-firewall.in:355 
+msgid "5. DROP Invalid packet"
+msgstr "5. ÀÌ»ó ÆÐÅ¶ Á¦°Å"
+
+#: oops-firewall.in:345 
+msgid "  * Deny Ping at BroadCast"
+msgstr "  * BroadCast ·ÎÀÇ Ping À» °ÅºÎ"
+
+#: oops-firewall.in:191 
+msgid "  Remove rule of FORWARD Chain"
+msgstr "  FORWARD »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
+
+#: oops-firewall.h:131 
+msgid "  Remove ${1} module"
+msgstr "  ${i} ¸ðµâ Á¦°Å"
+
+#: oops-firewall.in:58 
+msgid "# by Dec 11 2003 JoungKyun Kim <http://www.oops.org>"
+msgstr "# 2003.12.11 ±èÁ¤±Õ <http://www.oops.org>"
+
+#: oops-firewall.in:686 
+msgid "11. Masqurade Configuration"
+msgstr "11. ¸Å½ºÄõ·¹ÀÌµå ¼³Á¤"
+
+#: oops-firewall.in:670 
+msgid "  * ICMP service"
+msgstr "  * ICMP ¼­ºñ½º"
+
+#: oops-firewall.in:823 
+msgid "13. Config Deny Ruleset"
+msgstr "13. °ÅºÎ ·ê¼Â ¼³Á¤"
+
+#: oops-firewall.in:222 oops-firewall.in:281 
+msgid "  Remove rule of POSTROUTING"
+msgstr "  POSTROUTING ±ÔÄ¢ Á¦°Å"
+
+#: oops-firewall.in:766 
+msgid "12. Forwarding Configuration"
+msgstr "12. Æ÷¿öµù ¼³Á¤"
+
+#: oops-firewall.h:141 
+msgid "  * Load Netfilter Module"
+msgstr "  * ³ÝÇÊÅÍ ¸ðµâ µî·Ï"
+
+#: oops-firewall.in:218 oops-firewall.in:276 
+msgid "  Accept All POSTROUTING Chain"
+msgstr "  ¸ðµç POSTROUTING »ç½½ Çã°¡"
+
+#: oops-firewall.in:122 oops-firewall.in:132 
+msgid "  IP ADDRESS"
+msgstr "  IP ÁÖ¼Ò"
+
+#: oops-firewall.in:747 
+msgid "Supported only eth0 and eth1. Shutdown firewall"
+msgstr "eth0 °ú eth1 ¸¸ Áö¿øÇÕ´Ï´Ù. ¹æÈ­º®À» Á¾·áÇÕ´Ï´Ù."
+
+#: oops-firewall.init.in:121 
+msgid "Destory Firewall Tables: "
+msgstr "OOPS Firewall Á¾·á: "
+
+#: oops-firewall.in:229 
+msgid "  Reset MANGLE Tabel Counter"
+msgstr "  MANGLE Å×ÀÌºí Ä«¿îÅÍ ÃÊ±âÈ­"
+
+#: oops-firewall.in:921 
+msgid "* Copyright by GPL Since 2000-$last"
+msgstr ""
+
+#: oops-firewall.in:67 
+msgid "1. Check user type"
+msgstr "1. ½ÇÇà À¯Àú Ã¼Å©"
+
+#: oops-firewall.in:121 
+msgid "  * ETH0 Information"
+msgstr "  * ETH0 Á¤º¸"
+
+#: oops-firewall.in:913 
+msgid "16. EXECUTE USER POST COMMAND"
+msgstr "16. ½ÇÇà ÈÄ À¯Àú ¸í·É"
+
+#: oops-firewall.in:640 
+msgid "  * UDP service"
+msgstr "  * UDP ¼­ºñ½º"
+
+#: oops-firewall.in:175 
+msgid "  Reset Chain Counter "
+msgstr "  »ç½½ Ä«¿îÅÍ ÃÊ±âÈ­"
+
+#: oops-firewall.in:891 
+msgid "  = TOS CONFIG IN ${tostb} TABLE"
+msgstr "  = ${tostb} Å×ÀÌºíÀÇ TOS ¼³Á¤"
+
+#: oops-firewall.in:179 oops-firewall.in:256 
+msgid "  Accept All INPUT Chain"
+msgstr "  ¸ðµç INPUT »ç½½ Çã°¡"
+
+#: oops-firewall.in:249 
+msgid "  Remove rule of OUTPUT"
+msgstr "  OUTPUT ±ÔÄ¢À» Á¦°Å"
+
+#: oops-firewall.in:163 
+msgid "3. RESET NETWORK FOR PACKET FILTERING SERVICE"
+msgstr "3. ÆÐÅ¶ ÇÊÅÍ¸µ ¼­ºñ½º¸¦ À§ÇÑ ³×Æ®¿öÅ© ÃÊ±âÈ­"
+
+#: oops-firewall.in:109 
+msgid "2. IP address Check"
+msgstr "2. IP ÁÖ¼Ò Ã¼Å©"
+
+#: oops-firewall.init.in:144 
+msgid "[1;31m[ MANGLE Table ][7;0m"
+msgstr "[1;31m[ MANGLE Å×ÀÌºí ][7;0m"
+
+#: oops-firewall.in:550 
+msgid "  Not Existed Configuration"
+msgstr "  ¼³Á¤ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ½"
+
+#: oops-firewall.h:182 oops-firewall.h:185 
+msgid "  Load ${1} module"
+msgstr "  ${1} ¸ðµâ µî·Ï"
+
+#: oops-firewall.in:72 
+msgid "U are not super user!"
+msgstr "¼öÆÛ À¯Àú ±ÇÇÑÀ¸·Î ½ÇÇàÀ» ÇØ¾ß ÇÕ´Ï´Ù."
+
+#: oops-firewall.init.in:41 
+msgid "Starting OOPS Firewall: "
+msgstr "OOPS Firewall ½ÃÀÛ: "
+
+#: oops-firewall.in:214 oops-firewall.in:239 
+msgid "  Remove rule of PREROUTING"
+msgstr "  PREROUTING ±ÔÄ¢ Á¦°Å"
+
+#: oops-firewall.in:315 
+msgid "  * CHK IP SPOOFING ${dev}"
+msgstr "  * ${dev} IP ½ºÇªÇÎ Ã¼Å©"
+
+#: oops-firewall.in:302 
+msgid "  * Allow to use TCP SYNCOOKIES"
+msgstr "  * TCP SYNCOOKIES ÆÄ¶ó¹ÌÅÍ »ç¿ë"
+
+#: oops-firewall.in:925 
+msgid "   -v print version"
+msgstr "    -v ¹öÀü Ãâ·Â"
+
+#: oops-firewall.init.in:132 
+msgid "[1;31m[ Legualar Table ][7;0m"
+msgstr "[1;31m[ ±âº» Å×ÀÌºí ][7;0m"
+
+#: oops-firewall.h:33 
+#, c-format 
+msgid "  * USER PRE COMMAND (%) Not Config"
+msgstr "  * ½ÇÇà Àü À¯Àú ¸í·É(%) ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾ÊÀ½"
+
+#: oops-firewall.h:166 
+msgid "Already Loading"
+msgstr "Á¸ÀçÇÔ"
+
+#: oops-firewall.init.in:150 
+msgid "Usage: $0 {start|stop|restart|status}"
+msgstr "»ç¿ë¹ý: $0 {start|stop|restart|status}"
+
+#: oops-firewall.in:324 
+msgid "  * Deny Invalid MSG"
+msgstr "  * À¯È¿ÇÏÁö ¾ÊÀº ¸Þ¼¼Áö °ÅÀý"
+
+#: oops-firewall.in:438 
+msgid "  * STRING MATCH Not Use"
+msgstr "  * STRING MATCH »ç¿ë ¾ÊÇÔ"
+
+#: oops-firewall.in:124 oops-firewall.in:134 
+msgid "  SUBNET MASK"
+msgstr "  ¼­ºê³Ý ¸¶½ºÅ©"
+
+#: oops-firewall.in:210 oops-firewall.in:234 
+msgid "  Accept All PREROUTING Chain"
+msgstr "  FORWARD ±ÔÄ¢ Á¦°Å"
+
+#: oops-firewall.in:446 
+msgid "8. Allow All Service"
+msgstr "8. ¸ðµç ¼­ºñ½º Çã°¡"
+
