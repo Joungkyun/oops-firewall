@@ -25,6 +25,7 @@ install: install-conf install-po install-doc
 	$(INSTALL) -m 755 $(PROG) $(DESTDIR)$(bindir)/$(PROG)
 	$(INSTALL) -m 755 $(PROG).init $(DESTDIR)$(initdir)/$(PROG)
 	$(INSTALL) -m 644 $(PROG).h $(DESTDIR)$(includedir)/$(PROG).h
+	$(INSTALL) -m 644 config.sed $(DESTDIR)$(includedir)/config.sed
 
 install-conf:
 	$(MKDIR) $(DESTDIR)$(confdir)
