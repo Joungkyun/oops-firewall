@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.15 2004-08-26 14:22:26 oops Exp $
+# $Id: oops-firewall.in,v 1.16 2004-08-26 19:17:24 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -162,7 +162,6 @@ if [ "$1" = "" ]; then
   for cVAR in ALLOWSELF USE_LOG MASQ_USED USE_STRING_MATCH
   do
     eval "cVARTMP=\$${cVAR}"
-    echo $cVAR $cVARTMP
     parseValue $cVARTMP $cVAR
   done
 
