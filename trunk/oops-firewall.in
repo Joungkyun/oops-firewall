@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.18 2004-09-06 16:41:41 oops Exp $
+# $Id: oops-firewall.in,v 1.19 2004-09-06 18:21:25 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -600,9 +600,9 @@ if [ "$1" = "" ]; then
           [ "${TESTMODE}" = 0 ] && \
           ${IPTABLES} -A INPUT -p tcp --sport 20 -m state --state ${nE},${nR} -j ACCEPT
           echo "  iptables -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} \\"
-          echo "           -m state --state ${nE} -j ACCEPT"
+          echo "           -m state --state ${nE},${nR} -j ACCEPT"
           [ "${TESTMODE}" = 0 ] && \
-          ${IPTABLES} -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE} -j ACCEPT
+          ${IPTABLES} -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE},${nR} -j ACCEPT
         fi
 
         echo "  iptables -A INPUT -p tcp --sport ${oport} -m state --state ${tconnect} -j ACCEPT"
@@ -685,9 +685,9 @@ if [ "$1" = "" ]; then
       # ftp service 를 위한 20 번 포트 개방
       if [ "${ftp_chk}" = "1" ]; then
         if [ "${chk_data_port}" != "1" ]; then
-          echo "  iptables -A INPUT -p tcp --dport 20 -m state --state ${nE} -j ACCEPT"
+          echo "  iptables -A INPUT -p tcp --dport 20 -m state --state ${nE},${nR} -j ACCEPT"
           [ "${TESTMODE}" = 0 ] && \
-          ${IPTABLES} -A INPUT -p tcp --dport 20 -m state --state ${nE} -j ACCEPT
+          ${IPTABLES} -A INPUT -p tcp --dport 20 -m state --state ${nE},${nR} -j ACCEPT
         fi
         echo "  iptables -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} \\"
         echo "           -m state --state ${nE},${nR} -j ACCEPT"
