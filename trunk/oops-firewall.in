@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.14 2004-08-26 14:06:57 oops Exp $
+# $Id: oops-firewall.in,v 1.15 2004-08-26 14:22:26 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -515,7 +515,7 @@ if [ "$1" = "" ]; then
 
   for dv in ${devlist}
   do
-    i=$(echo ${dv} | sed 's/eth//g')
+    i=$(echo ${dv} | ${sed} 's/eth//g')
 
     if [ "${ALLOWSELF}" = 1 ]; then
       # subnet 전체 열기
