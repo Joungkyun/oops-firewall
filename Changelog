@@ -1,3 +1,13 @@
+2002.02.27 update 3.2.0
+           changed package name to oops-firewall from oops_firewall
+           supported kernel 2.4.18
+           removed Dial Pad configuration
+           merged client.conf with filter.conf
+           added tos.conf user.conf
+           added README.DIALPAD
+           update README.SORIBADA
+           update README.STRING
+
 2002.02.25 patch version 3.1.2
            added check of ethernet device that eth0 don't exist
              and eth1 exists in ethernet device exsits one card

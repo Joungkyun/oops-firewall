@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="3.1.2"
+VER="3.2.0"
 
 # Root user의 권한으로 작동시켜야 함
 #
@@ -12,6 +12,12 @@ if [ "$UID" != "0" ]; then
     echo "U are not super user!"
   fi
   exit 1
+fi
+
+# check of kernel version
+KERCHK=$(uname -r | sed -e 's/2.4.\([0-9]\{1,3\}\).*/\1/g')
+if [ "${KERCHK}" -gt 17 ]; then
+  KERNEL_UP=1
 fi
 
 
@@ -33,8 +39,16 @@ fi
 /sbin/iptables -t mangle -P OUTPUT ACCEPT
 /sbin/iptables -t mangle -F OUTPUT
 
+if [ "${KERNEL_UP}" = 1 ]; then
+  /sbin/iptables -t mangle -P POSTROUTING ACCEPT
+  /sbin/iptables -t mangle -F POSTROUTING
+  /sbin/iptables -t mangle -P INPUT ACCEPT
+  /sbin/iptables -t mangle -F INPUT
+  /sbin/iptables -t mangle -P FORWARD ACCEPT
+  /sbin/iptables -t mangle -F FORWARD
+fi
 
-rm -rf /usr/sbin/oops_firewall
-rm -rf /usr/doc/oops_firewall-${VER}
+rm -rf /usr/sbin/oops-firewall
+rm -rf /usr/doc/oops-firewall-${VER}
 
 exit 0
