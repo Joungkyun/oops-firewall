@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# $Id: oops-firewall.init,v 1.2 2004-08-04 14:32:47 oops Exp $
+#
+# Startup script for the OOPS FireWall
+#
+# chkconfig: 345 100 10
+# description: OOPS Firewall is firewall that used IPTABLES in kernel 2.4.x
+# processname: oops_firewall
+# config: /etc/oops_firewall
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+ERR_FILE=/tmp/oops_firewall_err
+
+case "$1" in
+  start)
+    echo -n "Starting OOPS Firewall: "
+    /usr/sbin/oops_firewall > /dev/null 2> ${ERR_FILE}
+
+    if [ "$(cat ${ERR_FILE} 2>/dev/null)" != "" ]; then
+      echo_failure
+      iptables -P INPUT ACCEPT
+      iptables -F INPUT
+      iptables -t nat -P PREROUTING ACCEPT
+      iptables -t nat -F PREROUTING
+      iptables -t nat -P POSTROUTING ACCEPT
+      iptables -t nat -F POSTROUTING
+      echo 0 > /proc/sys/net/ipv4/ip_forward
+    else
+      echo_success
+      touch /var/lock/subsys/oops_firewall
+    fi
+    rm -rf $ERR_FILE > /dev/null 2>&1
+    echo
+    ;;
+  stop)
+    iptables -P INPUT ACCEPT
+    iptables -F INPUT
+    iptables -t nat -P PREROUTING ACCEPT
+    iptables -t nat -F PREROUTING
+    iptables -t nat -P POSTROUTING ACCEPT
+    iptables -t nat -F POSTROUTING
+    echo 0 > /proc/sys/net/ipv4/ip_forward
+    rm -rf /var/lock/subsys/oops_firewall
+    echo -n "Destory Firewall Tables: "
+    echo_success
+    echo
+    ;;
+  restart)
+    $0 stop
+    $0 start
+    ;;
+  status)
+    iptables -L -v
+    iptables -t nat -L -v
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+esac
+
+exit 0
