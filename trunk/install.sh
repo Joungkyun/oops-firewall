@@ -25,7 +25,7 @@ if [ -d "/etc/oops_firewall" ]; then
   mv -f /etc/oops_fireall /etc/oops_firewall/backup
 fi
 
-install -m 700 ./oops-firewall-${VER} /usr/sbin/oops-firewall
+install -m 700 ./oops-firewall /usr/sbin/oops-firewall
 install -m 644 ./filter.conf ${ETCDIR}/filter.conf
 install -m 644 ./masq.conf ${ETCDIR}/masq.conf
 install -m 644 ./forward.conf ${ETCDIR}/forward.conf
@@ -47,7 +47,7 @@ install -m 755 ./uninstall.sh ${DOCDIR}/uninstall.sh
 install -m 755 ./oops-firewall.init ${DOCDIR}/oops-firewall.init
 
 echo "mkdir ${ETCDIR}" >> ${DOCDIR}/install.log
-echo "install -m 700 ./oops-firewall-${VER} /usr/sbin/oops-firewall" >> ${DOCDIR}/install.log
+echo "install -m 700 ./oops-firewall /usr/sbin/oops-firewall" >> ${DOCDIR}/install.log
 echo "install -m 644 ./filter.conf ${ETCDIR}/filter.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./masq.conf ${ETCDIR}/masq.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./forward.conf ${ETCDIR}/forward.conf" >> ${DOCDIR}/install.log
