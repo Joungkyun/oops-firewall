@@ -1,3 +1,7 @@
+2001.04.26 update verson 2.3
+           adjusted privite ip address in masq
+           modified forwarding chains
+
 2001.04.25 update verson 2.2
            added masq start address
 
