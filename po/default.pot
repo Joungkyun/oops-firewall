@@ -1,290 +1,346 @@
+# oops-firewall templete file
+# Copyright (C) 2004 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# JoungKyun Kim <http://www.oops.org>, 2004
+# made by xgettext -d default --from-code=euc-kr -s *.sh
+# if you merge new version, msgmerge -U old.po new.po
+# xgettext 0.13 support shell script
+#
+# $Id: default.pot,v 1.3 2004-08-18 11:35:07 oops Exp $
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"PO-Revision-Date: YYYY-MM-DD HH:MM TZO DST\n"
-"Last-Translator: \n"
-"Language-Team: <XX@li.org>\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-08-18 20:19+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
-"Content-Transfer-Encoding: 8-bit\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-#: oops-firewall-4.0.0:168 
-msgid "  * Reset Basic Table"
-msgstr ""
-
-#: oops-firewall-4.0.0:431 
-msgid "  * MASQ STRING MATCH Not Config"
-msgstr ""
-
-#: oops-firewall-4.0.0:477 
-msgid "9. Allow External Service"
-msgstr ""
-
-#: oops-firewall-4.0.0:328 
-msgid "  * Logged Spoofing check"
-msgstr ""
-
-#: oops-firewall-4.0.0:557 
-msgid "10. Allow Internal Service (FOR SERVER AND DAEMON)"
-msgstr ""
-
-#: oops-firewall-4.0.0:183 oops-firewall-4.0.0:240 
-msgid "  Accept All OUTPUT Chain"
-msgstr ""
-
-#: oops-firewall-4.0.0:916 
-msgid "* OOPS FIREWALL v.${VER} by JoungKyun Kim"
-msgstr ""
-
-#: oops-firewall-4.0.0:195 
-msgid "  Remove rule of OUTPUT Chain"
-msgstr ""
-
-#: oops-firewall-4.0.0:481 oops-firewall-4.0.0:564 
-msgid "  * TCP service"
-msgstr ""
-
-#: oops-firewall-4.0.0:202 
-msgid "  Reset NAT Tabel Counter"
-msgstr ""
-
-#: oops-firewall-4.0.0:206 oops-firewall-4.0.0:230 
-msgid "  Accept All PREROUTING Chain"
-msgstr ""
-
-#: oops-firewall-4.0.0:199 
-msgid "  * Reset NAT Table"
-msgstr ""
-
-#: oops-firewall-4.0.0:191 oops-firewall-4.0.0:262 
-msgid "  Accept All FORWARD Chain"
-msgstr ""
-
-#: oops-firewall-4.0.0:179 
-msgid "  Remove rule of INPUT Chain"
-msgstr ""
-
-#: oops-firewall-4.0.0:290 
-msgid "  * Deny IP Forward"
-msgstr ""
-
-#: oops-firewall-4.0.0:551 
-msgid "  * Name Service Config"
-msgstr ""
-
-#: oops-firewall-4.0.0:412 
-msgid "  * STRING MATCH Not Config"
-msgstr ""
-
-#: oops-firewall-4.0.0:65 
-msgid "  * Check Result"
-msgstr ""
-
-#: oops-firewall.init:137 
-msgid "[1;31m[ NAT Table ][7;0m"
-msgstr ""
-
-#: oops-firewall-4.0.0:920 
-msgid "USAGE : $0 [-v]"
-msgstr ""
-
-#: oops-firewall-4.0.0:375 
-msgid "6. EXECUTE USER PRE COMMAND"
-msgstr ""
-
-#: oops-firewall-4.0.0:282 
-msgid "4. Basic Kernel Parameter Configuration"
-msgstr ""
-
-#: oops-firewall-4.0.0:859 
-msgid "14. TOS Configuration"
-msgstr ""
-
-#: oops-firewall-4.0.0:127 
-msgid "  * ETH1 Information"
-msgstr ""
-
-#: oops-firewall-4.0.0:902 
-msgid "  * TOS Not Config"
-msgstr ""
-
-#: oops-firewall-4.0.0:257 
-msgid "  Remove rule of INPUT"
-msgstr ""
-
-#: oops-firewall-4.0.0:53 
-msgid "# OOPS Firewall - Network Firewall Program v ${VER}"
-msgstr ""
-
-#: oops-firewall-4.0.0:918 
-msgid "* See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
-msgstr ""
-
-#: oops-firewall-4.0.0:222 
-msgid "  * Reset Mangle Table"
-msgstr ""
-
-#: oops-firewall-4.0.0:385 
-msgid "7. Check String in Packet"
-msgstr ""
-
-#: oops-firewall-4.0.0:122 oops-firewall-4.0.0:132 
-msgid "  NETWORK"
-msgstr ""
-
-#: oops-firewall-4.0.0:351 
-msgid "5. DROP Invalid packet"
-msgstr ""
-
-#: oops-firewall-4.0.0:341 
-msgid "  * Deny Ping at BroadCast"
-msgstr ""
-
-#: oops-firewall-4.0.0:187 
-msgid "  Remove rule of FORWARD Chain"
-msgstr ""
-
-#: oops-firewall-4.0.0:54 
-msgid "# by Dec 11 2003 JoungKyun Kim <http://www.oops.org>"
-msgstr ""
-
-#: oops-firewall-4.0.0:682 
-msgid "11. Masqurade Configuration"
-msgstr ""
-
-#: oops-firewall-4.0.0:666 
-msgid "  * ICMP service"
-msgstr ""
-
-#: oops-firewall-4.0.0:819 
-msgid "13. Config Deny Ruleset"
-msgstr ""
-
-#: oops-firewall-4.0.0:218 oops-firewall-4.0.0:277 
-msgid "  Remove rule of POSTROUTING"
-msgstr ""
-
-#: oops-firewall-4.0.0:762 
-msgid "12. Forwarding Configuration"
-msgstr ""
-
-#: oops-firewall-4.0.0:214 oops-firewall-4.0.0:272 
-msgid "  Accept All POSTROUTING Chain"
-msgstr ""
-
-#: oops-firewall-4.0.0:118 oops-firewall-4.0.0:128 
-msgid "  IP ADDRESS"
-msgstr ""
-
-#: oops-firewall-4.0.0:743 
-msgid "Supported only eth0 and eth1. Shutdown firewall"
-msgstr ""
-
-#: oops-firewall.init:120 
-msgid "Destory Firewall Tables: "
-msgstr ""
-
-#: oops-firewall-4.0.0:225 
-msgid "  Reset MANGLE Tabel Counter"
-msgstr ""
-
-#: oops-firewall-4.0.0:917 
-msgid "* Copyright by GPL Since 2000-$last"
-msgstr ""
-
-#: oops-firewall-4.0.0:63 
-msgid "1. Check user type"
-msgstr ""
-
-#: oops-firewall-4.0.0:117 
-msgid "  * ETH0 Information"
-msgstr ""
-
-#: oops-firewall-4.0.0:909 
-msgid "16. EXECUTE USER POST COMMAND"
-msgstr ""
-
-#: oops-firewall-4.0.0:636 
-msgid "  * UDP service"
-msgstr ""
-
-#: oops-firewall-4.0.0:171 
-msgid "  Reset Chain Counter "
-msgstr ""
-
-#: oops-firewall-4.0.0:887 
-msgid "  = TOS CONFIG IN ${tostb} TABLE"
-msgstr ""
-
-#: oops-firewall-4.0.0:175 oops-firewall-4.0.0:252 
-msgid "  Accept All INPUT Chain"
-msgstr ""
-
-#: oops-firewall-4.0.0:245 
-msgid "  Remove rule of OUTPUT"
-msgstr ""
-
-#: oops-firewall-4.0.0:159 
-msgid "3. RESET NETWORK FOR PACKET FILTERING SERVICE"
-msgstr ""
-
-#: oops-firewall-4.0.0:105 
-msgid "2. IP address Check"
-msgstr ""
-
-#: oops-firewall.init:143 
-msgid "[1;31m[ MANGLE Table ][7;0m"
-msgstr ""
-
-#: oops-firewall-4.0.0:546 
-msgid "  Not Existed Configuration"
-msgstr ""
-
-#: oops-firewall.init:40 
-msgid "Starting OOPS Firewall: "
-msgstr ""
-
-#: oops-firewall-4.0.0:210 oops-firewall-4.0.0:235 
-msgid "  Remove rule of PREROUTING"
-msgstr ""
-
-#: oops-firewall-4.0.0:311 
-msgid "  * CHK IP SPOOFING ${dev}"
-msgstr ""
-
-#: oops-firewall-4.0.0:298 
-msgid "  * Allow to use TCP SYNCOOKIES"
-msgstr ""
-
-#: oops-firewall-4.0.0:921 
+#: oops-firewall.in.sh:978
 msgid "   -v print version"
 msgstr ""
 
-#: oops-firewall.init:131 
-msgid "[1;31m[ Legualar Table ][7;0m"
+#: oops-firewall.in.sh:321
+msgid "  * Allow to use TCP SYNCOOKIES"
 msgstr ""
 
-#: oops-firewall.init:149 
-msgid "Usage: $0 {start|stop|restart|status}"
+#: oops-firewall.in.sh:334
+#, sh-format
+msgid "  * CHK IP SPOOFING ${dev}"
 msgstr ""
 
-#: oops-firewall-4.0.0:320 
+#: oops-firewall.in.sh:73
+msgid "  * Check Result"
+msgstr ""
+
+#: oops-firewall.in.sh:343
 msgid "  * Deny Invalid MSG"
 msgstr ""
 
-#: oops-firewall-4.0.0:434 
+#: oops-firewall.in.sh:364
+msgid "  * Deny Ping at BroadCast"
+msgstr ""
+
+#: oops-firewall.in.sh:159
+#, sh-format
+msgid "  * ETH${i} Information"
+msgstr ""
+
+#: oops-firewall.in.sh:701
+msgid "  * ICMP service"
+msgstr ""
+
+#: oops-firewall.h.sh:143
+msgid "  * Load Netfilter Module"
+msgstr ""
+
+#: oops-firewall.in.sh:454
+msgid "  * MASQ STRING MATCH Not Config"
+msgstr ""
+
+#: oops-firewall.in.sh:586
+msgid "  * Name Service Config"
+msgstr ""
+
+#: oops-firewall.h.sh:118
+msgid "  * Netfilter Module Shutdown"
+msgstr ""
+
+#: oops-firewall.in.sh:191
+msgid "  * Reset Basic Table"
+msgstr ""
+
+#: oops-firewall.in.sh:245
+msgid "  * Reset Mangle Table"
+msgstr ""
+
+#: oops-firewall.in.sh:222
+msgid "  * Reset NAT Table"
+msgstr ""
+
+#: oops-firewall.in.sh:435
+msgid "  * STRING MATCH Not Config"
+msgstr ""
+
+#: oops-firewall.in.sh:457
 msgid "  * STRING MATCH Not Use"
 msgstr ""
 
-#: oops-firewall-4.0.0:120 oops-firewall-4.0.0:130 
-msgid "  SUBNET MASK"
+#: oops-firewall.in.sh:516 oops-firewall.in.sh:599
+msgid "  * TCP service"
 msgstr ""
 
-#: oops-firewall-4.0.0:267 
+#: oops-firewall.in.sh:959
+msgid "  * TOS Not Config"
+msgstr ""
+
+#: oops-firewall.in.sh:671
+msgid "  * UDP service"
+msgstr ""
+
+#: oops-firewall.h.sh:38
+msgid "  * USER POST COMMAND (@) Not Config"
+msgstr ""
+
+#: oops-firewall.h.sh:35
+msgid "  * USER PRE COMMAND (%) Not Config"
+msgstr ""
+
+#: oops-firewall.h.sh:41
+msgid "  * Unknown parameter"
+msgstr ""
+
+#: oops-firewall.in.sh:944
+#, sh-format
+msgid "  = TOS CONFIG IN ${tostb} TABLE"
+msgstr ""
+
+#: oops-firewall.in.sh:214 oops-firewall.in.sh:285
+msgid "  Accept All FORWARD Chain"
+msgstr ""
+
+#: oops-firewall.in.sh:198 oops-firewall.in.sh:275
+msgid "  Accept All INPUT Chain"
+msgstr ""
+
+#: oops-firewall.in.sh:206 oops-firewall.in.sh:263
+msgid "  Accept All OUTPUT Chain"
+msgstr ""
+
+#: oops-firewall.in.sh:237 oops-firewall.in.sh:295
+msgid "  Accept All POSTROUTING Chain"
+msgstr ""
+
+#: oops-firewall.in.sh:229 oops-firewall.in.sh:253
+msgid "  Accept All PREROUTING Chain"
+msgstr ""
+
+#: oops-firewall.in.sh:160
+msgid "  IP ADDRESS"
+msgstr ""
+
+#: oops-firewall.h.sh:184 oops-firewall.h.sh:187
+msgid "  Load ${1} module"
+msgstr ""
+
+#: oops-firewall.h.sh:164 oops-firewall.h.sh:167
+#, sh-format
+msgid "  Load ${i} module"
+msgstr ""
+
+#: oops-firewall.in.sh:164
+msgid "  NETWORK"
+msgstr ""
+
+#: oops-firewall.in.sh:581
+msgid "  Not Existed Configuration"
+msgstr ""
+
+#: oops-firewall.h.sh:133
+msgid "  Remove ${1} module"
+msgstr ""
+
+#: oops-firewall.h.sh:126
+#, sh-format
+msgid "  Remove ${i} module"
+msgstr ""
+
+#: oops-firewall.in.sh:290
 msgid "  Remove rule of FORWARD"
 msgstr ""
 
-#: oops-firewall-4.0.0:442 
+#: oops-firewall.in.sh:210
+msgid "  Remove rule of FORWARD Chain"
+msgstr ""
+
+#: oops-firewall.in.sh:280
+msgid "  Remove rule of INPUT"
+msgstr ""
+
+#: oops-firewall.in.sh:202
+msgid "  Remove rule of INPUT Chain"
+msgstr ""
+
+#: oops-firewall.in.sh:268
+msgid "  Remove rule of OUTPUT"
+msgstr ""
+
+#: oops-firewall.in.sh:218
+msgid "  Remove rule of OUTPUT Chain"
+msgstr ""
+
+#: oops-firewall.in.sh:241 oops-firewall.in.sh:300
+msgid "  Remove rule of POSTROUTING"
+msgstr ""
+
+#: oops-firewall.in.sh:233 oops-firewall.in.sh:258
+msgid "  Remove rule of PREROUTING"
+msgstr ""
+
+#: oops-firewall.in.sh:194
+msgid "  Reset Chain Counter "
+msgstr ""
+
+#: oops-firewall.in.sh:248
+msgid "  Reset MANGLE Tabel Counter"
+msgstr ""
+
+#: oops-firewall.in.sh:225
+msgid "  Reset NAT Tabel Counter"
+msgstr ""
+
+#: oops-firewall.in.sh:162
+msgid "  SUBNET MASK"
+msgstr ""
+
+#: oops-firewall.in.sh:61
+#, sh-format
+msgid "# OOPS Firewall - Network Firewall Program v ${VER}"
+msgstr ""
+
+#: oops-firewall.in.sh:62
+msgid "# by Dec 11 2003 JoungKyun Kim <http://www.oops.org>"
+msgstr ""
+
+#: oops-firewall.in.sh:974
+#, sh-format
+msgid "* Copyright by GPL Since 2000-$last"
+msgstr ""
+
+#: oops-firewall.in.sh:973
+#, sh-format
+msgid "* OOPS FIREWALL v.${VER} by JoungKyun Kim"
+msgstr ""
+
+#: oops-firewall.in.sh:975
+msgid "* See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
+msgstr ""
+
+#: oops-firewall.in.sh:71
+msgid "1. Check user type"
+msgstr ""
+
+#: oops-firewall.in.sh:592
+msgid "10. Allow Internal Service (FOR SERVER AND DAEMON)"
+msgstr ""
+
+#: oops-firewall.in.sh:735
+msgid "11. Masqurade Configuration"
+msgstr ""
+
+#: oops-firewall.in.sh:815
+msgid "12. Forwarding Configuration"
+msgstr ""
+
+#: oops-firewall.in.sh:872
+msgid "13. Config Deny Ruleset"
+msgstr ""
+
+#: oops-firewall.in.sh:916
+msgid "14. TOS Configuration"
+msgstr ""
+
+#: oops-firewall.in.sh:966
+msgid "16. EXECUTE USER POST COMMAND"
+msgstr ""
+
+#: oops-firewall.in.sh:111
+msgid "2. IP address Check"
+msgstr ""
+
+#: oops-firewall.in.sh:182
+msgid "3. RESET NETWORK FOR PACKET FILTERING SERVICE"
+msgstr ""
+
+#: oops-firewall.in.sh:305
+msgid "4. Basic Kernel Parameter Configuration"
+msgstr ""
+
+#: oops-firewall.in.sh:374
+msgid "5. DROP Invalid packet"
+msgstr ""
+
+#: oops-firewall.in.sh:398
+msgid "6. EXECUTE USER PRE COMMAND"
+msgstr ""
+
+#: oops-firewall.in.sh:408
+msgid "7. Check String in Packet"
+msgstr ""
+
+#: oops-firewall.in.sh:465
 msgid "8. Allow All Service"
 msgstr ""
 
+#: oops-firewall.in.sh:512
+msgid "9. Allow External Service"
+msgstr ""
+
+#: oops-firewall.h.sh:168
+msgid "Already Loading"
+msgstr ""
+
+#: oops-firewall.init.in.sh:121
+msgid "Destory Firewall Tables: "
+msgstr ""
+
+#: oops-firewall.h.sh:214
+msgid "Enable to use over kernel 2.4.0"
+msgstr ""
+
+#: oops-firewall.init.in.sh:41
+msgid "Starting OOPS Firewall: "
+msgstr ""
+
+#: oops-firewall.in.sh:796
+msgid "Supported only eth0 and eth1. Shutdown firewall"
+msgstr ""
+
+#: oops-firewall.in.sh:76
+msgid "U are not super user!"
+msgstr ""
+
+#: oops-firewall.in.sh:977
+msgid "USAGE : $0 [-v]"
+msgstr ""
+
+#: oops-firewall.init.in.sh:156
+msgid "Usage: $0 {start|stop|restart|status}"
+msgstr ""
+
+#: oops-firewall.init.in.sh:133
+msgid "[ Legualar Table ]"
+msgstr ""
+
+#: oops-firewall.init.in.sh:149
+msgid "[ MANGLE Table ]"
+msgstr ""
+
+#: oops-firewall.init.in.sh:141
+msgid "[ NAT Table ]"
+msgstr ""
