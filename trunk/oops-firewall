@@ -1,8 +1,8 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.17 2004-08-04 14:56:01 oops Exp $
+# $Id: oops-firewall,v 1.18 2004-08-04 14:57:16 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 3.2.1
+# OOPS Firewall 네트워크 서버 방화벽 설정 3.2.2
 # 작성 : 김정균 http://www.oops.org
 # 날짜 : 2002.06.14
 # 
@@ -32,7 +32,7 @@
 # --sport 출추의 포트 정의
 #
 
-VER="3.2.1"
+VER="3.2.2"
 
 # 사용자 실행을 위한 함수
 user_cmd () {
@@ -200,7 +200,7 @@ if [ "$1" = "" ]; then
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -P OUTPUT ACCEPT
   CHKCHAIN=$?
-  echo -n "  Accept All FORWARD Chain      : "
+  echo -n "  Accept All OUTPUT Chain       : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -F FORWARD
@@ -210,7 +210,7 @@ if [ "$1" = "" ]; then
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -P FORWARD ACCEPT
   CHKCHAIN=$?
-  echo -n "  Accept All OUTPUT Chain       : "
+  echo -n "  Accept All FORWARD Chain      : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
   ${IPTABLES} -F OUTPUT
@@ -562,8 +562,8 @@ if [ "$1" = "" ]; then
         IFS=':' read oport tconnect
         [ "${tconnect}" = "" ] && tconnect=${nE}
 
-        echo "  iptables -A INPUT -p udp --sport ${oport} -m state --state ${tconnect} -j ACCEPT"
-        ${IPTABLES} -A INPUT -p udp --sport ${oport} -m state --state ${tconnect} -j ACCEPT
+        echo "  iptables -A INPUT -p udp --sport ${oport} -j ACCEPT"
+        ${IPTABLES} -A INPUT -p udp --sport ${oport} -j ACCEPT
       }
     done
   else
@@ -573,8 +573,8 @@ if [ "$1" = "" ]; then
   # name service 를 위한 설정
   echo
   echo "  * Name Service Config"
-  echo "  iptables -A INPUT -p udp --sport 53 -m state --state ${nE} -j ACCEPT"
-  ${IPTABLES} -A INPUT -p udp --sport 53 -m state --state ${nE} -j ACCEPT
+  echo "  iptables -A INPUT -p udp --sport 53 -j ACCEPT"
+  ${IPTABLES} -A INPUT -p udp --sport 53 -j ACCEPT
 
 
   echo
@@ -629,8 +629,8 @@ if [ "$1" = "" ]; then
   if [ "${UDP_ALLOWPORT}" != "" ]; then
     for values in ${UDP_ALLOWPORT}
     do
-      echo "  iptables -A INPUT -p udp --dport ${values} -m state --state NEW,ESTABLISHED -j ACCEPT"
-      ${IPTABLES} -A INPUT -p udp --dport ${values} -m state --state NEW,ESTABLISHED -j ACCEPT
+      echo "  iptables -A INPUT -p udp --dport ${values} -j ACCEPT"
+      ${IPTABLES} -A INPUT -p udp --dport ${values} -j ACCEPT
     done
   fi  
   
@@ -641,9 +641,8 @@ if [ "$1" = "" ]; then
     do
       echo ${values} | {
         IFS=':' read hosts ports
-        echo "  iptables -A INPUT -s ${hosts} -p udp --dport ${ports} \\"
-        echo "           -m state --state NEW,ESTABLISHED -j ACCEPT"
-        ${IPTABLES} -A INPUT -s ${hosts} -p udp --dport ${ports} -m state --state NEW,ESTABLISHED -j ACCEPT
+        echo "  iptables -A INPUT -s ${hosts} -p udp --dport ${ports} -j ACCEPT"
+        ${IPTABLES} -A INPUT -s ${hosts} -p udp --dport ${ports} -j ACCEPT
       }
     done
   fi

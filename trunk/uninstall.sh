@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="3.2.1"
+VER="3.2.3"
 
 # Root user의 권한으로 작동시켜야 함
 #
@@ -49,6 +49,6 @@ if [ "${KERNEL_UP}" = 1 ]; then
 fi
 
 rm -rf /usr/sbin/oops-firewall
-rm -rf /usr/share/doc/oops-firewall-${VER}
+rm -rf /usr/doc/oops-firewall-${VER}
 
 exit 0
