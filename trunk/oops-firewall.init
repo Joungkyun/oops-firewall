@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init,v 1.8 2004-08-04 14:41:41 oops Exp $
+# $Id: oops-firewall.init,v 1.9 2004-08-04 14:43:45 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
@@ -25,10 +25,16 @@ case "$1" in
       ${IPTABLES} -Z
       ${IPTABLES} -P INPUT ACCEPT
       ${IPTABLES} -F INPUT
+      ${IPTABLES} -t nat -Z
       ${IPTABLES} -t nat -P PREROUTING ACCEPT
       ${IPTABLES} -t nat -F PREROUTING
       ${IPTABLES} -t nat -P POSTROUTING ACCEPT
       ${IPTABLES} -t nat -F POSTROUTING
+      ${IPTABLES} -t mangle -Z
+      ${IPTABLES} -t mangle -P PREROUTING ACCEPT
+      ${IPTABLES} -t mangle -F PREROUTING
+      ${IPTABLES} -t mangle -P OUTPUT ACCEPT
+      ${IPTABLES} -t mangle -F OUTPUT
       echo 0 > /proc/sys/net/ipv4/ip_forward
     else
       echo_success
@@ -41,10 +47,16 @@ case "$1" in
     ${IPTABLES} -Z
     ${IPTABLES} -P INPUT ACCEPT
     ${IPTABLES} -F INPUT
+    ${IPTABLES} -t nat -Z
     ${IPTABLES} -t nat -P PREROUTING ACCEPT
     ${IPTABLES} -t nat -F PREROUTING
     ${IPTABLES} -t nat -P POSTROUTING ACCEPT
     ${IPTABLES} -t nat -F POSTROUTING
+    ${IPTABLES} -t mangle -Z
+    ${IPTABLES} -t mangle -P PREROUTING ACCEPT
+    ${IPTABLES} -t mangle -F PREROUTING
+    ${IPTABLES} -t mangle -P OUTPUT ACCEPT
+    ${IPTABLES} -t mangle -F OUTPUT
     echo 0 > /proc/sys/net/ipv4/ip_forward
     rm -rf /var/lock/subsys/oops_firewall
     echo -n "Destory Firewall Tables: "
@@ -58,6 +70,7 @@ case "$1" in
   status)
     ${IPTABLES} -L -v
     ${IPTABLES} -t nat -L -v
+    ${IPTABLES} -t mangle -L -v
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|status}"

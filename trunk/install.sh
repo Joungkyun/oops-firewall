@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="2.8"
+VER="3.0"
 
 # Root user의 권한으로 작동시켜야 함
 #
@@ -22,6 +22,7 @@ install -m 700 ./oops-firewall /sbin/oops_firewall
 install -m 644 ./filter.conf ${ETCDIR}/filter.conf
 install -m 644 ./masq.conf ${ETCDIR}/masq.conf
 install -m 644 ./forward.conf ${ETCDIR}/forward.conf
+install -m 644 ./client.conf ${ETCDIR}/client.conf
 
 mkdir -p ${DOCDIR}
 install -m 644 ./COPYING ${DOCDIR}/COPYING
@@ -40,6 +41,7 @@ echo "install -m 700 ./oops-firewall /sbin/oops_firewall" >> ${DOCDIR}/install.l
 echo "install -m 644 ./filter.conf ${ETCDIR}/filter.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./masq.conf ${ETCDIR}/masq.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./forward.conf ${ETCDIR}/forward.conf" >> ${DOCDIR}/install.log
+echo "install -m 644 ./client.conf ${ETCDIR}/client.conf" >> ${DOCDIR}/install.log
 echo "" >> ${DOCDIR}/install.log
 echo "mkdir -p ${DOCDIR}" >> ${DOCDIR}/install.log
 echo "install -m 644 ./COPYING ${DOCDIR}/COPYING" >> ${DOCDIR}/install.log
