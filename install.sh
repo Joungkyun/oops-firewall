@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="3.1.1"
+VER="3.1.2"
 
 # Root user의 권한으로 작동시켜야 함
 #

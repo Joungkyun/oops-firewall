@@ -1,8 +1,8 @@
 #!/bin/sh
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 3.1.1
+# OOPS Firewall 네트워크 서버 방화벽 설정 3.1.2
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2001.11.15
+# 날짜 : 2002.02.25
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -30,13 +30,13 @@
 # --sport 출추의 포트 정의
 #
 
-VER="3.1.1"
+VER="3.1.2"
 
 if [ "$1" = "" ]; then
 
   echo "############################################################################"
   echo "# OOPS Firewall - Network Firewall Program v ${VER}"
-  echo "# by Nov 15 2001 JoungKyun Kim <http://www.oops.org>"
+  echo "# by Feb 25 2002 JoungKyun Kim <http://www.oops.org>"
   echo "############################################################################"
   echo
 
@@ -99,7 +99,7 @@ if [ "$1" = "" ]; then
   echo "  NETWORK         : ${ETH0_NET}"
   echo
 
-  if [ "${ETH1_IPADDR}" != "" ]; then
+  if [ ! -z "${ETH1_IPADDR}" ]; then
     echo "  * ETH1 Information"
     echo "  IP ADDRESS      : ${ETH1_IPADDR}"
     echo "  SUBNET MASK     : ${ETH1_SUBNET}"
@@ -107,6 +107,16 @@ if [ "$1" = "" ]; then
     echo
   fi
 
+  # 이더넷이 1개만 있을때 eth0 이 안잡히고 eth1 로 잡혔있는 경우 처리
+  if [ -z "${ETH0_IPADDR}" ] && [ ! -z "${ETH1_IPADDR}" ] ; then
+    ETH0_IPADDR=${ETH1_IPADDR}
+    ETH0_SUBNET=${ETH1_SUBNET}
+    ETH0_NET=${ETH1_NET}
+    # reset information of ETH1
+    ETH1_IPADDR=
+    ETH1_SUBNET=
+    ETH1_NET=
+  fi
 
   # 설정 파일을 불러들임
   . /etc/oops_firewall/filter.conf
@@ -295,7 +305,7 @@ if [ "$1" = "" ]; then
     echo "  * iptables -A OUTPUT -m state --state ${nI} \\"
     echo "             ${LOGFORMAT} \\"
     echo "             --log-prefix 'OUTPUT ANY Packet Refuse'"
-    ${IPTABLES} -A INPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'OUTPUT ANY Packet Refuse'
+    ${IPTABLES} -A OUTPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'OUTPUT ANY Packet Refuse'
   fi
   echo "  * iptables -A INPUT -m state --state ${nI} -j DROP"
   ${IPTABLES} -A INPUT -m state --state ${nI} -j DROP
