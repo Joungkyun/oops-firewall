@@ -1,10 +1,8 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.13 2004-08-04 14:49:09 oops Exp $
-#
-# OOPS Firewall 네트워크 서버 방화벽 설정 3.1.0
+# OOPS Firewall 네트워크 서버 방화벽 설정 3.1.1
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2001.11.13
+# 날짜 : 2001.11.15
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -32,13 +30,13 @@
 # --sport 출추의 포트 정의
 #
 
-VER="3.1.0"
+VER="3.1.1"
 
 if [ "$1" = "" ]; then
 
   echo "############################################################################"
   echo "# OOPS Firewall - Network Firewall Program v ${VER}"
-  echo "# by Nov 13 2001 JoungKyun Kim <http://www.oops.org>"
+  echo "# by Nov 15 2001 JoungKyun Kim <http://www.oops.org>"
   echo "############################################################################"
   echo
 
@@ -418,9 +416,9 @@ if [ "$1" = "" ]; then
         if [ "${oport}" = "21" ]; then
           echo "  iptables -A INPUT -p tcp --sport 20 -m state --state ${nE},${nR} -j ACCEPT"
           ${IPTABLES} -A INPUT -p tcp --sport 20 -m state --state ${nE},${nR} -j ACCEPT
-          echo "  iptables -A INPUT -i eth0 -p tcp --sport ${UPORT} --dport ${UPORT} \\"
+          echo "  iptables -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} \\"
           echo "           -m state --state ${nE} -j ACCEPT"
-          ${IPTABLES} -A INPUT -i eth0 -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE} -j ACCEPT
+          ${IPTABLES} -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE} -j ACCEPT
         fi
 
         echo "  iptables -A INPUT -p tcp --sport ${oport} -m state --state ${tconnect} -j ACCEPT"
@@ -473,9 +471,9 @@ if [ "$1" = "" ]; then
       if [ "${values}" = "21" ]; then
         echo "  iptables -A INPUT -p tcp --dport 20 -m state --state ${nE} -j ACCEPT"
         ${IPTABLES} -A INPUT -p tcp --dport 20 -m state --state ${nE} -j ACCEPT
-        echo "  iptables -A INPUT -i eth0 -p tcp --sport ${UPORT} --dport ${UPORT} \\"
+        echo "  iptables -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} \\"
         echo "           -m state --state ${nE},${nR} -j ACCEPT"
-        ${IPTABLES} -A INPUT -i eth0 -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE},${nR} -j ACCEPT
+        ${IPTABLES} -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE},${nR} -j ACCEPT
       fi
 
       echo "  iptables -A INPUT -p tcp --dport ${values} -m state --state NEW,ESTABLISHED -j ACCEPT"

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="3.1.0"
+VER="3.1.1"
 
 # Root user의 권한으로 작동시켜야 함
 #
@@ -34,7 +34,7 @@ fi
 /sbin/iptables -t mangle -F OUTPUT
 
 
-rm -rf /sbin/oops_firewall
+rm -rf /usr/sbin/oops_firewall
 rm -rf /usr/doc/oops_firewall-${VER}
 
 exit 0
