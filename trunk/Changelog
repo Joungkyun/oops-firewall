@@ -1,3 +1,7 @@
+2004.08.26 update 4.2.0
+           fixed to use ppp device for masq function
+           fixed to forward master device problem in some case
+
 2004.08.18 update 4.1.0
            fixed miss print
            added config parse script
