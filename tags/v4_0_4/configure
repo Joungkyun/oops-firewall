@@ -1,0 +1,881 @@
+#!/bin/sh
+
+NAME=oops-firewall
+GCOL=40
+VERSION=4.0.4
+OS=$(uname)
+LOCALDIR=/usr/local
+CHKDIR="/bin /sbin /usr/bin /usr/sbin ${LOCALDIR}/bin ${LOCALDIR}/sbin"
+
+usage() {
+cat << EOF
+
+Usage: $1 [option]
+Options: [defaults in brackets after descriptions]
+Configuration:
+  --prefix=PREFIX   install architecture-independent files in PREFIX [/usr/local/]
+  --bindir=DIR      user executables in DIR [PREFIX/bin]
+  --confdir=DIR     default path of *.conf in DIR [PREFIX/etc/oops-firewall]
+  --includedir=DIR  header files [PREFIX/include/oops-firewall]
+  --shareddir=DIR   modifiable architecture-independent data in DIR [PREFIX/share]
+  --initdir=DIR     redhat init script path [/etc/rc.d/init.d]
+  --destdir=DIR     Absulute path !! for needed packaging
+
+Check Utility:
+  --perl=PATH       path of perl
+  --iptables=PATH   path of iptables
+
+EOF
+
+  exit 0
+}
+
+print_result() {
+  opt=$1
+  cstart="1;32m"
+  cend="7;0m"
+
+  if [ -n "$2" ]; then
+    result=$2
+  else
+    eval "result=\$${opt}"
+  fi
+
+  if [ -n "$3" ]; then
+    cstart=$3
+  fi
+
+  if [ -z "$4" ]; then
+    echo -n "${opt} check"
+  else
+    echo -n "${opt}"
+  fi
+
+  echo -ne "\\033[${GCOL}G"
+  echo -n ".... "
+  echo -ne "[${cstart}${result}[${cend}\n"
+}
+
+if [ "${OS}" = "Linux" ]; then
+  HEADCHK=/usr/include
+fi
+
+for i in $*
+do
+  case "${i}" in
+    --prefix=*)
+      prefix=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --bindir=*)
+      bindir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --initdir=*)
+      initdir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --includedir=*)
+      includedir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --confdir=*)
+      confdir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --shareddir=*)
+      shareddir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --destdir=*)
+      destdir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --perl=*)
+      perl=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --iptables=*)
+      iptables=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    -h|--h*)
+      usage $0
+      ;;
+  esac
+done
+
+echo "Directory Check"
+echo "............................................."
+echo
+
+if [ -z "${prefix}" ]; then
+  prefix=${LOCALDIR}
+fi
+
+prefixchk=$(echo ${prefix} | sed -e 's/.*\/\([^\/]*\)$/\1/g')
+if [ "${prefixchk}" = "oops-firewall" ]; then
+  prefixchk=1
+fi
+
+print_result "prefix"
+
+if [ -z "${bindir}" ]; then
+  bindir=${prefix}/bin
+fi
+
+print_result "bindir"
+
+if [ -z "${initdir}" ]; then
+  initdir=/etc/rc.d/init.d
+fi
+
+print_result "initdir"
+
+if [ -z "${confdir}" ]; then
+  if [ "${prefixchk}" = 1 ]; then
+    confdir=${prefix}/etc
+  else
+    confdir=${prefix}/etc/oops-firewall
+  fi
+fi
+
+print_result "confdir"
+
+if [ -z "${includedir}" ]; then
+  if [ "${prefixchk}" = 1 ]; then
+    includedir=${prefix}/include
+  else
+    includedir=${prefix}/include/oops-firewall
+  fi
+fi
+
+print_result "includedir"
+
+if [ -z "${shareddir}" ]; then
+  shareddir=${prefix}/share
+fi
+
+print_result "shareddir"
+
+if [ -n "${DESTDIR}" ]; then
+  destdir=${DESTDIR}
+fi
+
+if [ -z "${destdir}" ]; then
+  destdir=
+fi
+
+print_result "destdir"
+
+echo
+echo "Compiler Check"
+echo "............................................."
+echo
+cc=$(which gcc)
+if [ -z "${cc}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/gcc/bin ${LOCALDIR}/gcc/sbin
+  do
+    if [ -f "${i}/cc" ]; then
+      install=${i}/cc
+      break;
+    fi
+  done
+fi
+
+if [ -z "${cc}" ]; then
+  print_result "compiler" "failed" "1;31m"
+  exit 1
+else
+  if [ -f "${cc}" ]; then
+    print_result "compiler" "${cc}"
+  else
+    print_result "compiler" "failed"
+    exit 1
+  fi
+fi
+
+ccver=$(${cc} --version)
+print_result "compiler version" "${ccver}"
+
+echo
+echo "Header file Check"
+echo "............................................."
+echo
+HEADERS="stdio.h stdlib.h string.h stdarg.h ctype.h unistd.h sys/stat.h grp.h time.h libintl.h locale.h"
+HCHK=0
+
+for i in ${HEADERS}
+do
+
+  cat > oops-firewall_header_check.c << EOF
+#include <${i}>
+
+main()
+{
+	printf("");
+}
+EOF
+
+  ${cc} -o oops-firewall_header_check oops-firewall_header_check.c 2> /dev/null
+  HCHK=$?
+
+  rm -f oops-firewall_header_check*
+
+  echo -ne
+  if [ "${HCHK}" = 0 ]; then
+    print_result "${i} header" "ok"
+  else
+    print_result "${i} header" "failed" "1;31m"
+    exit 1
+  fi
+done
+
+echo
+echo "Program Check"
+echo "............................................."
+echo
+
+if [ -z "${perl}" ]; then
+  perl=$(which perl 2> /dev/null)
+
+  if [ -z "${perl}" ]; then
+
+    for i in ${CHKDIR} ${LOCALDIR}/perl/bin ${LOCALDIR}/perl/sbin
+    do
+      if [ -f "${i}/perl" ]; then
+        perl=${i}/perl
+        break;
+      fi
+    done
+  fi
+
+  if [ -z "${perl}" ]; then
+    print_result "perl" "can not found perl" "1;31m"
+    exit 1
+  else
+    print_result "perl"
+  fi
+else 
+  if [ ! -f "${perl}" ]; then
+    print_result "perl" "can not found perl" "1;31m"
+    exit 1
+  else
+    print_result "perl"
+  fi
+fi
+
+if [ -z "${iptables}" ]; then
+  iptables=$(which iptables 2> /dev/null)
+
+  if [ -z "${iptables}" ]; then
+
+    for i in ${CHKDIR}
+    do
+      if [ -f "${i}/iptables" ]; then
+        iptables=${i}/iptables
+        break;
+      fi
+    done
+  fi
+
+  if [ -z "${iptables}" ]; then
+    print_result "iptables" "can not found iptables" "1;31m"
+    exit 1
+  else
+    print_result "iptables"
+  fi
+else
+  if [ ! -f "${iptables}" ]; then
+    print_result "iptables" "can not found iptables" "1;31m"
+    exit 1
+  else
+    print_result "iptables"
+  fi
+fi
+
+insmode=$(which insmod 2> /dev/null)
+if [ -z "${insmod}" ]; then
+  for i in ${CHKDIR}
+  do
+    if [ -f "${i}/insmod" ]; then
+      insmod=${i}/insmod
+      break;
+    fi
+  done
+fi
+
+if [ -z "${insmod}" ]; then
+  print_result "insmod" "can not found insmod" "1;31m"
+  exit 1
+else
+  if [ -f "${insmod}" ]; then
+    print_result "insmod"
+  else
+    print_result "insmod" "can not found insmod" "1;31m"
+    exit 1
+  fi
+fi
+
+lsmod=$(which lsmod 2> /dev/null)
+if [ -z "${lsmod}" ]; then
+  for i in ${CHKDIR} 
+  do
+    if [ -f "${i}/lsmod" ]; then
+      lsmod=${i}/lsmod
+      break;
+    fi
+  done
+fi
+
+if [ -z "${lsmod}" ]; then
+  print_result "lsmod" "can not found lsmod" "1;31m"
+  exit 1
+else
+  if [ -f "${lsmod}" ]; then
+    print_result "lsmod"
+  else
+    print_result "lsmod" "can not found lsmod" "1;31m"
+    exit 1
+  fi
+fi
+
+rmmod=$(which rmmod 2> /dev/null)
+if [ -z "${rmmod}" ]; then
+  for i in ${CHKDIR} 
+  do 
+    if [ -f "${i}/rmmod" ]; then
+      rmmod=${i}/rmmod
+      break;
+    fi
+  done
+fi
+
+if [ -z "${rmmod}" ]; then
+  print_result "rmmod" "can not found rmmod" "1;31m"
+  exit 1
+else
+  if [ -f "${rmmod}" ]; then
+    print_result "rmmod"
+  else 
+    print_result "rmmod" "can not found rmmod" "1;31m"
+    exit 1
+  fi
+fi
+
+modprobe=$(which modprobe 2> /dev/null)
+if [ -z "${modprobe}" ]; then
+  for i in ${CHKDIR} 
+  do 
+    if [ -f "${i}/modprobe" ]; then
+      modprobe=${i}/modprobe
+      break;
+    fi
+  done
+fi
+
+if [ -z "${modprobe}" ]; then
+  print_result "modprobe" "can not found modprobe" "1;31m"
+  exit 1
+else
+  if [ -f "${modprobe}" ]; then
+    print_result "modprobe"
+  else
+    print_result "modprobe" "can not found modprobe" "1;31m"
+    exit 1
+  fi
+fi
+
+depmod=$(which depmod 2> /dev/null)
+if [ -z "${depmod}" ]; then
+  for i in ${CHKDIR} 
+  do 
+    if [ -f "${i}/depmod" ]; then
+      depmod=${i}/depmod
+      break;
+    fi
+  done
+fi
+
+if [ -z "${depmod}" ]; then
+  print_result "depmod" "can not found depmod" "1;31m"
+  exit 1
+else
+  if [ -f "${depmod}" ]; then
+    print_result "depmod"
+  else
+    print_result "depmod" "can not found depmod" "1;31m"
+    exit 1
+  fi
+fi
+
+ifconfig=$(which ifconfig 2> /dev/null)
+if [ -z "${ifconfig}" ]; then
+  for i in ${CHKDIR}
+  do
+    if [ -f "${i}/ifconfig" ]; then
+      ifconfig=${i}/ifconfig
+      break;
+    fi
+  done
+fi
+
+if [ -z "${ifconfig}" ]; then
+  print_result "ifconfig" "can not found ifconfig" "1;31m"
+  exit 1
+else
+  if [ -f "${ifconfig}" ]; then
+    print_result "ifconfig"
+  else
+    print_result "ifconfig" "can not found ifconfig" "1;31m"
+    exit 1
+  fi
+fi
+
+route=$(which route 2> /dev/null)
+if [ -z "${route}" ]; then
+  for i in ${CHKDIR}
+  do
+    if [ -f "${i}/route" ]; then
+      route=${i}/route
+      break;
+    fi
+  done
+fi
+
+if [ -z "${route}" ]; then
+  print_result "route" "can not found route" "1;31m"
+  exit 1
+else
+  if [ -f "${route}" ]; then
+    print_result "route"
+  else
+    print_result "route" "can not found route" "1;31m"
+    exit 1
+  fi
+fi
+
+install=$(which install 2> /dev/null)
+if [ -z "${install}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do 
+    if [ -f "${i}/install" ]; then
+      install=${i}/install
+      break;
+    fi 
+  done
+fi
+
+if [ -z "${install}" ]; then
+  print_result "install" "can not found install" "1;31m"
+  exit 1
+else
+  if [ -f "${install}" ]; then
+    print_result "install"
+  else
+    print_result "install" "can not found install" "1;31m"
+    exit 1
+  fi
+fi
+
+awk=$(which awk 2> /dev/null)
+if [ -z "${awk}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/gawk/bin ${LOCALDIR}/gawk/sbin
+  do 
+    if [ -f "${i}/awk" ]; then
+      awk=${i}/awk
+      break;
+    fi 
+  done
+fi
+
+if [ -z "${awk}" ]; then
+  print_result "awk" "can not found awk" "1;31m"
+  exit 1
+else
+  if [ -f "${awk}" ]; then
+    print_result "awk"
+  else
+    print_result "awk" "can not found awk" "1;31m"
+    exit 1
+  fi
+fi
+
+sed=$(which sed 2> /dev/null)
+if [ -z "${sed}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/sed/bin ${LOCALDIR}/sed/sbin
+  do
+    if [ -f "${i}/sed" ]; then
+      sed=${i}/sed
+      break;
+    fi
+  done
+fi
+
+if [ -z "${sed}" ]; then
+  print_result "sed" "can not found sed" "1;31m"
+  exit 1
+else
+  if [ -f "${sed}" ]; then
+    print_result "sed"
+  else
+    print_result "sed" "can not found sed" "1;31m"
+    exit 1
+  fi
+fi
+
+grep=$(which grep 2> /dev/null)
+if [ -z "${grep}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/grep/bin ${LOCALDIR}/grep/sbin
+  do
+    if [ -f "${i}/grep" ]; then
+      grep=${i}/grep
+      break;
+    fi
+  done
+fi
+
+if [ -z "${grep}" ]; then
+  print_result "grep" "can not found grep" "1;31m"
+  exit 1
+else
+  if [ -f "${grep}" ]; then
+    print_result "grep"
+  else
+    print_result "grep" "can not found grep" "1;31m"
+    exit 1
+  fi
+fi
+
+uname=$(which uname 2> /dev/null)
+if [ -z "${uname}" ]; then
+  for i in ${CHKDIR}
+  do
+    if [ -f "${i}/uname" ]; then
+      uname=${i}/uname
+      break;
+    fi
+  done
+fi
+
+if [ -z "${uname}" ]; then
+  print_result "uname" "can not found uname" "1;31m"
+  exit 1
+else
+  if [ -f "${uname}" ]; then
+    print_result "uname"
+  else
+    print_result "uname" "can not found uname" "1;31m"
+    exit 1
+  fi
+fi
+
+ipcalc=$(which ipcalc 2> /dev/null)
+if [ -z "${ipcalc}" ]; then
+  for i in ${CHKDIR}
+  do
+    if [ -f "${i}/ipcalc" ]; then
+      ipcalc=${i}/ipcalc
+      break;
+    fi
+  done
+fi
+
+if [ -z "${ipcalc}" ]; then
+  print_result "ipcalc" "can not found ipcalc" "1;31m"
+  exit 1
+else
+  if [ -f "${ipcalc}" ]; then
+    print_result "ipcalc"
+  else
+    print_result "ipcalc" "can not found ipcalc" "1;31m"
+    exit 1
+  fi
+fi
+
+ls=$(which ls 2> /dev/null)
+if [ -z "${ls}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do
+    if [ -f "${i}/ls" ]; then
+      ls=${i}/ls
+      break;
+    fi
+  done
+fi
+
+if [ -z "${ls}" ]; then
+  print_result "ls" "can not found ls" "1;31m"
+  exit 1
+else
+  if [ -f "${ls}" ]; then
+    print_result "ls"
+  else
+    print_result "ls" "can not found ls" "1;31m"
+    exit 1
+  fi
+fi
+
+rm=$(which rm 2> /dev/null)
+if [ -z "${rm}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do
+    if [ -f "${i}/rm" ]; then
+      rm=${i}/rm
+      break;
+    fi
+  done
+fi
+
+if [ -z "${rm}" ]; then
+  print_result "rm" "can not found rm" "1;31m"
+  exit 1
+else
+  if [ -f "${rm}" ]; then
+    print_result "rm"
+  else
+    print_result "rm" "can not found rm" "1;31m"
+    exit 1
+  fi
+fi
+
+cat=$(which cat 2> /dev/null)
+if [ -z "${cat}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do
+    if [ -f "${i}/cat" ]; then
+      cat=${i}/cat
+      break;
+    fi
+  done
+fi
+
+if [ -z "${cat}" ]; then
+  print_result "cat" "can not found cat" "1;31m"
+  exit 1
+else
+  if [ -f "${cat}" ]; then
+    print_result "cat"
+  else
+    print_result "cat" "can not found cat" "1;31m"
+    exit 1
+  fi
+fi
+
+mv=$(which mv 2> /dev/null)
+if [ -z "${mv}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do
+    if [ -f "${i}/mv" ]; then
+      mv=${i}/mv
+      break;
+    fi
+  done
+fi
+
+if [ -z "${mv}" ]; then
+  print_result "mv" "can not found mv" "1;31m"
+  exit 1
+else
+  if [ -f "${mv}" ]; then
+    print_result "mv"
+  else
+    print_result "mv" "can not found mv" "1;31m"
+    exit 1
+  fi
+fi
+
+cp=$(which cp 2> /dev/null)
+if [ -z "${cp}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do
+    if [ -f "${i}/cp" ]; then
+      cp=${i}/cp
+      break;
+    fi
+  done
+fi
+
+if [ -z "${cp}" ]; then
+  print_result "cp" "can not found cp" "1;31m"
+  exit 1
+else
+  if [ -f "${cp}" ]; then
+    print_result "cp"
+  else
+    print_result "cp" "can not found cp" "1;31m"
+    exit 1
+  fi
+fi
+
+mkdir=$(which mkdir 2> /dev/null)
+if [ -z "${mkdir}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do
+    if [ -f "${i}/mkdir" ]; then
+      mkdir=${i}/mkdir
+      break;
+    fi
+  done
+fi
+
+if [ -z "${mkdir}" ]; then
+  print_result "mkdir" "can not found mkdir" "1;31m"
+  exit 1
+else
+  if [ -f "${mkdir}" ]; then
+    print_result "mkdir"
+  else
+    print_result "mkdir" "can not found mkdir" "1;31m"
+    exit 1
+  fi
+fi
+
+touch=$(which touch 2> /dev/null)
+if [ -z "${touch}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do
+    if [ -f "${i}/touch" ]; then
+      touch=${i}/touch
+      break;
+    fi
+  done
+fi
+
+if [ -z "${touch}" ]; then
+  print_result "touch" "can not found touch" "1;31m"
+  exit 1
+else
+  if [ -f "${touch}" ]; then
+    print_result "touch"
+  else
+    print_result "touch" "can not found touch" "1;31m"
+    exit 1
+  fi
+fi
+
+chmod=$(which chmod 2> /dev/null)
+if [ -z "${chmod}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
+  do
+    if [ -f "${i}/chmod" ]; then
+      chmod=${i}/chmod
+      break;
+    fi
+  done
+fi
+
+if [ -z "${chmod}" ]; then
+  print_result "chmod" "can not found chmod" "1;31m"
+  exit 1
+else
+  if [ -f "${chmod}" ]; then
+    print_result "chmod"
+  else
+    print_result "chmod" "can not found chmod" "1;31m"
+    exit 1
+  fi
+fi
+
+strip=$(which strip 2> /dev/null)
+if [ -z "${strip}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/bin
+  do
+    if [ -f "${i}/strip" ]; then
+      strip=${i}/strip
+      break;
+    fi
+  done
+fi
+
+if [ -z "${strip}" ]; then
+  print_result "strip" "can not found strip" "1;31m"
+  exit 1
+else
+  if [ -f "${strip}" ]; then
+    print_result "strip"
+  else
+    print_result "strip" "can not found strip" "1;31m"
+    exit 1
+  fi
+fi
+
+msgfmt=$(which msgfmt 2> /dev/null)
+if [ -z "${msgfmt}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/gettext/bin ${LOCALDIR}/gettext/bin
+  do
+    if [ -f "${i}/msgfmt" ]; then
+      strip=${i}/msgfmt
+      break;
+    fi
+  done
+fi
+
+if [ -z "${msgfmt}" ]; then
+  print_result "msgfmt" "can not found msgfmt" "1;31m"
+  exit 1
+else
+  if [ -f "${msgfmt}" ]; then
+    print_result "msgfmt"
+  else
+    print_result "msgfmt" "can not found msgfmt" "1;31m"
+    exit 1
+  fi
+fi
+
+echo
+echo "Create Template file"
+echo "............................................."
+echo
+
+${install} -m 700 ./oops-firewall.in ./oops-firewall
+${install} -m 700 ./oops-firewall.init.in ./oops-firewall.init
+
+${perl} -pi -e "s!\@VERSION\@!${VERSION}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@SHAREDDIR\@!${shareddir}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@INCLUDEDIR\@!${includedir}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@DESTDIR\@!${destdir}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@BINDIR\@!${bindir}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@INITDIR\@!${initdir}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@DEPMOD\@!${depmod}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@LSMOD\@!${lsmod}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@RMMOD\@!${rmmod}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@INSMOD\@!${insmod}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@MODPROBE\@!${modprobe}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@SED\@!${sed}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@GREP\@!${grep}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@AWK\@!${awk}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@CAT\@!${cat}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@TOUCH\@!${touch}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@IPTABLES\@!${iptables}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@IFCONFIG\@!${ifconfig}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@ROUTE\@!${route}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@RM\@!${rm}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@UNAME\@!${uname}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@IPCALC\@!${ipcalc}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@TOUCH\@!${touch}!g" oops-firewall oops-firewall.init
+
+print_result "oops-firewall" "ok"
+print_result "oops-firewall.init" "ok"
+
+echo
+echo "Create make file"
+echo "............................................."
+echo
+
+if [ -z "${CFLAGS}" ]; then
+  CFLAGS="-march=i386"
+fi
+
+${install} -m 644 Makefile.in Makefile
+${install} -m 644  po/Makefile.in po/Makefile
+
+${perl} -pi -e "s!\@VERSION\@!${VERSION}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@CC\@!${cc}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@DESTDIR\@!${destdir}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@PREFIX\@!${prefix}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@BINDIR\@!${bindir}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@SHAREDDIR\@!${shareddir}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@INCLUDEDIR\@!${includedir}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@CONFDIR\@!${confdir}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@INITDIR\@!${initdir}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@INSTALL\@!${install}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@RM\@!${rm}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@LS\@!${ls}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@MKDIR\@!${mkdir}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@SED\@!${sed}!g" Makefile po/Makefile
+${perl} -pi -e "s!\@MSGFMT\@!${msgfmt}!g" Makefile po/Makefile
+
+print_result "Create Makefile" "OK" "" "1"
+print_result "Create po/Makefile" "OK" "" "1"
