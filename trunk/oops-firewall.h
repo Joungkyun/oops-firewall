@@ -1,6 +1,6 @@
 # OOPS Firewall 에서 사용되는 함수
 #
-# $Id: oops-firewall.h,v 1.4 2004-08-04 15:05:40 oops Exp $
+# $Id: oops-firewall.h,v 1.5 2004-08-04 15:06:11 oops Exp $
 #
 # 사용자 실행을 위한 함수
 user_cmd () {
