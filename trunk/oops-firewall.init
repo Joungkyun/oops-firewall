@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init,v 1.4 2004-08-04 14:36:57 oops Exp $
+# $Id: oops-firewall.init,v 1.5 2004-08-04 14:37:41 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
-# chkconfig: 345 100 10
+# chkconfig: 345 99 10
 # description: OOPS Firewall is firewall that used IPTABLES in kernel 2.4.x
 # processname: oops_firewall
 # config: /etc/oops_firewall
@@ -13,6 +13,7 @@
 . /etc/rc.d/init.d/functions
 
 ERR_FILE=/tmp/oops_firewall_err
+IPTABLES=/sbin/iptables
 
 case "$1" in
   start)
@@ -21,12 +22,13 @@ case "$1" in
 
     if [ "$(cat ${ERR_FILE} 2>/dev/null)" != "" ]; then
       echo_failure
-      iptables -P INPUT ACCEPT
-      iptables -F INPUT
-      iptables -t nat -P PREROUTING ACCEPT
-      iptables -t nat -F PREROUTING
-      iptables -t nat -P POSTROUTING ACCEPT
-      iptables -t nat -F POSTROUTING
+      ${IPTABLES} -Z
+      ${IPTABLES} -P INPUT ACCEPT
+      ${IPTABLES} -F INPUT
+      ${IPTABLES} -t nat -P PREROUTING ACCEPT
+      ${IPTABLES} -t nat -F PREROUTING
+      ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+      ${IPTABLES} -t nat -F POSTROUTING
       echo 0 > /proc/sys/net/ipv4/ip_forward
     else
       echo_success
@@ -36,12 +38,13 @@ case "$1" in
     echo
     ;;
   stop)
-    iptables -P INPUT ACCEPT
-    iptables -F INPUT
-    iptables -t nat -P PREROUTING ACCEPT
-    iptables -t nat -F PREROUTING
-    iptables -t nat -P POSTROUTING ACCEPT
-    iptables -t nat -F POSTROUTING
+    ${IPTABLES} -Z
+    ${IPTABLES} -P INPUT ACCEPT
+    ${IPTABLES} -F INPUT
+    ${IPTABLES} -t nat -P PREROUTING ACCEPT
+    ${IPTABLES} -t nat -F PREROUTING
+    ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+    ${IPTABLES} -t nat -F POSTROUTING
     echo 0 > /proc/sys/net/ipv4/ip_forward
     rm -rf /var/lock/subsys/oops_firewall
     echo -n "Destory Firewall Tables: "
@@ -53,8 +56,8 @@ case "$1" in
     $0 start
     ;;
   status)
-    iptables -L -v
-    iptables -t nat -L -v
+    ${IPTABLES} -L -v
+    ${IPTABLES} -t nat -L -v
     ;;
   *)
     echo "Usage: $0 {start|stop|restart|status}"

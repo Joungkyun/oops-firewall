@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# version numbering
+VER="2.5"
+
 # Root user의 권한으로 작동시켜야 함
 #
 if [ "$UID" != "0" ]; then
@@ -11,8 +14,7 @@ if [ "$UID" != "0" ]; then
   exit 1
 fi
 
-rm -f /etc/oops_firewall/oops_firewall.conf
 rm -rf /sbin/oops_firewall
-rm -rf /usr/doc/oops_firewall-2.4
+rm -rf /usr/doc/oops_firewall-${VER}
 
 exit 0

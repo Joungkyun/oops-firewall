@@ -1,8 +1,8 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.5 2004-08-04 14:36:57 oops Exp $
+# $Id: oops-firewall,v 1.6 2004-08-04 14:37:41 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 2.4
+# OOPS Firewall 네트워크 서버 방화벽 설정 2.5
 # 작성 : 김정균 http://www.oops.org
 # 날짜 : 2003.05.01
 # 
@@ -49,17 +49,19 @@ fi
 # Default 변수 설정
 ##############################################################################
 
-# 방화벽 프로그램 지정
+# 방화벽에 사용되는 프로그램의 경로 지정
 IPTABLES=/sbin/iptables
+SIFCONFIG=/sbin/ifconfig
+SROUTE=/sbin/route
 
 # 자신의 NETWORK 설정
-ETH0_IPADDR=`/sbin/ifconfig eth0 2> /dev/null | grep 'inet addr' | awk '{print $2}' | sed -e 's/.*://'`
-ETH0_SUBNET=`/sbin/ifconfig eth0 2> /dev/null | grep 'inet addr' | awk '{print $4}' | sed -e 's/.*://'`
-ETH0_NET=`route -n | grep -w U | grep eth0 | awk '{print $1}'`
+ETH0_IPADDR=`${SIFCONFIG} eth0 2> /dev/null | grep 'inet addr' | awk '{print $2}' | sed -e 's/.*://'`
+ETH0_SUBNET=`${SIFCONFIG} eth0 2> /dev/null | grep 'inet addr' | awk '{print $4}' | sed -e 's/.*://'`
+ETH0_NET=`${SROUTE} -n | grep -w U | grep eth0 | awk '{print $1}'`
 
-ETH1_IPADDR=`/sbin/ifconfig eth1 2> /dev/null | grep 'inet addr' | awk '{print $2}' | sed -e 's/.*://'`
-ETH1_SUBNET=`/sbin/ifconfig eth1 2> /dev/null | grep 'inet addr' | awk '{print $4}' | sed -e 's/.*://'`
-ETH1_NET=`route -n | grep -w U | grep eth1 | awk '{print $1}'`
+ETH1_IPADDR=`${SIFCONFIG} eth1 2> /dev/null | grep 'inet addr' | awk '{print $2}' | sed -e 's/.*://'`
+ETH1_SUBNET=`${SIFCONFIG} eth1 2> /dev/null | grep 'inet addr' | awk '{print $4}' | sed -e 's/.*://'`
+ETH1_NET=`${SROUTE} -n | grep -w U | grep eth1 | awk '{print $1}'`
 
 
 # 설정 파일을 불러들임
@@ -75,12 +77,13 @@ if [ "$1" = "" ]; then
   ##############################################################################
 
   # 서비스를 시작하기전 초기화
-  iptables -P INPUT ACCEPT
-  iptables -F INPUT
-  iptables -t nat -P PREROUTING ACCEPT
-  iptables -t nat -F PREROUTING
-  iptables -t nat -P POSTROUTING ACCEPT
-  iptables -t nat -F POSTROUTING
+  ${IPTABLES} -Z
+  ${IPTABLES} -P INPUT ACCEPT
+  ${IPTABLES} -F INPUT
+  ${IPTABLES} -t nat -P PREROUTING ACCEPT
+  ${IPTABLES} -t nat -F PREROUTING
+  ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+  ${IPTABLES} -t nat -F POSTROUTING
   echo 0 > /proc/sys/net/ipv4/ip_forward
 
   # TCP Syncookies 를 사용할수 있게 하기 위해
@@ -289,10 +292,11 @@ if [ "$1" = "" ]; then
     else
       echo "Ethernet Device 는 eth1 까지만 지원합니다."
       echo "방화벽 설정을 초기화 합니다."
-      iptables -P INPUT ACCEPT
-      iptables -F INPUT
-      iptables -t nat -P POSTROUTING ACCEPT
-      iptables -t nat -F POSTROUTING
+      ${IPTABLES} -Z
+      ${IPTABLES} -P INPUT ACCEPT
+      ${IPTABLES} -F INPUT
+      ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+      ${IPTABLES} -t nat -F POSTROUTING
       echo 0 > /proc/sys/net/ipv4/ip_forward
       exit 1
     fi
@@ -334,8 +338,9 @@ if [ "$1" = "" ]; then
     done
   fi
 elif [ "$1" = "-v" ];then
-  echo "OOPS FIREWALL v.2.4 by JoungKyun Kim"
-  echo "Copyright by GPL Since 2000-2001"
+  last=$(date +%Y)
+  echo "OOPS FIREWALL v.2.5 by JoungKyun Kim"
+  echo "Copyright by GPL Since 2000-$last"
 else
   echo "USAGE : $0 [-v]"
   echo "   -v print version"
