@@ -1,0 +1,9 @@
+2001.4. 3 update version 2.1
+          added masquerade configurations
+          added port forward configurations
+
+2001.3.21 version 2.0 with iptables in kernel 2.4.x
+
+2000.8.17 added DNS entry
+
+2000.8.16 version 1.0 with ipchains in kernel 2.2.x
