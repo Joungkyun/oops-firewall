@@ -12,10 +12,10 @@ if [ "$UID" != "0" ]; then
 fi
 
 ETCDIR="/etc/oops_firewall"
-DOCDIR="/usr/doc/oops_firewall-2.1"
+DOCDIR="/usr/doc/oops_firewall-2.2"
 
 mkdir ${ETCDIR}
-install -m 700 ./oops-firewall /sbin/oops_firewall
+install -m 700 ./oops_firewall-2.2 /sbin/oops_firewall
 install -m 644 ./filter.conf ${ETCDIR}/filter.conf
 install -m 644 ./masq.conf ${ETCDIR}/masq.conf
 install -m 644 ./forward.conf ${ETCDIR}/forward.conf
@@ -29,10 +29,10 @@ install -m 644 ./INSTALL ${DOCDIR}/INSTALL
 install -m 644 ./README ${DOCDIR}/README
 install -m 644 ./README.SORIBADA ${DOCDIR}/README.SORIBADA
 install -m 755 ./uninstall.sh ${DOCDIR}/uninstall.sh
-install -m 755 ./oops-firewall.init ${DOCDIR}/oops_firewall.init
+install -m 755 ./oops_firewall.init ${DOCDIR}/oops_firewall.init
 
 echo "mkdir ${ETCDIR}" >> ${DOCDIR}/install.log
-echo "install -m 700 ./oops-firewall /sbin/oops_firewall" >> ${DOCDIR}/install.log
+echo "install -m 700 ./oops_firewall-2.2 /sbin/oops_firewall" >> ${DOCDIR}/install.log
 echo "install -m 644 ./filter.conf ${ETCDIR}/filter.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./masq.conf ${ETCDIR}/masq.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./forward.conf ${ETCDIR}/forward.conf" >> ${DOCDIR}/install.log
@@ -46,6 +46,6 @@ echo "install -m 644 ./INSTALL ${DOCDIR}/INSTALL" >> ${DOCDIR}/install.log
 echo "install -m 644 ./README ${DOCDIR}/README" >> ${DOCDIR}/install.log
 echo "install -m 644 ./README.SORIBADA ${DOCDIR}/README.SORIBADA" >> ${DOCDIR}/install.log
 echo "install -m 755 ./uninstall.sh ${DOCDIR}/uninstall.sh" >> ${DOCDIR}/install.log
-echo "install -m 755 ./oops-firewall.init ${DOCDIR}/oops_firewall.init" >> ${DOCDIR}/install.log
+echo "install -m 755 ./oops_firewall.init ${DOCDIR}/oops_firewall.init" >> ${DOCDIR}/install.log
 
 exit 0

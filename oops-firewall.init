@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init,v 1.1 2004-08-04 14:30:52 oops Exp $
+# $Id: oops-firewall.init,v 1.2 2004-08-04 14:32:47 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
-# chkconfig: 345 50 50
+# chkconfig: 345 100 10
 # description: OOPS Firewall is firewall that used IPTABLES in kernel 2.4.x
 # processname: oops_firewall
 # config: /etc/oops_firewall
