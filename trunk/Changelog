@@ -1,3 +1,6 @@
+2004.09.09
+           fixed duplicate excute and typo to UDP_FORWARD_TO_S direction
+
 2004.09.07
            added check private config file mine.conf that no include package
            added RELATED status on ftp active mode port
