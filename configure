@@ -825,6 +825,7 @@ ${install} -m 700 ./oops-firewall.init.in ./oops-firewall.init
 ${perl} -pi -e "s!\@VERSION\@!${VERSION}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@SHAREDDIR\@!${shareddir}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@INCLUDEDIR\@!${includedir}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@CONFDIR\@!${confdir}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@DESTDIR\@!${destdir}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@BINDIR\@!${bindir}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@INITDIR\@!${initdir}!g" oops-firewall oops-firewall.init
