@@ -1,5 +1,6 @@
 2004.08.18
            fixed miss print
+           added config parse script
 
 2004.08.05 update 4.0.5
            add traceroute direction
