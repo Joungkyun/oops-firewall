@@ -1,6 +1,6 @@
 # OOPS Firewall 에서 사용되는 함수
 #
-# $Id: oops-firewall.h,v 1.1 2004-08-04 15:01:06 oops Exp $
+# $Id: oops-firewall.h,v 1.2 2004-08-04 15:02:50 oops Exp $
 #
 # 사용자 실행을 위한 함수
 user_cmd () {
@@ -146,26 +146,43 @@ ins_mod() {
 
     for i in ${list}
     do
+      msg=
       chk=
       load=
       loads=$(lsmod | grep "^${i}")
       if [ -z "${loads}" ]; then
         ${modprobe} -k ${i} > /dev/null 2>&1
         chk=$?
+
+        if [ "${chk}" != 0 ]; then
+          if [ ! -f "/lib/modules/$(${uname} -r)/kernel/net/ipv4/netfilter/${i}" ]; then
+            chk=0
+            msg="maybe builtin"
+          fi
+        fi
+
         echo -n $"  Load ${i} module"
-        print_result ${chk}
+        print_result ${chk} "${msg}"
       else
         echo -n $"  Load ${i} module"
-        print_result 1 "Already Loading"
+        print_result 1 $"Already Loading"
       fi
     done
   else
-    loads=$(lsmod | grep "^ip_conntrack_ftp")
+    loads=$(lsmod | grep "^${1}")
     if [ -z "${loads}" ]; then
       ${modprobe} -k ${1} > /dev/null 2>&1
       chk=$?
+
+      if [ "${chk}" != 0 ]; then
+        if [ ! -f "/lib/modules/$(${uname} -r)/kernel/net/ipv4/netfilter/${1}" ]; then
+          chk=0
+          msg="maybe builtin"
+        fi
+      fi
+
       echo -n $"  Load ${1} module"
-      print_result ${chk}
+      print_result ${chk} "${msg}"
     else
       echo -n $"  Load ${1} module"
       print_result 1 "Already Loading" "yellow"
