@@ -2,7 +2,7 @@
 
 NAME=oops-firewall
 GCOL=40
-VERSION=4.0.3
+VERSION=4.0.4
 OS=$(uname)
 LOCALDIR=/usr/local
 CHKDIR="/bin /sbin /usr/bin /usr/sbin ${LOCALDIR}/bin ${LOCALDIR}/sbin"
@@ -561,6 +561,29 @@ else
   fi
 fi
 
+ipcalc=$(which ipcalc 2> /dev/null)
+if [ -z "${ipcalc}" ]; then
+  for i in ${CHKDIR}
+  do
+    if [ -f "${i}/ipcalc" ]; then
+      ipcalc=${i}/ipcalc
+      break;
+    fi
+  done
+fi
+
+if [ -z "${ipcalc}" ]; then
+  print_result "ipcalc" "can not found ipcalc" "1;31m"
+  exit 1
+else
+  if [ -f "${ipcalc}" ]; then
+    print_result "ipcalc"
+  else
+    print_result "ipcalc" "can not found ipcalc" "1;31m"
+    exit 1
+  fi
+fi
+
 ls=$(which ls 2> /dev/null)
 if [ -z "${ls}" ]; then
   for i in ${CHKDIR} ${LOCALDIR}/fileutils/bin ${LOCALDIR}/fileutils/sbin
@@ -820,6 +843,7 @@ ${perl} -pi -e "s!\@IFCONFIG\@!${ifconfig}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@ROUTE\@!${route}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@RM\@!${rm}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@UNAME\@!${uname}!g" oops-firewall oops-firewall.init
+${perl} -pi -e "s!\@IPCALC\@!${ipcalc}!g" oops-firewall oops-firewall.init
 ${perl} -pi -e "s!\@TOUCH\@!${touch}!g" oops-firewall oops-firewall.init
 
 print_result "oops-firewall" "ok"

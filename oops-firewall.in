@@ -1,7 +1,5 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.4 2004-08-04 15:05:40 oops Exp $
-#
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.3
 # 작성 : 김정균 http://www.oops.org
 # 날짜 : 2003.07.31
@@ -47,6 +45,7 @@ sed=@SED@
 grep=@GREP@
 awk=@AWK@
 uname=@UNAME@
+ipcalc=@IPCALC@
 
 ${depmod} -a > /dev/null 2>&1
 
@@ -111,45 +110,61 @@ if [ "$1" = "" ]; then
   echo $"2. IP address Check"
   echo
 
-  # 자신의 NETWORK 설정
-  ETH0_IPADDR=`${SIFCONFIG} eth0 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $2}' | ${sed} -e 's/.*://'`
-  ETH0_SUBNET=`${SIFCONFIG} eth0 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $4}' | ${sed} -e 's/.*://'`
-  ETH0_NET=`${SROUTE} -n | ${grep} -w U | ${grep} eth0 | ${awk} '{print $1}'`
+  # device list 를 구함
+  devlist=$(${grep} 'eth[0-9]\+:' /proc/net/dev | ${awk} -F ':' '{print $1}')
 
-  ETH1_IPADDR=`${SIFCONFIG} eth1 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $2}' | ${sed} -e 's/.*://'`
-  ETH1_SUBNET=`${SIFCONFIG} eth1 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $4}' | ${sed} -e 's/.*://'`
-  ETH1_NET=`${SROUTE} -n | ${grep} -w U | ${grep} eth1 | ${awk} '{print $1}'`
+  for dv in ${devlist}
+  do
+    # 이더넷 디바이스 번호
+    dvno=$(echo ${dv} | sed 's/eth//g')
 
-  echo $"  * ETH0 Information"
-  echo -n $"  IP ADDRESS"
-  print_result 0 "${ETH0_IPADDR}" "yellow"
-  echo -n $"  SUBNET MASK"
-  print_result 0 "${ETH0_SUBNET}" "yellow"
-  echo -n $"  NETWORK"
-  print_result 0 "${ETH0_NET}" "yellow"
-  echo
+    # 이더넷 디바이스에 할당된 IP 주소
+    val_IP=$(${SIFCONFIG} ${dv} 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $2}' | ${sed} -e 's/.*://')
+    var_IP="ETH${dvno}_IPADDR=${val_IP}"
 
-  if [ ! -z "${ETH1_IPADDR}" ]; then
-    echo $"  * ETH1 Information"
-    echo -n $"  IP ADDRESS"
-    print_result 0 "${ETH1_IPADDR}" "yellow"
-    echo -n $"  SUBNET MASK"
-    print_result 0 "${ETH1_SUBNET}" "yellow"
-    echo -n $"  NETWORK"
-    print_result 0 "${ETH1_NET}" "yellow"
-    echo
-  fi
+    if [ -n "${var_IP}" ]; then
+      eval ${var_IP}
 
-  # 이더넷이 1개만 있을때 eth0 이 안잡히고 eth1 로 잡혔있는 경우 처리
-  if [ -z "${ETH0_IPADDR}" ] && [ ! -z "${ETH1_IPADDR}" ] ; then
-    ETH0_IPADDR=${ETH1_IPADDR}
-    ETH0_SUBNET=${ETH1_SUBNET}
-    ETH0_NET=${ETH1_NET}
-    # reset information of ETH1
-    ETH1_IPADDR=
-    ETH1_SUBNET=
-    ETH1_NET=
-  fi
+      # 이더넷 디바이스에 할당된 서브넷 마스크
+      val_SN=$(${SIFCONFIG} ${dv} 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $4}' | ${sed} -e 's/.*://')
+      var_SN="ETH${dvno}_SUBNET=${val_SN}"
+      eval ${var_SN}
+  
+      # 이더넷 디바이스에 할당된 네트워크
+      val_NT=$(${ipcalc} -s -n ${val_IP} ${val_SN} | awk -F '=' '{print $2}')
+      var_NT="ETH${dvno}_NET=${val_NT}"
+      eval ${var_NT}
+    fi
+  done
+
+  # 디바이스 정보 출력
+  for dv in ${devlist}
+  do
+    chkIP=
+    chkSN=
+    chkNT=
+  
+    i=$(echo ${dv} | sed 's/eth//g')
+    chk_IP="chkIP=\${ETH${i}_IPADDR}"
+    eval ${chk_IP}
+
+    if [ -n "${chkIP}" ]; then
+
+      chk_SN="chkSN=\${ETH${i}_SUBNET}"
+      chk_NT="chkNT=\${ETH${i}_NET}"
+      eval ${chk_SN}
+      eval ${chk_NT}
+
+      echo $"  * ETH${i} Information"
+      echo -n $"  IP ADDRESS"
+      print_result 0 "${chkIP}" "yellow"
+      echo -n $"  SUBNET MASK"
+      print_result 0 "${chkSN}" "yellow"
+      echo -n $"  NETWORK"
+      print_result 0 "${chkNT}" "yellow"
+      echo
+    fi
+  done
 
   # 설정 파일을 불러들임
   . ${CONFS}/filter.conf
@@ -451,21 +466,33 @@ if [ "$1" = "" ]; then
   echo "  * iptables -A INPUT -i lo -j ACCEPT"
   ${IPTABLES} -A INPUT -i lo -j ACCEPT
 
-  if [ "${ALLOWSELF}" = "1" ]; then
-    echo "  * iptables -A INPUT -s ${ETH0_NET}/${ETH0_SUBNET} -j ACCEPT"
-    ${IPTABLES} -A INPUT -s ${ETH0_NET}/${ETH0_SUBNET} -j ACCEPT
-    if [ "${ETH1_NET}" != "" ]; then
-      echo "  * iptables -A INPUT -s ${ETH1_NET}/${ETH1_SUBNET} -j ACCEPT"
-      ${IPTABLES} -A INPUT -s ${ETH1_NET}/${ETH1_SUBNET} -j ACCEPT
+  for dv in ${devlist}
+  do
+    i=$(echo ${dv} | sed 's/eth//g')
+
+    if [ "${ALLOWSELF}" = 1 ]; then
+      # subnet 전체 열기
+      var_SN="varSN=\${ETH${i}_SUBNET}"
+      var_NT="varNT=\${ETH${i}_NET}"
+
+      eval ${var_SN}
+      eval ${var_NT}
+
+      if [ -n "${varNT}" -a -n "${varSN}" ]; then
+        echo "  * iptables -A INPUT -s ${varNT}/${varSN} -j ACCEPT"
+        ${IPTABLES} -A INPUT -s ${varNT}/${varSN} -j ACCEPT
+      fi
+    else
+      # 자신의 IP 만 열기
+      var_IP="varIP=\${ETH${i}_IPADDR}"
+      eval ${var_IP}
+
+      if [ -n "${varIP}" ]; then
+        echo "  * iptables -A INPUT -s ${varIP} -j ACCEPT"
+        ${IPTABLES} -A INPUT -s ${varIP} -j ACCEPT
+      fi
     fi
-  else
-    echo "  * iptables -A INPUT -s ${ETH0_IPADDR} -j ACCEPT"
-    ${IPTABLES} -A INPUT -s ${ETH0_IPADDR} -j ACCEPT
-    if [ "${ETH1_IPADDR}" != "" ]; then
-      echo "  * iptables -A INPUT -s ${ETH1_IPADDR} -j ACCEPT"
-      ${IPTABLES} -A INPUT -s ${ETH1_IPADDR} -j ACCEPT
-    fi
-  fi
+  done
 
   if [ "${ALLOWALL}" != "" ] ; then
     for values in ${ALLOWALL}
