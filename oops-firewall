@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.10 2004-08-04 14:43:45 oops Exp $
+# $Id: oops-firewall,v 1.11 2004-08-04 14:45:19 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 3.0
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2001.10.12
+# 날짜 : 2001.10.16
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -32,13 +32,13 @@
 # --sport 출추의 포트 정의
 #
 
-VER="3.0"
+VER="3.0.1"
 
 if [ "$1" = "" ]; then
 
   echo "############################################################################"
   echo "# OOPS Firewall - Network Firewall Program v ${VER}"
-  echo "# by Sep 19 2001 JoungKyun Kim <http://www.oops.org>"
+  echo "# by Oct 16 2001 JoungKyun Kim <http://www.oops.org>"
   echo "############################################################################"
   echo
 
@@ -292,9 +292,8 @@ if [ "$1" = "" ]; then
       insmod ${STRING_MODULE}
     fi
 
-    if [ "${STRINT_MATCH}" != "" ]; then
-      echo ${STRING_MATCH} > ${TMPFILE}
-      for values in ${STRINT_MATCH}
+    if [ "${STRING_MATCH}" != "" ]; then
+      for values in ${STRING_MATCH}
       do
         values=$(echo ${values} | sed -e 's/+/ /g')
         echo ${values} | {
@@ -384,12 +383,12 @@ if [ "$1" = "" ]; then
   echo
   echo "  * UDP service"
   if [ "${OUT_UDP_ALLOWPORT}" != "" ]; then
-    for values in ${OUT_TCP_ALLOWPORT}
+    for values in ${OUT_UDP_ALLOWPORT}
     do  
       echo ${values} | {
         IFS=':' read oport tconnect
-        echo "  iptables -A INPUT -p tcp --sport ${oport} -m state --state ${tconnect} -j ACCEPT"
-        ${IPTABLES} -A INPUT -p tcp --sport ${oport} -m state --state ${tconnect} -j ACCEPT
+        echo "  iptables -A INPUT -p udp --sport ${oport} -m state --state ${tconnect} -j ACCEPT"
+        ${IPTABLES} -A INPUT -p udp --sport ${oport} -m state --state ${tconnect} -j ACCEPT
       }
     done
   else

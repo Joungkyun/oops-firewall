@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="3.0"
+VER="3.0.1"
 
 # Root user의 권한으로 작동시켜야 함
 #
@@ -34,7 +34,7 @@ install -m 644 ./README ${DOCDIR}/README
 install -m 644 ./README.SORIBADA ${DOCDIR}/README.SORIBADA
 install -m 644 ./README.SORIBADA ${DOCDIR}/README.STRING
 install -m 755 ./uninstall.sh ${DOCDIR}/uninstall.sh
-install -m 755 ./oops_firewall.init ${DOCDIR}/oops_firewall.init
+install -m 755 ./oops-firewall.init ${DOCDIR}/oops_firewall.init
 
 echo "mkdir ${ETCDIR}" >> ${DOCDIR}/install.log
 echo "install -m 700 ./oops-firewall /sbin/oops_firewall" >> ${DOCDIR}/install.log
@@ -52,6 +52,6 @@ echo "install -m 644 ./INSTALL ${DOCDIR}/INSTALL" >> ${DOCDIR}/install.log
 echo "install -m 644 ./README ${DOCDIR}/README" >> ${DOCDIR}/install.log
 echo "install -m 644 ./README.SORIBADA ${DOCDIR}/README.SORIBADA" >> ${DOCDIR}/install.log
 echo "install -m 755 ./uninstall.sh ${DOCDIR}/uninstall.sh" >> ${DOCDIR}/install.log
-echo "install -m 755 ./oops_firewall.init ${DOCDIR}/oops_firewall.init" >> ${DOCDIR}/install.log
+echo "install -m 755 ./oops-firewall.init ${DOCDIR}/oops_firewall.init" >> ${DOCDIR}/install.log
 
 exit 0

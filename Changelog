@@ -1,3 +1,7 @@
+2001.10.16 pache version 3.0.1
+           change var name STRINT to STRING
+           patched wrong udp command
+
 2001.10.11 major upgrade 3.0
            separated daemon service and client service
            closed all port (change from 1-1024 to 1-65535)
