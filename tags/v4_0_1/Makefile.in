@@ -1,0 +1,53 @@
+VERSION		= @VERSION@
+CC		= @CC@
+PROG		= oops-firewall
+DESTDIR		= @DESTDIR@
+CFLAGS		=
+
+prefix		= @PREFIX@
+bindir		= @BINDIR@
+shareddir	= @SHAREDDIR@
+includedir	= @INCLUDEDIR@
+confdir		= @CONFDIR@
+initdir		= @INITDIR@
+
+INSTALL		= @INSTALL@
+RM		= @RM@
+MKDIR		= @MKDIR@ -p
+
+all:
+	make -C po
+
+install: install-conf install-po install-doc
+	$(MKDIR) $(DESTDIR)$(bindir)
+	$(MKDIR) $(DESTDIR)$(initdir)
+	$(MKDIR) $(DESTDIR)$(includedir)
+	$(INSTALL) -m 755 $(PROG) $(DESTDIR)$(bindir)/$(PROG)
+	$(INSTALL) -m 755 $(PROG).init $(DESTDIR)$(initdir)/$(PROG)
+	$(INSTALL) -m 644 $(PROG).h $(DESTDIR)$(includedir)/$(PROG).h
+
+install-conf:
+	$(MKDIR) $(DESTDIR)$(confdir)
+	for i in filter.conf forward.conf masq.conf string.conf tos.conf user.conf ; do \
+		[ ! -f "$(DESTDIR)$(confdir)/$$i" ] && $(INSTALL) -m 644 $$i $(DESTDIR)$(confdir)/$$i ; \
+		echo "install $(DESTDIR)$(confdir)/$$i" ; \
+	done
+
+install-po:
+	make -C po install
+
+install-doc:
+	$(MKDIR) $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)
+	$(INSTALL) -m 644 COPYING $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 CREDIT $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 Changelog $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 README $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 README.DIALPAD $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 README.SORIBADA $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 README.STRING $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+
+clean:
+	-${RM} -f oops-firewall oops-firewall.init
+
+init: clean
+	-${RM} -f Makefile po/Makefile
