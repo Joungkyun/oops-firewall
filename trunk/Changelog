@@ -1,5 +1,9 @@
-2003.01.18 update 3.2.3 2th
-           fix typo
+2003.06.18 update 4.0.0
+           fixed typo
+           added -n option on init status mode
+           support port range with '-' charactor
+           added module admin code
+           supported i18N
 
 2002.12.16 update 3.2.3
            modified init file for redhat kernel
