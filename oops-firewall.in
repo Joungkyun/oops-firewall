@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.19 2004-09-06 18:21:25 oops Exp $
+# $Id: oops-firewall.in,v 1.20 2004-09-08 05:51:10 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -945,8 +945,8 @@ if [ "$1" = "" ]; then
     done
   fi
 
-  if [ "${UDP_FORWARD_TO}" != "" ]; then
-    for values in ${UDP_FORWARD_TO}
+  if [ "${UDP_FORWARD_TO_S}" != "" ]; then
+    for values in ${UDP_FORWARD_TO_S}
     do
       echo ${values} | { 
         IFS=':' read laddr lports raddr rports
