@@ -12,19 +12,27 @@ Building
      /etc/oops_firewall/filter.conf
      /etc/oops_firewall/masq.conf
      /etc/oops_firewall/forward.conf
+     /etc/oops_firewall/client.conf
      /usr/sbin/oops_firewall
-  3. edit /etc/oops_firewall/{filter.conf,masq.conf,forward.conf}
-  4. run /sbin/oops_firewall
+  3. edit /etc/oops_firewall/{filter.conf,masq.conf,forward.conf,client.conf}
+  4. run /usr/sbin/oops_firewall
 
   IF U want stop oops_firewall, rut iptables command as follow..
 
+  $ /sbin/iptables -Z
   $ /sbin/iptables -P INPUT ACCEPT
   $ /sbin/iptables -F
+  $ /sbin/iptables -t nat -Z
   $ /sbin/iptables -t nat -P PREROUTING ACCEPT
   $ /sbin/iptables -t nat -F
   $ /sbin/iptables -t nat -P POSTROUTING ACCEPT
   $ /sbin/iptables -t nat -F
-
+  $ /sbin/iptables -t mangle -Z
+  $ /sbin/iptables -t mangle -P PREROUTING ACCEPT
+  $ /sbin/iptables -t mangle -F PREROUTING
+  $ /sbin/iptables -t mangle -P OUTPUT ACCEPT
+  $ /sbin/iptables -t mangle -F OUTPUT
+ 
 Uninstall
 
   U simply excute uninstall.sh
