@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.7 2004-08-18 09:12:48 oops Exp $
+# $Id: oops-firewall.in,v 1.8 2004-08-18 09:21:02 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -169,11 +169,12 @@ if [ "$1" = "" ]; then
   done
 
   # 설정 파일을 불러들임
-  . ${CONFS}/filter.conf
-  . ${CONFS}/masq.conf
-  . ${CONFS}/forward.conf
-  . ${CONFS}/string.conf
-  . ${CONFS}/tos.conf
+  for i in filter.conf masq.conf forward.conf string.conf tos.conf
+  do
+    conf_context=
+    conf_context=$(${sed} -n -f @INCLUDEDIR@/config.sed ${CONFS}/${i})
+    eval ${conf_context}
+  done
 
   ##############################################################################
   # GLOBAL 설정
