@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.6 2004-08-04 15:06:44 oops Exp $
+# $Id: oops-firewall.in,v 1.7 2004-08-18 09:12:48 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -720,7 +720,7 @@ if [ "$1" = "" ]; then
     for values in ${ICMP_HOSTPERTRACE}
     do
       echo "  iptables -A OUTPUT -s ${values} -p icmp --icmp-type time-exceeded -j ACCEPT"
-      echo "  iptables -A INPUT -s ${values} -p udp -dport 33434 -j ACCEPT"
+      echo "  iptables -A INPUT -s ${values} -p udp -dport 33434:33525 -j ACCEPT"
       ${IPTABLES} -A OUTPUT -s ${values} -p icmp --icmp-type time-exceeded -j ACCEPT
       ${IPTABLES} -A INPUT -s ${values} -p udp --dport 33434:33525 -j ACCEPT
     done
