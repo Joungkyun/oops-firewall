@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.9 2004-08-18 09:58:43 oops Exp $
+# $Id: oops-firewall.in,v 1.10 2004-08-18 10:46:44 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -46,6 +46,7 @@ modprobe=@MODPROBE@
 sed=@SED@
 grep=@GREP@
 awk=@AWK@
+cat=@CAT@
 uname=@UNAME@
 ipcalc=@IPCALC@
 
@@ -80,10 +81,8 @@ if [ "$1" = "" ]; then
 
   # 커널이 2.4.18 을 기준으로 어떻게 되는지 체크
   # 2.4.18 부터는 mangle hooker 가 2 개에서 5개로 증가
-  KERCHK=$(${uname} -r | ${sed} -e 's/2.4.\([0-9]\{1,3\}\).*/\1/g')
-  if [ "${KERCHK}" -gt 17 ]; then
-    KERNEL_UP=1
-  fi
+  kernelCheck
+  KERNEL_UP=$?
 
   ##############################################################################
   # Default 변수 설정
