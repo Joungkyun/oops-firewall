@@ -12,10 +12,10 @@ if [ "$UID" != "0" ]; then
 fi
 
 ETCDIR="/etc/oops_firewall"
-DOCDIR="/usr/doc/oops_firewall-2.3"
+DOCDIR="/usr/doc/oops_firewall-2.4"
 
 mkdir ${ETCDIR}
-install -m 700 ./oops_firewall-2.3 /sbin/oops_firewall
+install -m 700 ./oops_firewall-2.4 /sbin/oops_firewall
 install -m 644 ./filter.conf ${ETCDIR}/filter.conf
 install -m 644 ./masq.conf ${ETCDIR}/masq.conf
 install -m 644 ./forward.conf ${ETCDIR}/forward.conf
@@ -32,7 +32,7 @@ install -m 755 ./uninstall.sh ${DOCDIR}/uninstall.sh
 install -m 755 ./oops_firewall.init ${DOCDIR}/oops_firewall.init
 
 echo "mkdir ${ETCDIR}" >> ${DOCDIR}/install.log
-echo "install -m 700 ./oops_firewall-2.3 /sbin/oops_firewall" >> ${DOCDIR}/install.log
+echo "install -m 700 ./oops_firewall-2.4 /sbin/oops_firewall" >> ${DOCDIR}/install.log
 echo "install -m 644 ./filter.conf ${ETCDIR}/filter.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./masq.conf ${ETCDIR}/masq.conf" >> ${DOCDIR}/install.log
 echo "install -m 644 ./forward.conf ${ETCDIR}/forward.conf" >> ${DOCDIR}/install.log
