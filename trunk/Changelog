@@ -1,3 +1,7 @@
+2001.08.11 update version 2.7
+           modified ftp client configuration
+           added iptable string match rule (require iptables include ipt_string)
+
 2001.08.06 update version 2.6
            fixed ftp access ploblems
            added option -h

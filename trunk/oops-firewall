@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.7 2004-08-04 14:38:35 oops Exp $
+# $Id: oops-firewall,v 1.8 2004-08-04 14:40:14 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 2.6
+# OOPS Firewall 네트워크 서버 방화벽 설정 2.7
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2001.08.06
+# 날짜 : 2001.08.11
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -53,6 +53,7 @@ fi
 IPTABLES=/sbin/iptables
 SIFCONFIG=/sbin/ifconfig
 SROUTE=/sbin/route
+TMPFILE=/tmp/oops-firewall-tmp
 
 # 자신의 NETWORK 설정
 ETH0_IPADDR=`${SIFCONFIG} eth0 2> /dev/null | grep 'inet addr' | awk '{print $2}' | sed -e 's/.*://'`
@@ -137,13 +138,48 @@ if [ "$1" = "" ]; then
     done
   fi
 
-  # ftp 접속을 원할하게 하기 위해 상대방의 20번 포트에서의 접속을 허락
-  echo "${IPTABLES} -A INPUT -p tcp --sport 20 -j ACCEPT"
-  ${IPTABLES} -A INPUT -p tcp --sport 20 -j ACCEPT
+
+  ##############################################################################
+  # 문자열 체크 거부 설정
+  ##############################################################################
+
+  if [ "${USE_STRING_MATCH}" = "1" ]; then
+
+    # match string rule 을 사용하기 위해 먼저 ipt_string module 을 띄운다.
+    if [ "${STRING_MODULE}" != "" ] && [ -f "${STRING_MODULE}" ]; then
+      rmmod ipt_string > /dev/null 2&>1
+      insmod ${STRING_MODULE}
+    fi
+
+    if [ "${STRINT_MATCH}" != "" ]; then
+      echo ${STRING_MATCH} > ${TMPFILE}
+      for values in ${STRINT_MATCH}
+      do
+        echo ${values} > ${TMPFILE}
+        values=$(sed -e 's/+/ /g' ${TMPFILE})
+        echo ${values} | {
+          IFS=':' read flag port string
+          echo "${IPTABLES} -A INPUT -p tcp --tcp-flags ${flag} --dport ${port}"
+          echo "               -m string --string \"${string}\" -j REJECT --reject-with tcp-reset"
+          ${IPTABLES} -A INPUT -p tcp --tcp-flags ${flag} --dport ${port} -m string \
+                      --string "${string}" -j REJECT --reject-with tcp-reset
+        }
+       rm -f ${TMPFILE}
+      done
+    fi
+  fi
+
 
   ##############################################################################
   # TCP 설정
   ##############################################################################
+
+  # FTP client 를 위한 설정
+  # ftp 접속을 원할하게 하기 위해 상대방의 20번 포트에서의 접속을 허락
+  if [ "${FTP_CLIENT_ACCETP}" = "1" ]; then
+    echo "${IPTABLES} -A INPUT -p tcp --sport 20 -j ACCEPT"
+    ${IPTABLES} -A INPUT -p tcp --sport 20 -j ACCEPT
+  fi
 
   # 모든 곳으로의 포트를 open
   if [ "${TCP_ALLOWPORT}" != "" ]; then
@@ -155,7 +191,6 @@ if [ "$1" = "" ]; then
   fi
 
   # 특정 호스트로의 포트를 open
-
   if [ "${TCP_HOSTPERPORT}" != "" ]; then
     for values in ${TCP_HOSTPERPORT}
     do
@@ -320,6 +355,18 @@ if [ "$1" = "" ]; then
     done
   fi
 
+  # 메인 IP가 아닐경우 모든 query 를 원하는 target 으로 포워딩
+  if [ "${ALL_FORWARD_TO}" != "" ] && [ "${ALL_FORWARD_TO}" != "${INCOM_ADDR}" ];then
+    for values in ${ALL_FORWARD_TO}
+    do
+      echo ${values} | {
+        IFS=':' read dest target
+        echo "${IPTABLES} -t nat -A PREROUTING -d ${dest}  -j DNAT --to ${target}"
+        ${IPTABLES} -t nat -A PREROUTING -d ${dest} -j DNAT --to ${target}
+      }
+    done
+  fi
+
   ##############################################################################
   # DENY 정책
   ##############################################################################
@@ -343,10 +390,10 @@ if [ "$1" = "" ]; then
   ${IPTABLES} -A INPUT -m state --state INVALID -j DROP
 elif [ "$1" = "-v" ];then
   last=$(date +%Y)
-  echo "OOPS FIREWALL v.2.6 by JoungKyun Kim"
+  echo "OOPS FIREWALL v.2.7 by JoungKyun Kim"
   echo "Copyright by GPL Since 2000-$last"
 elif [ "$1" = "-v" ];then
-  echo "OOPS FIREWALL v.2.6 by JoungKyun Kim"
+  echo "OOPS FIREWALL v.2.7 by JoungKyun Kim"
   echo "See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
 else
   echo "USAGE : $0 [-v]"
