@@ -1,0 +1,24 @@
+System Requires
+
+  Based on REDHAT 6.x ( only test )
+  Kernel 2.4.x
+  iptables package
+
+Building
+
+  1. U simply excute install.sh.
+  2. After excute install.sh, file of oops_firewall package
+     is located in /etc/oops_firewall/oops_firewall.conf and
+     /usr/sbin/oops_firewall
+  3. edit /etc/oops_firewall.conf
+  4. run /sbin/oops_firewall
+
+  IF U want stop oops_firewall, rut iptables command as follow..
+  $ /sbin/iptables -P INPUT ACCEPT
+  $ /sbin/iptables -F
+
+Uninstall
+
+  U simply excute uninstall.sh
+
+Happy Hacking !:-)
