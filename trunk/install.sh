@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # version numbering
-VER="2.7"
+VER="2.8"
 
 # Root user의 권한으로 작동시켜야 함
 #

@@ -1,3 +1,9 @@
+2001.08.19 patched rmmod command option
+
+2001.08.13 update version 2.8
+           prefix ftp access problem
+           added log function
+
 2001.08.11 update version 2.7
            modified ftp client configuration
            added iptable string match rule (require iptables include ipt_string)

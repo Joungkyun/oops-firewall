@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.8 2004-08-04 14:40:14 oops Exp $
+# $Id: oops-firewall,v 1.9 2004-08-04 14:41:41 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 2.7
+# OOPS Firewall 네트워크 서버 방화벽 설정 2.8
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2001.08.11
+# 날짜 : 2001.08.13
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -54,6 +54,8 @@ IPTABLES=/sbin/iptables
 SIFCONFIG=/sbin/ifconfig
 SROUTE=/sbin/route
 TMPFILE=/tmp/oops-firewall-tmp
+
+LOGFORMAT="-m limit --limit 1/h --limit-burst 3 -j LOG"
 
 # 자신의 NETWORK 설정
 ETH0_IPADDR=`${SIFCONFIG} eth0 2> /dev/null | grep 'inet addr' | awk '{print $2}' | sed -e 's/.*://'`
@@ -138,6 +140,9 @@ if [ "$1" = "" ]; then
     done
   fi
 
+  # ftp 접속을 원할하게 하기 위해 RELATED tcp connection 을 허가
+  echo "${IPTABLES} -A INPUT -m state --state RELATED -j ACCEPT"
+  ${IPTABLES} -A INPUT -m state --state RELATED -j ACCEPT
 
   ##############################################################################
   # 문자열 체크 거부 설정
@@ -147,7 +152,7 @@ if [ "$1" = "" ]; then
 
     # match string rule 을 사용하기 위해 먼저 ipt_string module 을 띄운다.
     if [ "${STRING_MODULE}" != "" ] && [ -f "${STRING_MODULE}" ]; then
-      rmmod ipt_string > /dev/null 2&>1
+      rmmod ipt_string > /dev/null 2>&1
       insmod ${STRING_MODULE}
     fi
 
@@ -173,13 +178,6 @@ if [ "$1" = "" ]; then
   ##############################################################################
   # TCP 설정
   ##############################################################################
-
-  # FTP client 를 위한 설정
-  # ftp 접속을 원할하게 하기 위해 상대방의 20번 포트에서의 접속을 허락
-  if [ "${FTP_CLIENT_ACCETP}" = "1" ]; then
-    echo "${IPTABLES} -A INPUT -p tcp --sport 20 -j ACCEPT"
-    ${IPTABLES} -A INPUT -p tcp --sport 20 -j ACCEPT
-  fi
 
   # 모든 곳으로의 포트를 open
   if [ "${TCP_ALLOWPORT}" != "" ]; then
@@ -373,27 +371,52 @@ if [ "$1" = "" ]; then
 
   # 모든 서비스를 거부
   if [ "${TCP_DENYPORT}" != "" ]; then
-    echo "${IPTABLES} -A INPUT -p tcp --syn -j DROP"
+    if [ "${USE_LOG}" = "1" ]; then
+      echo "${IPTABLES} -A INPUT -p tcp --syn ${LOGFORMAT} --log-prefix 'SYN Refuse'"
+      ${IPTABLES} -A INPUT -p tcp --syn ${LOGFORMAT} --log-prefix 'SYN Refuse'
+    fi
+    echo "${IPTABLES} -A INPUT -p tcp --syn -j REJECT"
     ${IPTABLES} -A INPUT -p tcp --syn -j REJECT
+
+    if [ "${USE_LOG}" = "1" ]; then
+      echo "${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} ${LOGFORMAT} --log-prefix 'TCP Refuse'"
+      ${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} ${LOGFORMAT} --log-prefix 'TCP Refuse'
+    fi
     echo "${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} -j DROP"
     ${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} -j DROP
   fi
+
   if [ "${UDP_DENYPORT}" != "" ]; then
+    if [ "${USE_LOG}" = "1" ]; then
+      echo "${IPTABLES} -A INPUT -p udp --dport 1:${UDP_DENYPORT} ${LOGFORMAT} --log-prefix 'UDP Refuse'"
+      ${IPTABLES} -A INPUT -p udp --dport 1:${UDP_DENYPORT} ${LOGFORMAT} --log-prefix 'UDP Refuse'
+    fi
     echo "${IPTABLES} -A INPUT -p udp --dport 1:${UDP_DENYPORT} -j DROP"
     ${IPTABLES} -A INPUT -p udp --dport 1:${UDP_DENYPORT} -j DROP
+  fi
+
+  # PING 을 막음
+  if [ "${USE_LOG}" = "1" ]; then
+    echo "${IPTABLES} -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING Refuse'"
+    ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING Refuse'
   fi
   echo "${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT"
   ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT
 
   # 어떤 이유로 확인할수 없는 패킷들을 drop 시킴
+  if [ "${USE_LOG}" = "1" ]; then
+    echo "${IPTABLES} -A INPUT -m state --state INVALID ${LOGFORMAT} --log-prefix 'ANY Packet Refuse'"
+    ${IPTABLES} -A INPUT -m state --state INVALID ${LOGFORMAT} --log-prefix 'PING Refuse'
+  fi
   echo "${IPTABLES} -A INPUT -m state --state INVALID -j DROP"
   ${IPTABLES} -A INPUT -m state --state INVALID -j DROP
+
 elif [ "$1" = "-v" ];then
   last=$(date +%Y)
-  echo "OOPS FIREWALL v.2.7 by JoungKyun Kim"
+  echo "OOPS FIREWALL v.2.8 by JoungKyun Kim"
   echo "Copyright by GPL Since 2000-$last"
 elif [ "$1" = "-v" ];then
-  echo "OOPS FIREWALL v.2.7 by JoungKyun Kim"
+  echo "OOPS FIREWALL v.2.8 by JoungKyun Kim"
   echo "See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
 else
   echo "USAGE : $0 [-v]"
