@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.in,v 1.13 2004-08-26 13:31:30 oops Exp $
+# $Id: oops-firewall.in,v 1.14 2004-08-26 14:06:57 oops Exp $
 #
 # OOPS Firewall 네트워크 서버 방화벽 설정 4.0.5
 # 작성 : 김정균 http://www.oops.org
@@ -154,6 +154,18 @@ if [ "$1" = "" ]; then
     conf_context=$(${sed} -n -f @INCLUDEDIR@/config.sed ${CONFS}/${i})
     eval ${conf_context}
   done
+
+  ##############################################################################
+  # 설정 지시자 true/false 값을 가지는 변수 보정 (참: 1, 거짓: 0 으로 통일)
+  ##############################################################################
+
+  for cVAR in ALLOWSELF USE_LOG MASQ_USED USE_STRING_MATCH
+  do
+    eval "cVARTMP=\$${cVAR}"
+    echo $cVAR $cVARTMP
+    parseValue $cVARTMP $cVAR
+  done
+
 
   ##############################################################################
   # GLOBAL 설정
@@ -794,7 +806,7 @@ if [ "$1" = "" ]; then
   # masq client 에서 외부의 dns 를 설정하기 위해서는 위의 TCP_ALLPROT 와
   # UDT_ALLPORT 에 53번을 지정해 줘야 함
 
-  if [ "${MASQ_USED}" = "yes" ]; then
+  if [ "${MASQ_USED}" = "1" ]; then
     echo
     ins_mod ip_nat_ftp
     echo
@@ -838,6 +850,7 @@ if [ "$1" = "" ]; then
     # masq device 로 지정
     if [ "${MASQ_WHOLE_ADJ}" != "1" ]; then
       echo "  * iptables -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}"
+      [ "${TESTMODE}" = 0 ] && \
       ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}
     fi
 
@@ -867,14 +880,14 @@ if [ "$1" = "" ]; then
   echo $"12. Forwarding Configuration"
   echo
 
-  if [ ! -z "${TCP_FORWARD_TO}" ] || [ ! -z "${UDP_FORWARD_TO}" ] || [ ! -z "${ALL_FORWARD_TO}" ]; then
-    FORWARD_USED=yes
+  if [ -n "${TCP_FORWARD_TO}" -o -n "${UDP_FORWARD_TO_S}" -o -n "${UDP_FORWARD_TO}" -o -n "${UDP_FORWARD_TO_S}" -o -n "${ALL_FORWARD_TO}" ]; then
+    FORWARD_USED=1
   fi
 
   # masq device 가 존재할 경우 즉 ethernet device 가 여러개일 경우
   # masq device 로 지정된 device 의 주소를 외부로 나갈 주소로 지정
   #
-  if [ "${MASQ_USED}" = "no" ] || [ "${MASQ_DEVICE}" = "" ]; then
+  if [ "${MASQ_USED}" = "0" ]; then
     if [ -n "${FORWARD_MASTER}" ]; then
       WordToUpper ${FORWARD_MASTER} FORWARD_MASTER
       eval "INCOM_ADDR=\"\$${FORWARD_MASTER}_IPADDR\""
@@ -1023,15 +1036,15 @@ if [ "$1" = "" ]; then
       TOS_TABLE="OUTPUT"
     fi
 
-    if [ "${MASQ_USED}" = "yes" ] && [ "${KERNEL_UP}" = "1" ]; then
+    if [ "${MASQ_USED}" = "1" -a "${KERNEL_UP}" = "1" ]; then
       TOS_TABLE="${TOS_TABLE} POSTROUTING"
     fi
 
-    if [ "${FORWARD_USED}" = "yes" ];then
+    if [ "${FORWARD_USED}" = "1" ];then
       TOS_TABLE="${TOS_TABLE} PREROUTING"
     fi
 
-    if [ "${FORWARD_USED}" = "yes" ] || [ "${FORWARD_USED}" = "yes" ]; then
+    if [ "${MASQ_USED}" = "1" -o "${FORWARD_USED}" = "1" ]; then
       if [ "${KERNEL_UP}" = "1" ]; then
         TOS_TABLE="${TOS_TABLE} FORWARD"
       fi

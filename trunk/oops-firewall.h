@@ -1,6 +1,6 @@
 # OOPS Firewall 에서 사용되는 함수
 #
-# $Id: oops-firewall.h,v 1.9 2004-08-26 13:31:30 oops Exp $
+# $Id: oops-firewall.h,v 1.10 2004-08-26 14:06:57 oops Exp $
 #
 # 사용자 실행을 위한 함수
 user_cmd () {
@@ -461,4 +461,27 @@ masqStartCheck() {
       eval "${SCHKTMPNAME}=1"
     fi
   fi
+}
+
+parseValue() {
+  pV=$1
+  pN=$2
+  rV=0
+
+  WordToLower ${pV} pV
+
+  if [ -n "${pV}" ]; then
+    case ${pV} in
+      true) rV=1 ;;
+      yes)  rV=1 ;;
+      1)    rV=1 ;;
+      *)    rV=0 ;;
+    esac
+  fi
+
+  if [ -n "${pN}" ]; then
+    eval "${pN}=${rV}"
+  fi
+
+  return $rV
 }
