@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.3 2004-08-04 14:32:47 oops Exp $
+# $Id: oops-firewall,v 1.4 2004-08-04 14:35:26 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 2.2
+# OOPS Firewall 네트워크 서버 방화벽 설정 2.3
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2003.04.25
+# 날짜 : 2003.04.26
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -205,8 +205,8 @@ if [ "$1" = "" ]; then
 
   # 모든 서비스를 거부
   if [ "${TCP_DENYPORT}" != "" ]; then
-    echo "${IPTABLES} -A INPUT -d ${ETH0_IPADDR} -p tcp --syn -j DROP"
-    ${IPTABLES} -A INPUT -d ${ETH0_IPADDR} -p tcp --syn -j REJECT
+    echo "${IPTABLES} -A INPUT -p tcp --syn -j DROP"
+    ${IPTABLES} -A INPUT -p tcp --syn -j REJECT
     echo "${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} -j DROP"
     ${IPTABLES} -A INPUT -p tcp --dport 1:${TCP_DENYPORT} -j DROP
   fi
@@ -233,9 +233,13 @@ if [ "$1" = "" ]; then
   if [ "${MASQ_USED}" = "yes" ]; then
     if [ "${MASQ_DEVICE}" = "eth0" ] || [ "${MASQ_DEVICE}" = "eth1" ]; then
       if [ "${MASQ_DEVICE}" = "eth0" ]; then
-        MASQ_ADDR="${ETH0_IPADDR}"
+        MASQ_IPADDR="${ETH0_IPADDR}"
+        PRIV_DEVICE="eth1"
+        PRIV_IPADDR="${ETH1_IPADDR}"
       elif [ "${MASQ_DEVICE}" = "eth1" ]; then
-        MASQ_ADDR="${ETH1_IPADDR}"
+        MASQ_IPADDR="${ETH1_IPADDR}"
+        PRIV_DEVICE="eth0"
+        PRIV_IPADDR="${ETH0_IPADDR}"
       fi
       # packet forwarding 을 가능하게 함
       echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -262,9 +266,13 @@ if [ "$1" = "" ]; then
       # 출발지 주소 지정에서 사설 IP가 everywhere 이 적용 안될 경우 everywhere 을
       # masq device 로 지정
       if [ "${MASQ_WHOLE_ADJ}" != "1" ]; then
-        echo "${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_ADDR}"
-        ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_ADDR}
+        echo "${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}"
+        ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}
       fi
+
+      # Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정
+      echo "${IPTABLES} -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}"
+      ${IPTABLES} -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}
 
       # dial pad 를 사용하기 위한 설정
       if [ "${MASQ_DIAL}" != "" ]; then
@@ -298,10 +306,10 @@ if [ "$1" = "" ]; then
   # masq device 가 존재할 경우 즉 ethernet device 가 여러개일 경우
   # masq device 로 지정된 device 의 주소를 외부로 나갈 주소로 지정
   #
-  if [ "${MASQ_DEVICE}" = "" ]; then
+  if [ "${MASQ_USED}" = "no" ] || [ "${MASQ_DEVICE}" = "" ]; then
     INCOM_ADDR=${ETH0_IPADDR}
   else
-    INCOM_ADDR=${MASQ_ADDR}
+    INCOM_ADDR=${MASQ_IPADDR}
   fi
 
   if [ "${TCP_FORWARD_TO}" != "" ]; then
@@ -326,7 +334,7 @@ if [ "$1" = "" ]; then
     done
   fi
 elif [ "$1" = "-v" ];then
-  echo "OOPS FIREWALL v.2.2 by JoungKyun Kim"
+  echo "OOPS FIREWALL v.2.3 by JoungKyun Kim"
   echo "Copyright by GPL Since 2000-2001"
 else
   echo "USAGE : $0 [-v]"
