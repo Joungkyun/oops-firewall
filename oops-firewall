@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.11 2004-08-04 14:45:19 oops Exp $
+# $Id: oops-firewall,v 1.12 2004-08-04 14:46:50 oops Exp $
 #
-# OOPS Firewall 네트워크 서버 방화벽 설정 3.0
+# OOPS Firewall 네트워크 서버 방화벽 설정 3.0.2
 # 작성 : 김정균 http://www.oops.org
-# 날짜 : 2001.10.16
+# 날짜 : 2001.10.26
 # 
 # -N 새로운 체인 만들기
 # -X 비어있는 체인을 제거하기
@@ -32,13 +32,13 @@
 # --sport 출추의 포트 정의
 #
 
-VER="3.0.1"
+VER="3.0.2"
 
 if [ "$1" = "" ]; then
 
   echo "############################################################################"
   echo "# OOPS Firewall - Network Firewall Program v ${VER}"
-  echo "# by Oct 16 2001 JoungKyun Kim <http://www.oops.org>"
+  echo "# by Oct 26 2001 JoungKyun Kim <http://www.oops.org>"
   echo "############################################################################"
   echo
 
@@ -142,6 +142,16 @@ if [ "$1" = "" ]; then
   echo -n "  Remove rule of INPUT Chain   : "
   [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
   [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+  ${IPTABLES} -P OUTPUT ACCEPT
+  CHKCHAIN=$?
+  echo -n "  Accept All OUTPUT Chain       : "
+  [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+  [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
+  ${IPTABLES} -F OUTPUT
+  CHKCHAIN=$?
+  echo -n "  Remove rule of OUTPUT Chain   : "
+  [ "${CHKCHAIN}" -eq 0 ] && echo "OK"
+  [ "${CHKCHAIN}" -ne 0 ] && echo "Failed"
 
   echo
   echo "  * Reset NAT Table"
@@ -207,7 +217,7 @@ if [ "$1" = "" ]; then
 
   echo 0 > /proc/sys/net/ipv4/ip_forward
   KPCHK=$?
-  echo -n "  * Deny IP Forward : "
+  echo -n "  * Deny IP Forward             : "
   [ "${KPCHK}" -eq 0 ] && echo "OK"
   [ "${KPCHK}" -ne 0 ] && echo "Failed"
 
@@ -226,7 +236,7 @@ if [ "$1" = "" ]; then
     dev=$(echo ${pfile} | sed -e 's/\/proc\/sys\/net\/ipv4\/conf\/\(.\+\)\/rp_filter/\1/g')
     echo 1 > $pfile
     KPCHK=$?
-    echo -n "  * CHK IP SPOOFING ${dev} : "
+    echo -n "  * CHK IP SPOOFING ${dev}    : "
     [ "${KPCHK}" -eq 0 ] && echo "OK"
     [ "${KPCHK}" -ne 0 ] && echo "Failed"
   done
@@ -234,7 +244,7 @@ if [ "$1" = "" ]; then
   # 정의되지 않은 에러 메시지를 막음
   echo 1 > /proc/sys/net/ipv4/icmp_ignore_bogus_error_responses
   KPCHK=$?
-  echo -n "  * Deny Invalid MSG : "
+  echo -n "  * Deny Invalid MSG            : "
   [ "${KPCHK}" -eq 0 ] && echo "OK"
   [ "${KPCHK}" -ne 0 ] && echo "Failed"
 
@@ -243,7 +253,7 @@ if [ "$1" = "" ]; then
 
   echo 1 > /proc/sys/net/ipv4/conf/all/log_martians
   KPCHK=$?
-  echo -n "  * Deny IP Forward : "
+  echo -n "  * Logged Spoofing check       : "
   [ "${KPCHK}" -eq 0 ] && echo "OK"
   [ "${KPCHK}" -ne 0 ] && echo "Failed"
 
@@ -255,7 +265,7 @@ if [ "$1" = "" ]; then
 
   echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
   KPCHK=$?
-  echo -n "  * Deny IP Forward : "
+  echo -n "  * Deny Ping at BroadCast      : "
   [ "${KPCHK}" -eq 0 ] && echo "OK"
   [ "${KPCHK}" -ne 0 ] && echo "Failed"
 
@@ -271,10 +281,18 @@ if [ "$1" = "" ]; then
     echo "  * iptables -A INPUT -m state --state ${nI} \\"
     echo "             ${LOGFORMAT} \\"
     echo "             --log-prefix 'ANY Packet Refuse'"
-    ${IPTABLES} -A INPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'PING Refuse'
+    ${IPTABLES} -A INPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'ANY Packet Refuse'
+
+    echo "  * iptables -A OUTPUT -m state --state ${nI} \\"
+    echo "             ${LOGFORMAT} \\"
+    echo "             --log-prefix 'OUTPUT ANY Packet Refuse'"
+    ${IPTABLES} -A INPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'OUTPUT ANY Packet Refuse'
   fi
   echo "  * iptables -A INPUT -m state --state ${nI} -j DROP"
   ${IPTABLES} -A INPUT -m state --state ${nI} -j DROP
+
+  echo "  * iptables -A OUTPUT -m state --state ${nI} -j DROP"
+  ${IPTABLES} -A OUTPUT -m state --state ${nI} -j DROP
 
   ##############################################################################
   # 문자열 체크 거부 설정
@@ -288,7 +306,7 @@ if [ "$1" = "" ]; then
 
     # match string rule 을 사용하기 위해 먼저 ipt_string module 을 띄운다.
     if [ "${STRING_MODULE}" != "" ] && [ -f "${STRING_MODULE}" ]; then
-      rmmod ipt_string > /dev/null 2>&1
+      /sbin/rmmod $(/sbin/lsmod | grep ipt_string | awk '{print $1}') > /dev/null 2>&1
       insmod ${STRING_MODULE}
     fi
 
@@ -387,6 +405,8 @@ if [ "$1" = "" ]; then
     do  
       echo ${values} | {
         IFS=':' read oport tconnect
+        [ "${tconnect}" = "" ] && tconnect=${nE}
+
         echo "  iptables -A INPUT -p udp --sport ${oport} -m state --state ${tconnect} -j ACCEPT"
         ${IPTABLES} -A INPUT -p udp --sport ${oport} -m state --state ${tconnect} -j ACCEPT
       }
