@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init.in,v 1.7 2004-08-18 10:46:44 oops Exp $
+# $Id: oops-firewall.init.in,v 1.8 2004-08-18 10:59:46 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
@@ -8,10 +8,6 @@
 # description: OOPS Firewall is firewall that used IPTABLES in kernel 2.4.x
 # processname: oops-firewall
 # config: /etc/oops-firewall
-
-# Source function library.
-. @INITDIR@/functions
-. @INCLUDEDIR@/oops-firewall.h
 
 TEXTDOMAIN=oops-firewall
 TEXTDOMAINDIR=@SHAREDDIR@/locale
@@ -28,6 +24,10 @@ cat=@CAT@
 touch=@TOUCH@
 rm=@RM@
 sed=@SED@
+
+# Source function library.
+. @INITDIR@/functions
+. @INCLUDEDIR@/oops-firewall.h
 
 # check of kernel version
 kernelCheck
