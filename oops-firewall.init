@@ -1,5 +1,7 @@
 #!/bin/sh
 #
+# $Id: oops-firewall.init,v 1.1 2004-08-04 14:30:52 oops Exp $
+#
 # Startup script for the OOPS FireWall
 #
 # chkconfig: 345 50 50
@@ -19,6 +21,13 @@ case "$1" in
 
     if [ "$(cat ${ERR_FILE} 2>/dev/null)" != "" ]; then
       echo_failure
+      iptables -P INPUT ACCEPT
+      iptables -F INPUT
+      iptables -t nat -P PREROUTING ACCEPT
+      iptables -t nat -F PREROUTING
+      iptables -t nat -P POSTROUTING ACCEPT
+      iptables -t nat -F POSTROUTING
+      echo 0 > /proc/sys/net/ipv4/ip_forward
     else
       echo_success
       touch /var/lock/subsys/oops_firewall
@@ -29,6 +38,11 @@ case "$1" in
   stop)
     iptables -P INPUT ACCEPT
     iptables -F INPUT
+    iptables -t nat -P PREROUTING ACCEPT
+    iptables -t nat -F PREROUTING
+    iptables -t nat -P POSTROUTING ACCEPT
+    iptables -t nat -F POSTROUTING
+    echo 0 > /proc/sys/net/ipv4/ip_forward
     rm -rf /var/lock/subsys/oops_firewall
     echo -n "Destory Firewall Tables: "
     echo_success
@@ -40,9 +54,10 @@ case "$1" in
     ;;
   status)
     iptables -L -v
+    iptables -t nat -L -v
     ;;
   *)
-    echo -n "Usage: $0 {start|stop|restart|status}"
+    echo "Usage: $0 {start|stop|restart|status}"
 esac
 
 exit 0
