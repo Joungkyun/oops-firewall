@@ -1,9 +1,9 @@
 Summary: Individaul Firewall with IPTABLES
 Summary(ko): IPTABLES 를 이용한 개별 방화벽
 Name: oops-firewall
-Version: 4.2.1
+Version: 5.0.0
 Release: 1
-Epoch: 11
+Epoch: 13
 Copyright: GPL
 Group: Applications/Security
 URL: http://www.oops.org/?t=lecture&sb=firewall&n=1
@@ -21,7 +21,7 @@ It keeps your network system basically secure for external access
 with iptables package in KERNEL v2.4
 
 %description -l ko
-커널 2.4 로 부터 지원하는 NETFILTER 기능을 이용하여 원격 공격으로
+커널 2.4 부터 지원하는 NETFILTER 기능을 이용하여 원격 공격으로
 부터 시스템을 안전하게 막기 위하여 사용을 할수있다.
 
 %package doc
@@ -75,7 +75,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %attr(755,root,root) /etc/rc.d/init.d/oops-firewall
 %attr(755,root,root) /usr/sbin/oops-firewall
-/usr/include/oops-firewall/oops-firewall.h
+/usr/include/oops-firewall/*.h
 /usr/include/oops-firewall/config.sed
 /usr/share/locale/ko/LC_MESSAGES/oops-firewall.mo
 %config(noreplace) /etc/oops-firewall/filter.conf
@@ -83,15 +83,18 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/oops-firewall/forward.conf
 %config(noreplace) /etc/oops-firewall/tos.conf
 %config(noreplace) /etc/oops-firewall/user.conf
-%config(noreplace) /etc/oops-firewall/string.conf
+%config(noreplace) /etc/oops-firewall/modules.list
 %dir /usr/include/oops-firewall
 
 %files doc
-%doc README README.SORIBADA README.STRING
-%doc README.DIALPAD CREDIT COPYING Changelog
+%doc doc/README doc/README.SORIBADA doc/README.DIALPAD
+%doc CREDIT COPYING Changelog
 
 %changelog
-* Wed Sep  8 2004 JoungKyun Kim <http://www.oops.org> 11:4.2.1-1
+* Sun Dec  4 2005 JoungKyun Kim <http://www.oops.org> 13:5.0.0-1
+- update 5.0.0
+
+* Sun Nov 14 2004 JoungKyun Kim <http://www.oops.org> 12:4.2.1-1
 - update 4.2.1
 
 * Wed Aug 26 2004 JoungKyun Kim <http://www.oops.org> 10:4.2.0-1
