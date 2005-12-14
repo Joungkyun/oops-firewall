@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id: rule.h,v 1.2 2005-12-14 05:01:27 oops Exp $
 #
 
 add_named_port() {
@@ -15,6 +15,7 @@ add_named_port() {
 add_ftp_rule() {
 	__port=${1}
 	___type=${2}
+	___host="${3}"
 	__port=${__port=0}
 	__prange=
 	__ftpchk=0
@@ -37,13 +38,13 @@ add_ftp_rule() {
 
 	# open tcp port 20 for ftp active mode
 	if [ $__ftpchk -eq 1 ]; then
-		o_echo "    iptables -A INPUT -p tcp --${___pname} 20 -m state --state ${_nE},${_nR} -j ACCEPT"
+		o_echo "    iptables -A INPUT${___host} -p tcp --${___pname} 20 -m state --state ${_nE},${_nR} -j ACCEPT"
 		[ ${_testmode} -eq 0 ] && \
-			${c_iptables} -A INPUT -p tcp --${___pname} 20 -m state --state ${_nE},${_nR} -j ACCEPT
-		o_echo "    iptables -A INPUT -p tcp --sport ${_userport} --dport ${_userport} \\"
+			${c_iptables} -A INPUT${___host} -p tcp --${___pname} 20 -m state --state ${_nE},${_nR} -j ACCEPT
+		o_echo "    iptables -A INPUT${___host} -p tcp --sport ${_userport} --dport ${_userport} \\"
 		o_echo "             -m state --state ${_nE},${_nR} -j ACCEPT"
 		[ ${_testmode} -eq 0 ] && \
-			${c_iptables} -A INPUT -p tcp --sport ${_userport} --dport ${_userport} \
+			${c_iptables} -A INPUT${___host} -p tcp --sport ${_userport} --dport ${_userport} \
 						-m state --state ${_nE},${_nR} -j ACCEPT
 	fi
 }
@@ -133,7 +134,7 @@ add_port_rule() {
 					[ "${tconnect}" = "" ] && tconnect=${_nE}
 					[ "${__type}" = "incoming" ] && tconnect="${_nN},${_nE}"
 					t_connect="-m state --state ${tconnect}"
-					[ ${__host} -eq 0 ] && add_ftp_rule ${oport} ${__type}
+					add_ftp_rule ${oport} ${__type} "${hosts}"
 				fi
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
