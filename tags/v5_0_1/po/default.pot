@@ -1,0 +1,326 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# JoungKyun Kim <http://www.oops.org>, 2005
+# made by xgettext -d default --from-code=euc-kr -s *.sh
+# if you merge new version, msgmerge -U old.po new.po
+# xgettext 0.13 support shell script
+#
+# $Id: default.pot,v 1.5 2005-12-03 19:29:33 oops Exp $
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-12-04 00:59+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: include/print.h:23
+msgid "         -V                     print current version"
+msgstr ""
+
+#: include/print.h:20
+msgid "         -c config_directory    set configuration directory"
+msgstr ""
+
+#: include/print.h:24
+msgid "         -h                     help (this) message"
+msgstr ""
+
+#: include/print.h:21
+msgid "         -t                     run test mode"
+msgstr ""
+
+#: include/print.h:22
+msgid "         -v                     verbose mode"
+msgstr ""
+
+#: include/rule.h:169
+#, sh-format
+msgid "    ==> for ${__ct} service"
+msgstr ""
+
+#: include/init.h:44 include/init.h:143
+msgid "    Accept All FORWARD Chain"
+msgstr ""
+
+#: include/init.h:20 include/init.h:129
+msgid "    Accept All INPUT Chain"
+msgstr ""
+
+#: include/init.h:32 include/init.h:113
+msgid "    Accept All OUTPUT Chain"
+msgstr ""
+
+#: include/init.h:77 include/init.h:157
+msgid "    Accept All POSTROUTING Chain"
+msgstr ""
+
+#: include/init.h:65 include/init.h:99
+msgid "    Accept All PREROUTING Chain"
+msgstr ""
+
+#: sbin/oops-firewall.h:115
+msgid "    IP ADDRESS"
+msgstr ""
+
+#: include/modules.h:53 include/modules.h:56
+msgid "    Load ${1} module"
+msgstr ""
+
+#: include/modules.h:33 include/modules.h:36
+#, sh-format
+msgid "    Load ${i} module"
+msgstr ""
+
+#: sbin/oops-firewall.h:119
+msgid "    NETWORK"
+msgstr ""
+
+#: include/modules.h:86
+msgid "    Remove ${1} module"
+msgstr ""
+
+#: include/modules.h:79
+#, sh-format
+msgid "    Remove ${i} module"
+msgstr ""
+
+#: include/init.h:150
+msgid "    Remove rule of FORWARD"
+msgstr ""
+
+#: include/init.h:38
+msgid "    Remove rule of FORWARD Chain"
+msgstr ""
+
+#: include/init.h:136
+msgid "    Remove rule of INPUT"
+msgstr ""
+
+#: include/init.h:26
+msgid "    Remove rule of INPUT Chain"
+msgstr ""
+
+#: include/init.h:120
+msgid "    Remove rule of OUTPUT"
+msgstr ""
+
+#: include/init.h:50
+msgid "    Remove rule of OUTPUT Chain"
+msgstr ""
+
+#: include/init.h:83 include/init.h:164
+msgid "    Remove rule of POSTROUTING"
+msgstr ""
+
+#: include/init.h:71 include/init.h:106
+msgid "    Remove rule of PREROUTING"
+msgstr ""
+
+#: include/init.h:14
+msgid "    Reset Chain Counter "
+msgstr ""
+
+#: include/init.h:92
+msgid "    Reset MANGLE Tabel Counter"
+msgstr ""
+
+#: include/init.h:59
+msgid "    Reset NAT Tabel Counter"
+msgstr ""
+
+#: sbin/oops-firewall.h:117
+msgid "    SUBNET MASK"
+msgstr ""
+
+#: include/rule.h:119
+#, sh-format
+msgid "  * ${__ment} service"
+msgstr ""
+
+#: sbin/oops-firewall.h:114
+#, sh-format
+msgid "  * ${devName}${devNum} Information"
+msgstr ""
+
+#: include/init.h:187
+msgid "  * Allow to use TCP SYNCOOKIES"
+msgstr ""
+
+#: include/init.h:202
+#, sh-format
+msgid "  * CHK IP SPOOFING ${dev}"
+msgstr ""
+
+#: include/init.h:213
+msgid "  * Deny Invalid MSG"
+msgstr ""
+
+#: include/init.h:237
+msgid "  * Deny Ping at BroadCast"
+msgstr ""
+
+#: include/modules.h:11
+msgid "  * Load Netfilter Module"
+msgstr ""
+
+#: sbin/oops-firewall.h:210
+msgid "  * Name Service Configuration"
+msgstr ""
+
+#: include/modules.h:71
+msgid "  * Netfilter Module Shutdown"
+msgstr ""
+
+#: include/init.h:9
+msgid "  * Reset Basic Table"
+msgstr ""
+
+#: include/init.h:87
+msgid "  * Reset Mangle Table"
+msgstr ""
+
+#: include/init.h:54
+msgid "  * Reset NAT Table"
+msgstr ""
+
+#: sbin/oops-firewall.h:273
+msgid "  * TOS Not Config"
+msgstr ""
+
+#: include/command.h:60
+msgid "  * USER POST COMMAND (@) Not Config"
+msgstr ""
+
+#: include/command.h:57
+msgid "  * USER PRE COMMAND (%) Not Config"
+msgstr ""
+
+#: include/command.h:63
+msgid "  * Unknown parameter"
+msgstr ""
+
+#: include/rule.h:200
+#, sh-format
+msgid "  = Tos configuration in ${i} chain"
+msgstr ""
+
+#: include/print.h:10
+msgid "#      By Sep 27 2005 JoungKyun.Kim <http://www.oops.org>"
+msgstr ""
+
+#: include/print.h:9
+#, sh-format
+msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
+msgstr ""
+
+#: sbin/oops-firewall:46
+msgid "1. Check user type"
+msgstr ""
+
+#: sbin/oops-firewall:219
+msgid "10. Allow Incoming Service Configuration"
+msgstr ""
+
+#: sbin/oops-firewall:235
+msgid "11. Masqurade Configuration"
+msgstr ""
+
+#: sbin/oops-firewall:246
+msgid "12. Forwarding Configuration"
+msgstr ""
+
+#: sbin/oops-firewall:257
+msgid "13. Execute user defined post Command"
+msgstr ""
+
+#: sbin/oops-firewall:267
+msgid "14. TOS Configuration"
+msgstr ""
+
+#: sbin/oops-firewall:283
+msgid "15. Deny rule set configuration"
+msgstr ""
+
+#: sbin/oops-firewall:63
+msgid "2. Kernel version check"
+msgstr ""
+
+#: sbin/oops-firewall:87
+msgid "3. IP address Check"
+msgstr ""
+
+#: sbin/oops-firewall:148
+msgid "4. Reset network for packet filtering service"
+msgstr ""
+
+#: sbin/oops-firewall:163
+msgid "5. Basic Kernel Parameter Configuration"
+msgstr ""
+
+#: sbin/oops-firewall:174
+msgid "6. Drop Invalid Package"
+msgstr ""
+
+#: sbin/oops-firewall:184
+msgid "7. Allow All Service"
+msgstr ""
+
+#: sbin/oops-firewall:194
+msgid "8. Execute user defined pre command"
+msgstr ""
+
+#: sbin/oops-firewall:204
+msgid "9. Allow Outgoing Service Configuration"
+msgstr ""
+
+#: include/modules.h:37
+msgid "Already Loading"
+msgstr ""
+
+#: contrib/oops-firewall.init:121
+msgid "Destory Firewall Tables: "
+msgstr ""
+
+#: sbin/oops-firewall:68
+msgid "Enable to use over kernel 2.4.0"
+msgstr ""
+
+#: include/print.h:19
+msgid "Options:"
+msgstr ""
+
+#: contrib/oops-firewall.init:41
+msgid "Starting OOPS Firewall: "
+msgstr ""
+
+#: sbin/oops-firewall:51
+msgid "U are not super user!"
+msgstr ""
+
+#: contrib/oops-firewall.init:156
+msgid "Usage: $0 {start|stop|restart|status}"
+msgstr ""
+
+#: include/print.h:18
+msgid "Usage: oops-firewall -[option]"
+msgstr ""
+
+#: contrib/oops-firewall.init:133
+msgid "[ Legualar Table ]"
+msgstr ""
+
+#: contrib/oops-firewall.init:149
+msgid "[ MANGLE Table ]"
+msgstr ""
+
+#: contrib/oops-firewall.init:141
+msgid "[ NAT Table ]"
+msgstr ""
