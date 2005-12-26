@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id: command.h,v 1.2 2005-12-26 18:10:07 oops Exp $
 #
 
 # command line command
@@ -28,12 +28,12 @@ export c_iptables c_ifconfig
 user_cmd () {
 	case "$*" in
 		pre) 
-			USERCHK=$(${c_sed} -n '/^%/p' ${_confdir}/user.conf)
+			USERCHK=$(${c_sed} -n -f ${_includes}/user_pre.sed ${_confdir}/user.conf)
 			USERMENT="USER PRE COMMAND (%) Not Config"
 			IFS='%'
 			;;
 		post)
-			USERCHK=$(${c_sed} -n '/^@/p' ${_confdir}/user.conf)
+			USERCHK=$(${c_sed} -n -f ${_includes}/user_post.sed ${_confdir}/user.conf)
 			USERMENT="USER POST COMMAND (@) Not Config"
 			IFS='@'
 			;;
@@ -46,7 +46,7 @@ user_cmd () {
 			if [ -z "${uvalue}" ]; then
 				continue;
 			fi
-			uvalue=$(echo ${uvalue} | ${c_sed} -e '/\n/d' -e 's/^[^ ]*iptables//g' -e 's/#.*//g')
+			uvalue=$(echo ${uvalue})
 			o_echo "  * ${c_iptables} ${uvalue}"
 			[ $_testmode -eq 0 ] && ${c_iptables} ${uvalue}
 		done
