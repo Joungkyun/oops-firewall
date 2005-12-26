@@ -1,9 +1,9 @@
 Summary: Individaul Firewall with IPTABLES
 Summary(ko): IPTABLES 를 이용한 개별 방화벽
 Name: oops-firewall
-Version: 5.0.0
+Version: 5.0.1
 Release: 1
-Epoch: 13
+Epoch: 14
 Copyright: GPL
 Group: Applications/Security
 URL: http://www.oops.org/?t=lecture&sb=firewall&n=1
@@ -76,7 +76,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /etc/rc.d/init.d/oops-firewall
 %attr(755,root,root) /usr/sbin/oops-firewall
 /usr/include/oops-firewall/*.h
-/usr/include/oops-firewall/config.sed
+/usr/include/oops-firewall/*.sed
 /usr/share/locale/ko/LC_MESSAGES/oops-firewall.mo
 %config(noreplace) /etc/oops-firewall/filter.conf
 %config(noreplace) /etc/oops-firewall/masq.conf
@@ -87,10 +87,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir /usr/include/oops-firewall
 
 %files doc
-%doc doc/README doc/README.SORIBADA doc/README.DIALPAD
+%doc doc/README doc/README.SORIBADA doc/README.DIALPAD doc/CONFIG_SYNTAX
 %doc CREDIT COPYING Changelog
 
 %changelog
+* Tue Dec 26 2005 JoungKyun Kim <http://www.oops.org> 14:5.0.1-1
+- update 5.0.1
+
 * Sun Dec  4 2005 JoungKyun Kim <http://www.oops.org> 13:5.0.0-1
 - update 5.0.0
 
