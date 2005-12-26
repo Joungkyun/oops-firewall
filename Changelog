@@ -1,9 +1,10 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.38 2005-12-26 18:05:22 oops Exp $
+$Id: Changelog,v 1.39 2005-12-26 18:06:19 oops Exp $
 
 2005.12.26 JoungKyun.Kim <http://www.oops.org> 5.0.1
 - changed tab mark to \t
+- added user_pre.sed and user_post.sed
 
 2005.12.14 JoungKyun.Kim <http://www.oops.org>
 - enable administrate ftp user port when per host ftp open
