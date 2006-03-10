@@ -1,6 +1,6 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id: forward.h,v 1.2 2006-03-10 04:29:23 oops Exp $
 #
 
 add_forward_init() {
@@ -40,6 +40,11 @@ add_forward_rule() {
 		[ -n "$(echo ${i} | grep _S)" ] && _fs=1 || _fs=0
 		eval "_fv=\$${i}"
 
+		case "${i}" in
+			TCP*) proto="tcp";;
+			UDP*) proto="udp";;
+		easc
+
 		for v in $_fv
 		do
 			echo ${v} | {
@@ -50,10 +55,10 @@ add_forward_rule() {
 					IFS=':' read laddr lports raddr rports
 				fi
 
-				o_echo "  * iptables -t nat -A PREROUTING -p tcp -d ${laddr} \\"
+				o_echo "  * iptables -t nat -A PREROUTING -p ${proto} -d ${laddr} \\"
 				o_echo "             --dport ${lports} -j DNAT --to ${raddr}:${rports}"
 				[ "${_testmode}" -eq 0 ] && \
-					${c_iptables} -t nat -A PREROUTING -p tcp -d ${laddr} \
+					${c_iptables} -t nat -A PREROUTING -p ${proto} -d ${laddr} \
 								--dport ${lports} -j DNAT --to ${raddr}:${rports}
 			}
 		done
