@@ -1,6 +1,9 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.40 2005-12-26 18:10:07 oops Exp $
+$Id: Changelog,v 1.41 2006-03-10 04:29:23 oops Exp $
+
+2006.03.10 JoungKyun.Kim <http://www.oops.org>
+- fixed udp forwarding bug
 
 2005.12.26 JoungKyun.Kim <http://www.oops.org> 5.0.1
 - changed tab mark to \t
