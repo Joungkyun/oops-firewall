@@ -1,0 +1,290 @@
+#!/bin/sh
+#
+# $Id: oops-firewall,v 1.1 2005-12-03 19:41:01 oops Exp $
+#
+# OOPS Firewall : Very Easy Iptables frontend
+# Copyright by JoungKyun.Kim
+#
+
+TEXTDOMAIN=oops-firewall
+TEXTDOMAINDIR=@shareddir@/locale
+
+_confdir="@confdir@"
+_includes="@includedir@"
+export _confdir _includes
+
+# include function list
+source ${_includes}/oops-firewall.h
+
+# init modules
+${c_depmod} -a &> /dev/null
+
+# parse option
+opts=$(${c_getopt} c:htvV $*)
+[ $? -ne 0 ] && usage
+set -- ${opts}
+
+for i
+do
+	case "$i" in
+		-t) _testmode=1; shift;;
+		-v) _verbose=1; shift;;
+		-c) _confdir=$2; shift; shift;;
+		-V) printVersion;;
+		--) shift; break;;
+	esac
+done
+
+[ $# -ne 0 ] && usage
+
+[ $_verbose -eq 1 ] && printBanner clear
+
+#
+# check user type
+#
+o_echo
+o_echo -n $"1. Check user type"
+
+isroot
+
+if [ $? -ne 0 ]; then
+	print_result 1 $"U are not super user!"
+	exit 1
+else
+	print_result 0
+fi
+
+
+#
+# Kernel version check
+#
+
+o_echo
+o_echo -n $"2. Kernel version check"
+kernelCheck
+
+case "$?" in
+	2)
+		print_result 1 $"Enable to use over kernel 2.4.0"
+		exit 1
+		;;
+	1)
+		extend_mangle=1
+		print_result 0
+		;;
+	*)
+		extend_mangle=0
+		print_result 0
+		;;
+esac
+export extend_mangle
+
+#
+# IP Address check
+#
+
+o_echo
+o_echo $"3. IP address Check"
+o_echo
+
+# get device list
+getDeviceList devlist
+
+# parse device information
+for dv in ${devlist}
+do
+	makeDeviceEnv ${dv}
+done
+
+# print device information
+for dv in ${devlist}
+do
+    chkIP=
+    chkSN=
+    chkNT=
+
+    parseDevice "${dv}" devName devNum
+    eval "chkIP=\${${devName}${devNum}_IPADDR}"
+
+    if [ -n "${chkIP}" ]; then
+
+      eval "chkSN=\${${devName}${devNum}_SUBNET}"
+      eval "chkNT=\${${devName}${devNum}_NET}"
+
+      o_echo $"  * ${devName}${devNum} Information"
+      o_echo -n $"    IP ADDRESS"
+      print_result 0 "${chkIP}" "yellow"
+      o_echo -n $"    SUBNET MASK"
+      print_result 0 "${chkSN}" "yellow"
+      o_echo -n $"    NETWORK"
+      print_result 0 "${chkNT}" "yellow"
+      o_echo
+    fi
+done
+
+# if exists mine.conf, add in configuration list
+[ -f "${_confdir}/mine.conf" ] && _configs="${_configs} mine"
+
+# read configurations
+for i in ${_configs}
+do
+	conf_context=
+	conf_context=$(${c_sed} -n -f ${_includes}/config.sed ${_confdir}/${i}.conf)
+	eval ${conf_context}
+done
+
+# check directive with true/false values (true: 1, false: 0)
+for cVAR in ALLOWSELF USE_LOG MASQ_USED
+do
+	eval "cVARTMP=\$${cVAR}"
+	parseValue $cVARTMP $cVAR
+done
+
+
+#
+# global configuration
+#
+
+o_echo $"4. Reset Netfilter"
+o_echo
+
+ins_mod
+o_echo
+
+# Init Service
+init_service
+
+
+#
+# Init Kernel parameter
+#
+
+o_echo
+o_echo $"5. Basic Kernel Parameter Configuration"
+o_echo
+
+init_kernel
+
+
+#
+# Deny Invalid Packet
+#
+
+o_echo
+o_echo $"6. Drop Invalid Package"
+o_echo
+
+init_invalid
+
+#
+# Allow All Service
+#
+
+o_echo
+o_echo $"7. Allow All Service"
+o_echo
+
+add_all_rule
+
+#
+# User define command (execute "!" command)
+#
+
+o_echo
+o_echo $"8. Execute user defined pre command"
+o_echo
+user_cmd "pre"
+
+
+#
+# Outgoing Service configuration
+#
+
+o_echo
+o_echo $"9. Allow Outgoing Service Configuration"
+o_echo
+
+add_port_rule outgoing OUT_TCP_ALLOWPORT OUT_UDP_ALLOWPORT
+
+# for name service
+o_echo $"  * Name Service Configuration"
+add_named_port
+
+
+#
+# Incoming Service configuration 
+#
+
+o_echo
+o_echo $"10. Allow Incoming Service Configuration"
+o_echo
+
+add_port_rule incoming TCP_ALLOWPORT TCP_HOSTPERPORT UDP_ALLOWPORT UDP_HOSTPERPORT
+
+# for icmp
+
+o_echo "  * ICMP service Configuration"
+add_icmp_host ICMP_HOSTPERPING ICMP_HOSTPERTRACE
+
+
+#
+# Masqurade Configuration
+#
+
+o_echo
+o_echo $"11. Masqurade Configuration"
+o_echo
+
+add_masq_rule
+
+
+#
+# Forwarding Configuration
+#
+
+o_echo
+o_echo $"12. Forwarding Configuration"
+o_echo
+
+add_forward_rule
+
+
+#
+# User define command (execute "!" command)
+#
+
+o_echo
+o_echo $"13. Execute user defined post Command"
+o_echo
+user_cmd "post"
+
+
+#
+# Tos Configuration
+#
+
+o_echo
+o_echo $"14. TOS Configuration"
+o_echo
+
+add_tos_rule
+[ $? -ne 0 ] && {
+	o_echo
+	o_echo $"  * TOS Not Config"
+	o_echo
+}
+
+
+#
+# Deny rule set
+#
+
+o_echo
+o_echo $"15. Deny rule set configuration"
+o_echo
+
+init_deny
+
+o_echo
+
+exit 0

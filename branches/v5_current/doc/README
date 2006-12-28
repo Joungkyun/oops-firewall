@@ -1,0 +1,38 @@
+OOPS Firewall
+
+$Id: README,v 1.1 2005-12-03 19:25:08 oops Exp $
+
+This is the source of oops firewall v5.0.x
+
+oops firewall is frontend utility of iptables.
+
+See the Changelog file for a detailed listing of all changes.  See the INSTALL
+file for information on building and installing oops firewall.
+
+This program is used iptables package and kernel 2.4.x or 2.6.x
+
+Even if you get any problem, I don't have any sense of responsibility.
+All Problems are your destiny :-)
+
+
+** oops-firewall directive order
+
+ 1. ALLOWSELF             (filter.conf)
+ 2. ALLOWALL              (filter.conf)
+ 3. pre user define rule  (user.conf % directive)
+ 4. OUT_TCP_ALLOWPORT     (filter.conf)
+ 5. OUT_UDP_ALLOWPORT     (filter.conf)
+ 6. TCP_ALLOWPORT         (filter.conf)
+ 7. TCP_HOSTPERPORT       (filter.conf)
+ 8. UDP_ALLOWPORT         (filter.conf)
+ 9. UDP_HOSTPERPORT       (filter.conf)
+10. masquerading rule     (masq.conf)
+11. TCP_FORWARD_TO        (forward.conf)
+12. TCP_FORWARD_TO_S      (forward.conf)
+13. UDP_FORWARD_TO        (forward.conf)
+14. UDP_FORWARD_TO_S      (forward.conf)
+15. ALL_FORWARD_TO        (forward.conf)
+16. post user define rule (user.conf @ directive)
+17. USE_TOS               (tos.conf)
+
+
