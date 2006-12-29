@@ -1,6 +1,6 @@
 # IPTables Modules function
 #
-# $Id: modules.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id: modules.h,v 1.2 2006-12-29 05:45:17 oops Exp $
 #
 
 ins_mod() {
@@ -17,7 +17,7 @@ ins_mod() {
 			msg=
 			chk=
 			load=
-			loads=$(${c_lsmod} | grep "^${i}")
+			loads=$(${c_lsmod} | $c_grep "^${i}")
 
 			if [ -z "${loads}" ]; then
 				${c_modprobe} -k ${i} > /dev/null 2>&1
@@ -38,7 +38,7 @@ ins_mod() {
 			fi
 		done
 	else
-		loads=$(${c_lsmod} | grep "^${1}")
+		loads=$(${c_lsmod} | $c_grep "^${1}")
 		if [ -z "${loads}" ]; then
 			${c_modprobe} -k ${1} > /dev/null 2>&1
 			chk=$?
