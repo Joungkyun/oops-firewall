@@ -86,6 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/oops-firewall/application.conf
 %config(noreplace) /etc/oops-firewall/bridge.conf
 %config(noreplace) /etc/oops-firewall/filter.conf
+%config(noreplace) /etc/oops-firewall/interface.conf
 %config(noreplace) /etc/oops-firewall/masq.conf
 %config(noreplace) /etc/oops-firewall/forward.conf
 %config(noreplace) /etc/oops-firewall/tos.conf
