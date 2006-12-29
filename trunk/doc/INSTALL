@@ -1,6 +1,6 @@
 OOPS Firewall Installation 문서
 
-$Id: INSTALL,v 1.1 2006-12-29 06:27:45 oops Exp $
+$Id: INSTALL,v 1.2 2006-12-29 06:29:09 oops Exp $
 
 
 이 문서는 OOPS Firewall 6.x 설치에 대한 설명을 기술한다.
@@ -32,6 +32,9 @@ OOPS Firewall 은 Redhat 호환 배포본을위한 iptables 를 이용한 서버 개별 방
    shell> chkconfig --del iptables
 
 위의 과정을 거친 상태에서 OOPS Firewall 을 운영해야 한다.
+
+OOPS Firewall 은 안녕 리눅스(AnNyung LInux) 에서 개발이 되었고, 기본 방화
+벽이기 때문에 가장 궁합이 좋다.
 
 
 
