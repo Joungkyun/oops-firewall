@@ -1,0 +1,19 @@
+OOPS Firewall Chnages
+
+$Id: Changelog,v 1.47 2006-12-29 10:08:38 oops Exp $
+
+* 6.0.0
+---------------------------------------------------------------------
++ 2006.12.29 Fri JoungKyun.Kim <http://oops.org>
+	- init 6.0.0 tree
+	- add INSTALL document
+	- release 6.0.0
+
+
+* old stuff *
+
+2005.12.04 JoungKyun.Kim <http://oops.org> version 5.0.0
+2003.06.18 JoungKyun.Kim <http://oops.org> version 4.0.0
+2001.10.11 JoungKyun.Kim <http://oops.org> version 3.0
+2001.03.21 JoungKyun.Kim <http://oops.org> version 2.0
+2000.08.16 JoungKyun.Kim <http://oops.org> version 1.0 
