@@ -1,6 +1,6 @@
 # Init function
 #
-# $Id: init.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id: init.h,v 1.2 2006-12-29 05:45:17 oops Exp $
 #
 
 init_service() {
@@ -191,7 +191,8 @@ init_kernel() {
 
 	# RFC1812에 따른 IP spoof 방지를 위한 설정(커널 2.2 이상 버전)
 	# 아래에서 ip 스푸핑 해당 항목 참고
-	for pfile in /proc/sys/net/ipv4/conf/*/rp_filter
+	_pfile="/proc/sys/net/ipv4/conf/*/rp_filter"
+	for pfile in $_pfile
 	do
 		if [ -f "${pfile}" ]; then
 			dev=$(echo ${pfile} | ${c_sed} -e 's!/proc/sys/net/ipv4/conf/\([^/]\+\)/rp_filter!\1!g')
@@ -240,71 +241,159 @@ init_kernel() {
 }
 
 init_invalid() {
-	for v in INPUT OUTPUT
+	_tables="INPUT OUTPUT"
+	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
+
+	for v in $_tables
 	do
-		__logprefix="ANY Packet Refuse"
-		[ "${v}" = "OUTPUT" ] && __logprefix="${v} ${__logprefix}"
+		case "$v" in
+			INPUT) _pv="INPUT  ";;
+			OUTPUT) _pv="OUTPUT ";;
+			*) _pv="${v}"
+		esac
+		if [ "${v}" != "FORWARD" ]; then
+			__logprefix="${v} ANY Packet Refuse"
+		else
+			__logprefix="Bridge ANY Packet Refuse"
+		fi
 
 		[ ${USE_LOG} -eq 1 ] && {
-			o_echo "  * iptables -A ${v} -m stat --state ${_nI} \\"
+			o_echo "  * iptables -A ${_pv} -m stat --state ${_nI} \\"
 			o_echo "             ${_logformat} \\"
 			o_echo "             --log-prefix \"${__logprefix}\""
 			${c_iptables} -A ${v} -m state --state ${_nI} ${_logformat} --log-prefix "${__logprefix}"
 		}
-		o_echo "  * iptables -A ${v} -m state --state ${_nI} -j DROP"
+		o_echo "  * iptables -A ${_pv} -m state --state ${_nI} -j DROP"
 		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${v} -m state --state ${_nI} -j DROP
 	done
 }
 
 init_deny() {
+	_tables="INPUT"
+	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
+
 	# 모든 서비스를 거부
-	o_echo "  * Reject All Syn Packet"
-	[ ${USE_LOG} -eq 1 ] && {
-		o_echo "    iptables -A INPUT -p tcp --syn ${_logformat} --log-prefix 'SYN Refuse'"
-		[ ${_testmode} -eq 0 ] && \
-			${c_iptables} -A INPUT -p tcp --syn ${_logformat} --log-prefix 'SYN Refuse'
-	}
-	o_echo "    iptables -A INPUT -p tcp --syn -j REJECT"
-	[ ${_testmode} -eq 0 ] && ${c_iptables} -A INPUT -p tcp --syn -j REJECT
+	o_echo $"  * Reject All Syn Packet"
+	for _tb in OUTPUT ${_tables}
+	do
+		case "$_tb" in
+			INPUT) _ptb="INPUT  ";;
+			OUTPUT) _ptb="OUTPUT ";;
+			*) _ptb="$_tb"
+		esac
+		[ ${USE_LOG} -eq 1 ] && {
+			o_echo "    iptables -A ${_ptb} -p tcp --syn ${_logformat} --log-prefix 'SYN Refuse'"
+			[ ${_testmode} -eq 0 ] && \
+				${c_iptables} -A ${_tb} -p tcp --syn ${_logformat} --log-prefix 'SYN Refuse'
+		}
+		o_echo "    iptables -A ${_ptb} -p tcp --syn -j REJECT"
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p tcp --syn -j REJECT
+	done
 
-	o_echo "  * Drop All TCP packet"
-	[ "${USE_LOG}" = "1" ] && {
-		o_echo "    iptables -A INPUT -p tcp --dport ${_allport} ${_logformat} --log-prefix 'TCP Refuse'"
-		[ ${_testmode} -eq 0 ] && \
-			${c_iptables} -A INPUT -p tcp --dport ${_allport} ${_logformat} --log-prefix 'TCP Refuse'
-	}
-	o_echo "    iptables -A INPUT -p tcp --dport ${_allport} -j DROP"
-	[ ${_testmode} -eq 0 ] && ${c_iptables} -A INPUT -p tcp --dport ${_allport} -j DROP
+	o_echo
+	o_echo $"  * Drop All TCP packet"
+	for _tb in ${_tables}
+	do
+		case "$_tb" in
+			INPUT) _ptb="INPUT  ";;
+			OUTPUT) _ptb="OUTPUT ";;
+			*) _ptb="$_tb"
+		esac
+		[ "${USE_LOG}" = "1" ] && {
+			o_echo "    iptables -A ${_ptb} -p tcp --dport ${_allport} ${_logformat} --log-prefix 'TCP Refuse'"
+			[ ${_testmode} -eq 0 ] && \
+				${c_iptables} -A ${_tb} -p tcp --dport ${_allport} ${_logformat} --log-prefix 'TCP Refuse'
+		}
+		o_echo "    iptables -A ${_ptb} -p tcp --dport ${_allport} -j DROP"
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p tcp --dport ${_allport} -j DROP
+	done
 
-	o_echo "  * Drop All UDP packet"
-	[ "${USE_LOG}" = "1" ] && {
-		o_echo "    iptables -A INPUT -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'"
-		[ ${_testmode} -eq 0 ] && \
-			${c_iptables} -A INPUT -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'
-	}
-	o_echo "    iptables -A INPUT -p udp --dport ${_allport} -j DROP"
-	[ ${_testmode} -eq 0 ] && ${c_iptables} -A INPUT -p udp --dport ${_allport} -j DROP
+	o_echo
+	o_echo $"  * Drop All UDP packet"
+	for _tb in ${_tables}
+	do
+		case "$_tb" in
+			INPUT) _ptb="INPUT  ";;
+			OUTPUT) _ptb="OUTPUT ";;
+			*) _ptb="$_tb"
+		esac
+		if [ "${_tb}" = "FORWARD" ]; then
+			[ "${USE_LOG}" = "1" ] && {
+				o_echo "    iptables -A ${_ptb} -o ${BRIDGE_NAME} -p udp --dport 33434:33523 ${_logformat} --log-prefix 'UDP Traceroute'"
+				o_echo "    iptables -A ${_ptb} -i ${BRIDGE_NAME} -p udp --sport 32767:33167 ${_logformat} --log-prefix 'UDP Traceroute'"
+				if [ ${_testmode} -eq 0 ]; then
+					${c_iptables} -A ${_tb} -o ${BRIDGE_NAME} -p udp --dport 33434:33523 ${_logformat} --log-prefix 'UDP Traceroute'
+					${c_iptables} -A ${_tb} -i ${BRIDGE_NAME} -p udp --sport 32767:33167 ${_logformat} --log-prefix 'UDP Traceroute'
+				fi
+			}
+			o_echo "    iptables -A ${_ptb} -o ${BRIDGE_NAME} -p udp --dport 33434:33523 -j ACCEPT"
+			o_echo "    iptables -A ${_ptb} -i ${BRIDGE_NAME} -p udp --sport 32767:33167 -j ACCEPT"
+			if [ ${_testmode} -eq 0 ]; then
+				${c_iptables} -A ${_tb} -o ${BRIDGE_NAME}  -p udp --dport 33434:33523 -j ACCEPT 
+				${c_iptables} -A ${_tb} -i ${BRIDGE_NAME}  -p udp --sport 32767:33167 -j ACCEPT 
+			fi
+		fi
 
-	o_echo "  * Prevented internal ping and traceroute request"
+		[ "${USE_LOG}" = "1" ] && {
+			o_echo "    iptables -A ${_ptb} -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'"
+			[ ${_testmode} -eq 0 ] && \
+				${c_iptables} -A ${_tb} -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'
+		}
+		o_echo "    iptables -A ${_ptb} -p udp --dport ${_allport} -j DROP"
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p udp --dport ${_allport} -j DROP
+	done
+
+	o_echo
+	o_echo $"  * Prevented internal ping and traceroute request"
+
+	_tables="INPUT OUTPUT"
+	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
+
 	# PING 을 막음
 	[ "${USE_LOG}" = "1" ] && {
-		o_echo "    iptables -A INPUT -p icmp --icmp-type echo-request \\"
+		o_echo "    iptables -A INPUT   -p icmp --icmp-type echo-request \\"
 		o_echo "             ${_logformat} \\"
 		o_echo "             --log-prefix 'PING request Refuse'"
-		o_echo "    iptables -A OUTPUT -p icmp --icmp-type time-exceeded \\"
+		o_echo "    iptables -A OUTPUT  -p icmp --icmp-type time-exceeded \\"
 		o_echo "             ${_logformat} \\"
 		o_echo "             --log-prefix 'Traceroute Refuse'"
+		if [ ${BRIDGE_USED} -eq 1 ]; then
+			o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type echo-request \\"
+			o_echo "             ${_logformat} \\"
+			o_echo "             --log-prefix 'Traceroute Refuse'"
+			o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded \\"
+			o_echo "             ${_logformat} \\"
+			o_echo "             --log-prefix 'Traceroute Refuse'"
+		fi
 		[ ${_testmode} -eq 0 ] && {
 			${c_iptables} -A INPUT -p icmp --icmp-type echo-request ${_logformat} \
 						--log-prefix 'PING request Refuse'
 			${c_iptables} -A OUTPUT -p icmp --icmp-type time-exceeded ${_logformat} \
 						--log-prefix 'Traceroute Refuse'
+			if [ ${BRIDGE_USED} -eq 1 ]; then
+				${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type echo-request ${_logformat} \
+							--log-prefix 'PING request Refuse'
+				${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded ${_logformat} \
+							--log-prefix 'Traceroute Refuse'
+			fi
 		}
 	}
-	o_echo "    iptables -A INPUT -p icmp --icmp-type echo-request -j REJECT"
-	o_echo "    iptables -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT"
+	o_echo "    iptables -A INPUT   -p icmp --icmp-type echo-request -j REJECT"
+	o_echo "    iptables -A OUTPUT  -p icmp --icmp-type time-exceeded -j REJECT"
+	if [ ${BRIDGE_USED} -eq 1 ]; then
+		o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type echo-request -j ACCEPT"
+		o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded -j ACCEPT"
+		o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type echo-request -j REJECT"
+		o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded -j REJECT"
+	fi
 	[ ${_testmode} -eq 0 ] && {
 		${c_iptables} -A INPUT -p icmp --icmp-type echo-request -j REJECT
 		${c_iptables} -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT
+		if [ ${BRIDGE_USED} -eq 1 ]; then
+			${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type echo-request -j ACCEPT
+ 			${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded -j ACCEPT
+ 			${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type echo-request -j REJECT
+ 			${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded -j REJECT
+		fi
 	}
 }

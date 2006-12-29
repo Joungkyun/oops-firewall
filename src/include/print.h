@@ -1,13 +1,13 @@
 # Print function
 #
-# $Id: print.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id: print.h,v 1.2 2006-12-29 05:45:17 oops Exp $
 #
 
 printBanner() {
 	[ "${1}" = "clear" ] && clear || echo
 	echo  "############################################################################"
 	echo $"# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
-	echo $"#      By Sep 27 2005 JoungKyun.Kim <http://www.oops.org>"
+	echo $"#      By Dec 29 2006 JoungKyun.Kim <http://oops.org>"
 	echo  "############################################################################"
 	echo
 }
@@ -30,6 +30,11 @@ usage() {
 printVersion() {
 	echo -ne "OOPS Firewall v${_ver}\n\n"
 	exit 0
+}
+
+next_numbering() {
+	NB=$[$NB + 1]
+	export NB
 }
 
 # $1  => RESULT
@@ -67,15 +72,36 @@ print_result() {
 	fi
 }
 
+# $1  => USER COMMENT
+# $2  => START COLOR
+print_color() {
+	__cend="7;0m"
+	__msg=$1
+	__color=$2
+
+	[ $_verbose -ne 1 ] && return
+
+	[ -z "${__msg}" ] && return
+	[ -z "${__color}" ] && __color="green"
+
+	conv_color $__color
+	__mcol=$?
+	__cstart="1;${__mcol}m"
+
+	echo -ne "[${__cstart}${__msg}[${__cend}"
+}
+
 o_echo() {
-	if [ $_verbose -eq 1 ]; then
-		_opt=
-		if [ "$1" = "-ne" -o "$1" = "-n" -o "$1" = "-e" ]; then
-			_opt=$1
-			shift
-		fi
-		echo $_opt "$*"
+	[ $_verbose -ne 1 ] && return 0
+
+	_opt=
+	if [ "$1" = "-ne" -o "$1" = "-n" -o "$1" = "-e" ]; then
+		_opt=$1
+		shift
 	fi
+	echo $_opt "$*"
+
+	return 0
 }
 
 WordToUpper() {
