@@ -6,12 +6,12 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.9 2006-12-29 05:47:00 oops Exp $
+# $Id: ko.po,v 1.10 2007-01-02 08:15:15 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-fireall 6.0.0\n"
+"Project-Id-Version: oops-fireall 6.0.1\n"
 "Report-Msgid-Bugs-To: http://oops.org\n"
 "POT-Creation-Date: 2006-12-29 04:45+0900\n"
 "PO-Revision-Date: 2003-08-01 19:02+0900\n"
