@@ -1,11 +1,12 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.48 2007-01-02 08:13:34 oops Exp $
+$Id: Changelog,v 1.49 2007-01-02 08:15:15 oops Exp $
 
 * 6.0.1
 ---------------------------------------------------------------------
 + 2007.01.02 Tue JoungKyun.Kim <http://oops.org>
 	- fixed wrong execution on utf8 environmen
+	- start 6.0.1
 
 
 * 6.0.0
