@@ -1,0 +1,14 @@
+# kernel module list for using oops-firewall
+# $Id: modules.list,v 1.2 2005-12-03 19:50:06 oops Exp $
+#
+
+# Default kernel module lists
+# Don't touch follow configurations.
+ip_conntrack
+ip_tables
+ip_conntrack_ftp
+
+# use define kernel module lists. If you want to some moduels,
+# regist kernel module name per line.
+#ipt_geoip
+#ipt_layer7
