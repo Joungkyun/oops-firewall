@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: configure,v 1.17 2007-01-07 16:13:38 oops Exp $
+# $Id: configure,v 1.18 2007-01-07 16:36:17 oops Exp $
 
 NAME=oops-firewall
 GCOL=40
@@ -329,6 +329,11 @@ do
   ${perl} -pi -e "s!\@${i}\@!${_change}!g" ./temp/sbin/*
   ${perl} -pi -e "s!\@${i}\@!${_change}!g" ./temp/contrib/*
 done
+
+# bridge check
+[ -n "${brctl}" ] && \
+  ${perl} -pi -e "s!BRIDGE_SET=0!BRIDGE_SET=1!g" ./temp/include/default.h
+
 
 for i in oops-firewall.init command.h version.h oops-firewall
 do

@@ -1,6 +1,6 @@
 # Default variables define
 #
-# $Id: default.h,v 1.2 2006-12-29 05:45:17 oops Exp $
+# $Id: default.h,v 1.3 2007-01-07 16:36:17 oops Exp $
 #
 
 _ver=$(${c_cat} ${_includes}/version.h)
@@ -29,9 +29,12 @@ _logformat="-m limit --limit 1/h --limit-burst 3 -j LOG"
 # configration file name list
 _configs="interface application filter masq forward tos bridge"
 
+# bridge support
+BRIDGE_SET=0
+
 export _tmpifile _tmpofile _passiveif _passiveof
 export _userport _nN _nE _nR _nI
-export _logformat _configs
+export _logformat _configs BRIDGE_SET
 
 [ -f "${_tmpifile}" ]  && rm -rf "${_tmpifile}"  >& /dev/null
 [ -f "${_tmpofile}" ]  && rm -rf "${_tmpofile}"  >& /dev/null
