@@ -1,6 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.52 2007-01-07 16:02:24 oops Exp $
+$Id: Changelog,v 1.53 2007-01-07 16:11:22 oops Exp $
 
 * 6.0.1
 ---------------------------------------------------------------------
@@ -8,6 +8,7 @@ $Id: Changelog,v 1.52 2007-01-07 16:02:24 oops Exp $
 	- start 6.0.1
 	- fixed syntax error on configure
 	- removed file condition of ifup
+	- added exception case on execution file check of configure
 
 
 * 6.0.0
