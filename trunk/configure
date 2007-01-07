@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: configure,v 1.14 2007-01-07 15:58:12 oops Exp $
+# $Id: configure,v 1.15 2007-01-07 16:02:24 oops Exp $
 
 NAME=oops-firewall
 GCOL=40
@@ -10,7 +10,7 @@ CHKDIR="/bin /sbin /usr/bin /usr/sbin ${LOCALDIR}/bin ${LOCALDIR}/sbin"
 
 _command="depmod lsmod rmmod modprobe sed grep awk cat uname"
 _command="${_command} ipcalc cut getopt ifconfig ls rm mkdir"
-_command="${_command} msgfmt install cp touch brctl route ifup"
+_command="${_command} msgfmt install cp touch brctl route"
 
 
 usage() {
@@ -316,7 +316,7 @@ _target="awk bindir cat confdir cut depmod getopt grep"
 _target="${_target} ifconfig includedir initdir ipcalc"
 _target="${_target} iptables lsmod modprobe rm rmmod"
 _target="${_target} sed shareddir touch uname version"
-_target="${_target} brctl route ifup"
+_target="${_target} brctl route"
 
 for i in ${_target}
 do

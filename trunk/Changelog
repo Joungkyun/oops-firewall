@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.51 2007-01-07 15:58:12 oops Exp $
+$Id: Changelog,v 1.52 2007-01-07 16:02:24 oops Exp $
 
 * 6.0.1
 ---------------------------------------------------------------------
 + 2007.01.02 Tue JoungKyun.Kim <http://oops.org>
 	- start 6.0.1
 	- fixed syntax error on configure
+	- removed file condition of ifup
 
 
 * 6.0.0

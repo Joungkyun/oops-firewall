@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.3 2006-12-29 05:45:17 oops Exp $
+# $Id: command.h,v 1.4 2007-01-07 16:02:24 oops Exp $
 #
 
 # command line command
@@ -23,7 +23,6 @@ c_ifconfig="@ifconfig@"
 # bridge command
 c_brctl="@brctl@"
 c_route="@route@"
-c_ifup="@ifup@"
 
 export c_depmod c_lsmod c_rmmod c_modprobe
 export c_sed c_grep c_awk c_cat c_uname c_ipcalc c_cut
