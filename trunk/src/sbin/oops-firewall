@@ -1,12 +1,10 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.3 2007-01-02 08:12:39 oops Exp $
+# $Id: oops-firewall,v 1.4 2007-01-07 15:57:12 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
 #
-
-export LANG=
 
 TEXTDOMAIN=oops-firewall
 TEXTDOMAINDIR=@shareddir@/locale
