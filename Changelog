@@ -1,6 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.54 2007-01-07 16:13:38 oops Exp $
+$Id: Changelog,v 1.55 2007-01-07 16:36:17 oops Exp $
 
 * 6.0.1
 ---------------------------------------------------------------------
@@ -8,6 +8,7 @@ $Id: Changelog,v 1.54 2007-01-07 16:13:38 oops Exp $
 	- fixed syntax error on configure
 	- removed file condition of ifup
 	- added exception case on execution file check of configure
+	- enable not set bridge function on build time
 
 + 2007.01.02 Tue JoungKyun.Kim <http://oops.org>
 	- start 6.0.1

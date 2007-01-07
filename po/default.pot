@@ -2,18 +2,21 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # JoungKyun.Kim <http://oops.org>, 2006
-# made by xgettext -d default --from-code=euc-kr -L Shell -s *.sh
+# made by
+#    xgettext -d default --from-code=euc-kr -L Shell -s \
+#       configure src/include/*.h src/sbin/oops-firewall contrib/oops-firewall.init
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.6 2006-12-29 05:45:16 oops Exp $
+# $Id: default.pot,v 1.7 2007-01-07 16:36:17 oops Exp $
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-12-29 04:45+0900\n"
+"POT-Creation-Date: 2007-01-08 01:27+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,6 +80,10 @@ msgstr ""
 
 #: src/sbin/oops-firewall:123
 msgid "    IP ADDRESS"
+msgstr ""
+
+#: src/include/bridge.h:44
+msgid "    If you want use this function, isntall bridge-utils package"
 msgstr ""
 
 #: src/include/modules.h:53 src/include/modules.h:56
@@ -149,6 +156,14 @@ msgstr ""
 msgid "    SUBNET MASK"
 msgstr ""
 
+#: src/include/bridge.h:45
+msgid "    and, set 1 on BRIDGE_SET default.h and, configure path of"
+msgstr ""
+
+#: src/include/bridge.h:46
+msgid "    c_brctl environment on command.h"
+msgstr ""
+
 #: src/include/rule.h:212
 #, sh-format
 msgid "  * ${a_ment} service"
@@ -177,8 +192,12 @@ msgstr ""
 msgid "  * BRIDGE WAN Interface name \"$BRIDGE_WANDEV\" is not found"
 msgstr ""
 
-#: src/include/bridge.h:44
+#: src/include/bridge.h:51
 msgid "  * BRIDGE mode don't set"
+msgstr ""
+
+#: src/include/bridge.h:43
+msgid "  * BRIDGE not support on build time"
 msgstr ""
 
 #: src/include/rule.h:291
@@ -215,7 +234,7 @@ msgstr ""
 msgid "  * Load Netfilter Module"
 msgstr ""
 
-#: src/include/bridge.h:112 src/include/bridge.h:116
+#: src/include/bridge.h:119 src/include/bridge.h:123
 msgid "  * MASQ mode changed off mode!"
 msgstr ""
 
@@ -247,37 +266,37 @@ msgstr ""
 msgid "  * Reset NAT Table"
 msgstr ""
 
+#: src/include/command.h:34
+msgid "  * SSH Brute Force Attack Filter"
+msgstr ""
+
 #: src/sbin/oops-firewall:336
 msgid "  * TOS Not Config"
 msgstr ""
 
-#: src/include/command.h:101
+#: src/include/command.h:100
 msgid "  * USER POST COMMAND (@) Not Config"
 msgstr ""
 
-#: src/include/command.h:98
+#: src/include/command.h:97
 msgid "  * USER PRE COMMAND (%) Not Config"
 msgstr ""
 
-#: src/include/command.h:104
+#: src/include/command.h:103
 msgid "  * Unknown parameter"
 msgstr ""
 
-#: src/include/bridge.h:115
+#: src/include/bridge.h:122
 msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device"
 msgstr ""
 
-#: src/include/bridge.h:111
+#: src/include/bridge.h:118
 msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device"
 msgstr ""
 
 #: src/include/rule.h:424
 #, sh-format
 msgid "  = Tos configuration in ${i} chain"
-msgstr ""
-
-#: src/include/command.h:35
-msgid "  * SSH Brute Force Attack Filter"
 msgstr ""
 
 #: src/include/print.h:10

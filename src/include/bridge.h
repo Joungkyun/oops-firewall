@@ -1,6 +1,6 @@
 # Bridge rule function
 #
-# $Id: bridge.h,v 1.1 2006-12-29 05:46:24 oops Exp $
+# $Id: bridge.h,v 1.2 2007-01-07 16:36:17 oops Exp $
 #
 
 bridge_wan_info() {
@@ -39,6 +39,13 @@ bridge_dev_check() {
 }
 
 init_bridge() {
+	if [ $BRIDGE_SET -eq 0 ] ;then
+		o_echo $"  * BRIDGE not support on build time"
+		o_echo $"    If you want use this function, isntall bridge-utils package"
+		o_echo $"    and, set 1 on BRIDGE_SET default.h and, configure path of"
+	    o_echo $"    c_brctl environment on command.h"
+		return 1
+	fi
 
 	if [ $BRIDGE_USED -eq 0 ]; then
 		o_echo $"  * BRIDGE mode don't set"

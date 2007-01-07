@@ -6,14 +6,14 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.10 2007-01-02 08:15:15 oops Exp $
+# $Id: ko.po,v 1.11 2007-01-07 16:36:17 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: oops-fireall 6.0.1\n"
 "Report-Msgid-Bugs-To: http://oops.org\n"
-"POT-Creation-Date: 2006-12-29 04:45+0900\n"
+"POT-Creation-Date: 2007-01-08 01:27+0900\n"
 "PO-Revision-Date: 2003-08-01 19:02+0900\n"
 "Last-Translator: JoungKyun Kim <http://www.oops.org>\n"
 "Language-Team: AnNyung Packaging Team <http://annyung.oops.org>\n"
@@ -78,6 +78,10 @@ msgstr "    만료된 지시자 검사"
 #: src/sbin/oops-firewall:123
 msgid "    IP ADDRESS"
 msgstr "    IP 주소"
+
+#: src/include/bridge.h:44
+msgid "    If you want use this function, isntall bridge-utils package"
+msgstr "    이 기능을 사용하려면, 먼저 bridge-utils 패키지를 설치 하십시오."
 
 #: src/include/modules.h:53 src/include/modules.h:56
 msgid "    Load ${1} module"
@@ -149,6 +153,14 @@ msgstr "    NAT 테이블 카운터 초기화"
 msgid "    SUBNET MASK"
 msgstr "    서브넷 마스크"
 
+#: src/include/bridge.h:45
+msgid "    and, set 1 on BRIDGE_SET default.h and, configure path of"
+msgstr "    그리고 default.h 의 BRIDGE_SET 의 갓을 1로 설정하십시오."
+
+#: src/include/bridge.h:46
+msgid "    c_brctl environment on command.h"
+msgstr "    다음, command.h 의 c_brctl 변수에 brctl 의 경로를 설정 하십시오."
+
 #: src/include/rule.h:212
 #, sh-format
 msgid "  * ${a_ment} service"
@@ -177,9 +189,13 @@ msgstr "  * BRIDGE 모드가 비활성화 됩니다!"
 msgid "  * BRIDGE WAN Interface name \"$BRIDGE_WANDEV\" is not found"
 msgstr "  * BRIDGE WAN 인터페이스 이름 \"$BRIDGE_WANDEV\" 을 찾을 수 없습니다."
 
-#: src/include/bridge.h:44
+#: src/include/bridge.h:51
 msgid "  * BRIDGE mode don't set"
 msgstr "  * BRIDGE 모드가 셋팅되지 않았습니다."
+
+#: src/include/bridge.h:43
+msgid "  * BRIDGE not support on build time"
+msgstr "  * 빌드시에 BRIDGE 를 지원하지 않도록 설정 되었습니다."
 
 #: src/include/rule.h:291
 #, sh-format
@@ -215,7 +231,7 @@ msgstr "  * 모든 UDP 패킷을 Drop"
 msgid "  * Load Netfilter Module"
 msgstr "  * 넷필터 모듈 등록"
 
-#: src/include/bridge.h:112 src/include/bridge.h:116
+#: src/include/bridge.h:119 src/include/bridge.h:123
 msgid "  * MASQ mode changed off mode!"
 msgstr "  * MASQ 모드가 비활성화 됩니다!"
 
@@ -247,38 +263,40 @@ msgstr "  * Mangle 테이블 초기화"
 msgid "  * Reset NAT Table"
 msgstr "  * NAT 테이블 초기화"
 
+#: src/include/command.h:34
+msgid "  * SSH Brute Force Attack Filter"
+msgstr "  * SSH Brute Force 공격 필터"
+
 #: src/sbin/oops-firewall:336
 msgid "  * TOS Not Config"
 msgstr "  * TOS 설정이 안되어 있음"
 
-#: src/include/command.h:101
+#: src/include/command.h:100
 msgid "  * USER POST COMMAND (@) Not Config"
 msgstr "  * 실행 후 유저 명령(@)이 설정되어 있지 않음"
 
-#: src/include/command.h:98
+#: src/include/command.h:97
 msgid "  * USER PRE COMMAND (%) Not Config"
 msgstr "  * 실행 전 유저 명령(%) 이 설정되어 있지 않음"
 
-#: src/include/command.h:104
+#: src/include/command.h:103
 msgid "  * Unknown parameter"
 msgstr "  * 알수 없는 파라미터"
 
-#: src/include/bridge.h:115
+#: src/include/bridge.h:122
 msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device"
-msgstr "  * MASQ 클라이언트 디바이스 값이 BRIDGE 로컬 디바이스 값과 동일 합니다."
+msgstr ""
+"  * MASQ 클라이언트 디바이스 값이 BRIDGE 로컬 디바이스 값과 동일 합니다."
 
-#: src/include/bridge.h:111
+#: src/include/bridge.h:118
 msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device"
-msgstr "  * MASQ 클라이언트 디바이스의 값이 BRIDGE WAN 디바이스 값과 동일 합니다."
+msgstr ""
+"  * MASQ 클라이언트 디바이스의 값이 BRIDGE WAN 디바이스 값과 동일 합니다."
 
 #: src/include/rule.h:424
 #, sh-format
 msgid "  = Tos configuration in ${i} chain"
 msgstr "  = ${i} 체인 Tos 설정"
-
-#: src/include/command.h:35
-msgid "  * SSH Brute Force Attack Filter"
-msgstr "  * SSH Brute Force 공격 필터"
 
 #: src/include/print.h:10
 msgid "#      By Dec 29 2006 JoungKyun.Kim <http://oops.org>"
