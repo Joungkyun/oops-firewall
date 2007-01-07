@@ -1,14 +1,16 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.53 2007-01-07 16:11:22 oops Exp $
+$Id: Changelog,v 1.54 2007-01-07 16:13:38 oops Exp $
 
 * 6.0.1
 ---------------------------------------------------------------------
-+ 2007.01.02 Tue JoungKyun.Kim <http://oops.org>
-	- start 6.0.1
++ 2007.01.08 Mon JoungKyun.Kim <http://oops.org>
 	- fixed syntax error on configure
 	- removed file condition of ifup
 	- added exception case on execution file check of configure
+
++ 2007.01.02 Tue JoungKyun.Kim <http://oops.org>
+	- start 6.0.1
 
 
 * 6.0.0

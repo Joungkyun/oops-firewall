@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: configure,v 1.16 2007-01-07 16:11:22 oops Exp $
+# $Id: configure,v 1.17 2007-01-07 16:13:38 oops Exp $
 
 NAME=oops-firewall
 GCOL=40
@@ -314,6 +314,7 @@ ${rm} -rf ./temp
 ${mkdir} -p ./temp
 ${cp} -af src/* ./temp/
 ${cp} -af contrib ./temp/
+${find} ./temp -name "CVS" -exec rm -rf {} \; >& /dev/null
 
 _target="awk bindir cat confdir cut depmod getopt grep"
 _target="${_target} ifconfig includedir initdir ipcalc"
