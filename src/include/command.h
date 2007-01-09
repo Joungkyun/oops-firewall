@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.4 2007-01-07 16:02:24 oops Exp $
+# $Id: command.h,v 1.5 2007-01-09 14:19:37 oops Exp $
 #
 
 # command line command
@@ -43,7 +43,7 @@ brute_force_set() {
 			[ ${_testmode} -eq 0 ] && \
 				${c_iptables} -A ${b_dev} -p tcp --dport 22 -m state --state NEW \
 							-m recent --set --name SSHSCAN
-			if [ $USE_LOG -eq 1 ]; then
+			if [ $BRUTE_FORCE_LOG -eq 1 ]; then
 				o_echo "    iptables -A ${b_dev} -p tcp --dport 22 -m state --state NEW \\"
 				o_echo "             -m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \\"
 				o_echo "             --name SSHSCAN -j LOG --log-prefix SSH_Scan:"

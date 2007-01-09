@@ -1,6 +1,6 @@
 # Print function
 #
-# $Id: print.h,v 1.2 2006-12-29 05:45:17 oops Exp $
+# $Id: print.h,v 1.3 2007-01-09 14:19:37 oops Exp $
 #
 
 printBanner() {
@@ -236,9 +236,7 @@ parseValue() {
 		esac
 	fi
 
-	if [ -n "${pN}" ]; then
-		eval "${pN}=${rV}"
-	fi
+	[ -n "${pN}" ] && eval "${pN}=${rV}"
 
   return $rV
 }

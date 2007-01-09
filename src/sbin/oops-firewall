@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.4 2007-01-07 15:57:12 oops Exp $
+# $Id: oops-firewall,v 1.5 2007-01-09 14:19:37 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -142,10 +142,10 @@ do
 done
 
 # check directive with true/false values (true: 1, false: 0)
-for cVAR in ALLOWSELF USE_LOG MASQ_USED BRIDGE_USED
+for cVAR in ALLOWSELF USE_LOG MASQ_USED BRIDGE_USED BRUTE_FORCE_LOG
 do
 	eval "cVARTMP=\$${cVAR}"
-	parseValue $cVARTMP $cVAR
+	parseValue "$cVARTMP" "$cVAR"
 done
 
 next_numbering
