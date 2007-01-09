@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.56 2007-01-09 08:54:41 oops Exp $
+$Id: Changelog,v 1.57 2007-01-09 12:40:24 oops Exp $
 
 
 * 6.0.2
 ---------------------------------------------------------------------
 + 2007.01.09 Tue JoungKyun.Kim <http://oops.org>
 	- fixed error of brctl check error on configure
+	- fixed wrong lo device policy
 
 
 * 6.0.1

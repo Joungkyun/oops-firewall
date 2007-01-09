@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.3 2006-12-29 05:45:17 oops Exp $
+# $Id: rule.h,v 1.4 2007-01-09 12:40:24 oops Exp $
 #
 
 add_named_port() {
@@ -111,9 +111,18 @@ add_ftp_rule() {
 }
 
 add_all_rule() {
-	o_echo "  * iptables -A INPUT   -i lo -j ACCEPT"
-	[ "${_testmode}" = 0 ] && \
-		${c_iptables} -A INPUT -i lo -j ACCEPT
+	for i in INPUT OUTPUT
+	do
+		if [ "${i}" = "INPUT" ]; then
+			i="INPUT "
+			redir="i"
+		else
+			redir="o"
+		fi
+		o_echo "  * iptables -A ${i} -${redir} lo -j ACCEPT"
+		[ "${_testmode}" = 0 ] && \
+			${c_iptables} -A ${i} -${redir} lo -j ACCEPT
+	done
 
 	for dv in ${devlist}
 	do
@@ -128,7 +137,7 @@ add_all_rule() {
 			eval ${var_NT}
 
 			if [ -n "${varNT}" -a -n "${varSN}" ]; then
-				o_echo "  * iptables -A INPUT   -s ${varNT}/${varSN} -j ACCEPT"
+				o_echo "  * iptables -A INPUT  -s ${varNT}/${varSN} -j ACCEPT"
 				[ "${_testmode}" = 0 ] && \
 					${c_iptables} -A INPUT -s ${varNT}/${varSN} -j ACCEPT
 			fi
@@ -138,7 +147,7 @@ add_all_rule() {
 			eval ${var_IP}
 
 			if [ -n "${varIP}" ]; then
-				o_echo "  * iptables -A INPUT   -s ${varIP} -j ACCEPT"
+				o_echo "  * iptables -A INPUT  -s ${varIP} -j ACCEPT"
 				[ "${_testmode}" = 0 ] && \
 					${c_iptables} -A INPUT -s ${varIP} -j ACCEPT
 			fi
@@ -148,7 +157,7 @@ add_all_rule() {
 	if [ "${ALLOWALL}" != "" ] ; then
 		for values in ${ALLOWALL}
 		do
-			o_echo "  * iptables -A INPUT   -s ${values} -j ACCEPT"
+			o_echo "  * iptables -A INPUT  -s ${values} -j ACCEPT"
 			[ "${_testmode}" = 0 ] && \
 				${c_iptables} -A INPUT -s ${values} -j ACCEPT
 		done
