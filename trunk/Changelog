@@ -1,6 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.55 2007-01-07 16:36:17 oops Exp $
+$Id: Changelog,v 1.56 2007-01-09 08:54:41 oops Exp $
+
+
+* 6.0.2
+---------------------------------------------------------------------
++ 2007.01.09 Tue JoungKyun.Kim <http://oops.org>
+	- fixed error of brctl check error on configure
+
 
 * 6.0.1
 ---------------------------------------------------------------------
