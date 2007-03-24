@@ -1,0 +1,5 @@
+usr/sbin
+etc/init.d
+etc/oops-firewall
+usr/include/oops-firewall
+usr/share/locale/ko/LC_MESSAGES
