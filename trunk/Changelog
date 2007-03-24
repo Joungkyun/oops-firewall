@@ -1,6 +1,12 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.58 2007-01-09 14:19:37 oops Exp $
+$Id: Changelog,v 1.59 2007-03-24 18:52:30 oops Exp $
+
+* 6.0.3
+---------------------------------------------------------------------
++ 2007.03.25 Sun JoungKyun.Kim <http://oops.org>
+	- support debian
+	- add debian directory and files for dep environment
 
 
 * 6.0.2

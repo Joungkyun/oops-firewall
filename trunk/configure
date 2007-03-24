@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: configure,v 1.20 2007-01-27 10:16:04 oops Exp $
+# $Id: configure,v 1.21 2007-03-24 18:52:30 oops Exp $
 
 NAME=oops-firewall
 GCOL=40
@@ -132,7 +132,7 @@ do
     --iptables=*)
       iptables=$(echo ${i} | sed 's/.*=//g')
       ;;
-	--userpath=*)
+    --userpath=*)
       userpath=$(echo ${i} + sed 's/.*=//g')
       userpath=$(echo ${userpath} | sed 's/,/ /g')
       CHKDIR="${CHKDIR} ${userpath}"
@@ -313,7 +313,14 @@ echo
 ${rm} -rf ./temp
 ${mkdir} -p ./temp
 ${cp} -af src/* ./temp/
-${cp} -af contrib ./temp/
+
+${mkdir} -p ./temp/contrib
+if [ -f "/etc/debian_version" ]; then
+  ${cp} -af contrib/*.debian ./temp/contrib/oops-firewall.init
+else
+  ${cp} -af contrib/*.redhat ./temp/contrib/oops-firewall.init
+fi
+
 ${find} ./temp -name "CVS" -exec rm -rf {} \; >& /dev/null
 
 _target="awk bindir cat confdir cut depmod getopt grep"
