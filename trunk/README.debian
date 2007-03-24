@@ -10,6 +10,6 @@ follows:
 2. run dh_make set
 
    cd oops-firewall-6.0.3
-   debina/rule binary
+   debian/rule binary
 
 3. create oops-firewall_6.0.3-1.deb file parrent directory in current directory
