@@ -2,9 +2,9 @@
 Summary: Individaul Firewall with IPTABLES
 Summary(ko): IPTABLES 를 이용한 개별 방화벽
 Name: oops-firewall
-Version: 6.0.2
+Version: 6.0.3
 Release: 1
-Epoch: 32
+Epoch: 33
 Copyright: GPL
 Group: Applications/Security
 URL: http://oops.org/?t=lecture&sb=firewall&n=1
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
+* Sun Mar 25 2007 JoungKyun.Kim <http://oops.org> 33:6.0.3-1
+- update 6.0.3
+
 * Sat Jan 27 2007 JoungKyun.Kim <http://oops.org> 32:6.0.2-1
 - update 6.0.2
 
