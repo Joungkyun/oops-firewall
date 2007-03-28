@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init.redhat,v 1.1 2007-03-24 19:09:01 oops Exp $
+# $Id: oops-firewall.init.redhat,v 1.2 2007-03-28 12:46:46 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
@@ -114,9 +114,6 @@ case "$1" in
       ${IPTABLES} -t mangle -F FORWARD
     fi
 
-    if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
-      echo 0 > /proc/sys/net/ipv4/ip_forward
-    fi
     ${rm} -rf /var/lock/subsys/oops-firewall
 
     rm_mod 1
@@ -126,6 +123,9 @@ case "$1" in
     ;;
   stop)
     $0 right-stop
+    if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
+      echo 0 > /proc/sys/net/ipv4/ip_forward
+    fi
     clear_bridge
     ;;
   restart)
