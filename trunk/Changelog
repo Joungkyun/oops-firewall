@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.62 2007-03-28 11:59:07 oops Exp $
+$Id: Changelog,v 1.63 2007-03-28 12:46:46 oops Exp $
 
 * 6.0.4
 ---------------------------------------------------------------------
 + 2007.03.28
 	- fixed wrong forwarding work
 	- add check FORWARD configuration value
+	- move from right-stop to stop that init 0 on ip_forward
 
 * 6.0.3
 ---------------------------------------------------------------------
