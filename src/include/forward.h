@@ -1,6 +1,6 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.5 2007-03-28 07:57:13 oops Exp $
+# $Id: forward.h,v 1.6 2007-03-28 11:59:07 oops Exp $
 #
 
 add_forward_init() {
@@ -65,14 +65,28 @@ add_forward_rule() {
 
 		for v in $_fv
 		do
+			_chk=0
 			echo ${v} | {
 				if [ $_fs -eq 0 ]; then
 					IFS=':' read lports raddr rports
 					laddr=${FIREWALL_WAN}
 					ladd_dev=1
+
+					[ -z "${lports}" ] && _chk=1
+					[ -z "${raddr}" ] && _chk=1
+					[ -z "${rports}" ] && _chk=1
 				else
 					IFS=':' read laddr lports raddr rports
 					ladd_dev=0
+					[ -z "${laddr}" ] && _chk=1
+					[ -z "${lports}" ] && _chk=1
+					[ -z "${raddr}" ] && _chk=1
+					[ -z "${rports}" ] && _chk=1
+				fi
+
+				if [ $_chk -eq 1 ]; then
+					echo "  * ${i} => Wrong Configuration Value : ${v}"
+					continue
 				fi
 
 				for _laddr in ${laddr}
