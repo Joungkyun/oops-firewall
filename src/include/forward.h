@@ -1,6 +1,6 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.6 2007-03-28 11:59:07 oops Exp $
+# $Id: forward.h,v 1.7 2007-03-28 12:01:31 oops Exp $
 #
 
 add_forward_init() {
@@ -24,9 +24,9 @@ add_forward_init() {
 	#	INCOM_ADDR=${MASQ_IPADDR}
 	#fi
 
-	o_echo $"    Deprecated Direction Check"
+	o_echo $"  * Deprecated Direction Check"
 	if [ -n "${FORWARD_MASTER}" ]; then
-		o_echo -n "    * "
+		o_echo -n "    ==> "
 		print_color $"FORWARD_MASTER is Deprecated." red
 		o_echo
 	fi
