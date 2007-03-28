@@ -1,11 +1,11 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.4 2007-03-28 07:54:17 oops Exp $
+# $Id: forward.h,v 1.5 2007-03-28 07:57:13 oops Exp $
 #
 
 add_forward_init() {
 	[ -n "${TCP_FORWARD_TO}" ] && __finit=0 || __finit=1
-	[ -n "${TDP_FORWARD_TO_S}" ] && __finit=0
+	[ -n "${TCP_FORWARD_TO_S}" ] && __finit=0
 	[ -n "${UDP_FORWARD_TO}" ] && __finit=0
 	[ -n "${UDP_FORWARD_TO_S}" ] &&  __finit=0
 	[ -n "${ALL_FORWARD_TO}" ] && __finit=0
