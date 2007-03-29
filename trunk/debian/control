@@ -1,7 +1,7 @@
 Source: oops-firewall
 Section: net
 Priority: optional
-Maintainer: JoungKyun.Kim <admin@oops.org>
+Maintainer: JoungKyun Kim <admin@oops.org>
 Build-Depends: debhelper (>= 4.0.0), autotools-dev
 Standards-Version: 3.6.1
 
@@ -10,4 +10,4 @@ Architecture: any
 Depends: ipcalc, gettext, bridge-utils
 Description: Simple and useful frontend of iptables
  It keeps your network system basically secure for external access
- with iptables package in KERNEL v2.4
+ with iptables package in KERNEL v2.4 or v2.6
