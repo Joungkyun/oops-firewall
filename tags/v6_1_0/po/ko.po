@@ -1,0 +1,454 @@
+# oops-firewall templete file
+# Copyright (C) 2004 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# JoungKyun Kim <http://www.oops.org>, 2005
+# made by xgettext -d default --from-code=euc-kr -s *.sh
+# if you merge new version, msgmerge -U old.po new.po
+# xgettext 0.13 support shell script
+#
+# $Id: ko.po,v 1.15 2007-03-29 20:37:17 oops Exp $
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: oops-fireall 6.1.0\n"
+"Report-Msgid-Bugs-To: http://oops.org\n"
+"POT-Creation-Date: 2007-03-30 05:33+0900\n"
+"PO-Revision-Date: 2003-08-01 19:02+0900\n"
+"Last-Translator: JoungKyun.Kim <http://oops.org>\n"
+"Language-Team: AnNyung Packaging Team <http://annyung.oops.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=EUC-KR\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: src/include/print.h:23
+msgid "         -V                     print current version"
+msgstr "         -V                     현재 버전 출력"
+
+#: src/include/print.h:20
+msgid "         -c config_directory    set configuration directory"
+msgstr "         -c config_directory    설정 파일 디렉토리 지정"
+
+#: src/include/print.h:24
+msgid "         -h                     help (this) message"
+msgstr "         -h                     도움말"
+
+#: src/include/print.h:21
+msgid "         -t                     run test mode"
+msgstr "         -t                     테스트 모드로 실행"
+
+#: src/include/print.h:22
+msgid "         -v                     verbose mode"
+msgstr "         -v                     상세 모드"
+
+#: src/include/rule.h:387
+#, sh-format
+msgid "    ==> for ${i_ct} service"
+msgstr "    ==> ${i_ct} 서비스 설정"
+
+#: src/include/rule.h:414
+#, sh-format
+msgid "    ==> for Bridge ${i_ct} service"
+msgstr "    ==> Bridge ${i_ct} 서비스 설정"
+
+#: src/include/init.h:44 src/include/init.h:143
+msgid "    Accept All FORWARD Chain"
+msgstr "    모든 FORWARD 사슬 허가"
+
+#: src/include/init.h:20 src/include/init.h:129
+msgid "    Accept All INPUT Chain"
+msgstr "    모든 INPUT 사슬 허가"
+
+#: src/include/init.h:32 src/include/init.h:113
+msgid "    Accept All OUTPUT Chain"
+msgstr "    모든 OUTPUT 사슬을 허가"
+
+#: src/include/init.h:77 src/include/init.h:157
+msgid "    Accept All POSTROUTING Chain"
+msgstr "    모든 POSTROUTING 사슬 허가"
+
+#: src/include/init.h:65 src/include/init.h:99
+msgid "    Accept All PREROUTING Chain"
+msgstr "    FORWARD 규칙 제거"
+
+#: src/include/masq.h:13
+msgid "    Deprecated Direction Check"
+msgstr "    만료된 지시자 검사"
+
+#: src/sbin/oops-firewall:124
+msgid "    IP ADDRESS"
+msgstr "    IP 주소"
+
+#: src/include/bridge.h:46
+msgid "    If you want use this function, isntall bridge-utils package"
+msgstr "    이 기능을 사용하려면, 먼저 bridge-utils 패키지를 설치 하십시오."
+
+#: src/include/modules.h:53 src/include/modules.h:56
+msgid "    Load ${1} module"
+msgstr "    ${1} 모듈 등록"
+
+#: src/include/modules.h:33 src/include/modules.h:36
+#, sh-format
+msgid "    Load ${i} module"
+msgstr "    ${i} 모듈 등록"
+
+#: src/sbin/oops-firewall:128
+msgid "    NETWORK"
+msgstr "    네트워크"
+
+#: src/sbin/oops-firewall:130
+msgid "    NETWORK PREPIX"
+msgstr "    네트워크 프리픽스"
+
+#: src/include/modules.h:86
+msgid "    Remove ${1} module"
+msgstr "    ${i} 모듈 제거"
+
+#: src/include/modules.h:79
+#, sh-format
+msgid "    Remove ${i} module"
+msgstr "    ${i} 모듈 제거"
+
+#: src/include/init.h:150
+msgid "    Remove rule of FORWARD"
+msgstr "    FORWARD 규칙 제거"
+
+#: src/include/init.h:38
+msgid "    Remove rule of FORWARD Chain"
+msgstr "    FORWARD 사슬의 규칙 제거"
+
+#: src/include/init.h:136
+msgid "    Remove rule of INPUT"
+msgstr "    INPUT 규칙을 제거"
+
+#: src/include/init.h:26
+msgid "    Remove rule of INPUT Chain"
+msgstr "    INPUT 사슬의 규칙 제거"
+
+#: src/include/init.h:120
+msgid "    Remove rule of OUTPUT"
+msgstr "    OUTPUT 규칙을 제거"
+
+#: src/include/init.h:50
+msgid "    Remove rule of OUTPUT Chain"
+msgstr "    OUTPUT 사슬의 규칙 제거"
+
+#: src/include/init.h:83 src/include/init.h:164
+msgid "    Remove rule of POSTROUTING"
+msgstr "    POSTROUTING 규칙 제거"
+
+#: src/include/init.h:71 src/include/init.h:106
+msgid "    Remove rule of PREROUTING"
+msgstr "    PREROUTING 규칙 제거"
+
+#: src/include/init.h:14
+msgid "    Reset Chain Counter "
+msgstr "    사슬 카운터 초기화"
+
+#: src/include/init.h:92
+msgid "    Reset MANGLE Tabel Counter"
+msgstr "    MANGLE 테이블 카운터 초기화"
+
+#: src/include/init.h:59
+msgid "    Reset NAT Tabel Counter"
+msgstr "    NAT 테이블 카운터 초기화"
+
+#: src/sbin/oops-firewall:126
+msgid "    SUBNET MASK"
+msgstr "    서브넷 마스크"
+
+#: src/include/bridge.h:47
+msgid "    and, set 1 on BRIDGE_SET default.h and, configure path of"
+msgstr "    그리고 default.h 의 BRIDGE_SET 의 갓을 1로 설정하십시오."
+
+#: src/include/bridge.h:48
+msgid "    c_brctl environment on command.h"
+msgstr "    다음, command.h 의 c_brctl 변수에 brctl 의 경로를 설정 하십시오."
+
+#: src/include/rule.h:221
+#, sh-format
+msgid "  * ${a_ment} service"
+msgstr "  * ${a_ment} 서비스"
+
+#: src/sbin/oops-firewall:123
+#, sh-format
+msgid "  * ${devName}${devNum} Information"
+msgstr "  * ${devName}${devNum} 정보"
+
+#: src/include/init.h:187
+msgid "  * Allow to use TCP SYNCOOKIES"
+msgstr "  * TCP SYNCOOKIES 파라미터 사용"
+
+#: src/include/bridge.h:36
+#, sh-format
+msgid "  * BRIDGE Local Interface name \"$BRIDGE_LOCDEV\" is not found"
+msgstr "  * BRIDGE 로컬 인터페이스 \"$BRIDGE_LOCDEV\"를 찾을 수 없습니다."
+
+#: src/include/bridge.h:32 src/include/bridge.h:37
+msgid "  * BRIDGE MODE go off!"
+msgstr "  * BRIDGE 모드가 비활성화 됩니다!"
+
+#: src/include/bridge.h:31
+#, sh-format
+msgid "  * BRIDGE WAN Interface name \"$BRIDGE_WANDEV\" is not found"
+msgstr "  * BRIDGE WAN 인터페이스 이름 \"$BRIDGE_WANDEV\" 을 찾을 수 없습니다."
+
+#: src/include/bridge.h:53
+msgid "  * BRIDGE mode don't set"
+msgstr "  * BRIDGE 모드가 셋팅되지 않았습니다."
+
+#: src/include/bridge.h:45
+msgid "  * BRIDGE not support on build time"
+msgstr "  * 빌드시에 BRIDGE 를 지원하지 않도록 설정 되었습니다."
+
+#: src/include/rule.h:305
+#, sh-format
+msgid "  * Bridge ${a_ment} service"
+msgstr "  * Bridge ${a_ment} 서비스"
+
+#: src/sbin/oops-firewall:263
+msgid "  * Bridge Name Service Configuration"
+msgstr "  * Bridge DNS 서비스 설정"
+
+#: src/include/init.h:203
+#, sh-format
+msgid "  * CHK IP SPOOFING ${dev}"
+msgstr "  * ${dev} IP 스푸핑 체크"
+
+#: src/include/init.h:214
+msgid "  * Deny Invalid MSG"
+msgstr "  * 유효하지 않은 메세지 거절"
+
+#: src/include/init.h:238
+msgid "  * Deny Ping at BroadCast"
+msgstr "  * BroadCast 로의 Ping 을 거부"
+
+#: src/include/forward.h:27
+msgid "  * Deprecated Direction Check"
+msgstr "  * 만료된 지시자 검사"
+
+#: src/include/init.h:294
+msgid "  * Drop All TCP packet"
+msgstr "  * 모든 TCP 패킷을 Drop"
+
+#: src/include/init.h:312
+msgid "  * Drop All UDP packet"
+msgstr "  * 모든 UDP 패킷을 Drop"
+
+#: src/include/modules.h:11
+msgid "  * Load Netfilter Module"
+msgstr "  * 넷필터 모듈 등록"
+
+#: src/include/bridge.h:123 src/include/bridge.h:127
+msgid "  * MASQ mode changed off mode!"
+msgstr "  * MASQ 모드가 비활성화 됩니다!"
+
+#: src/sbin/oops-firewall:259
+msgid "  * Name Service Configuration"
+msgstr "  * DNS 서비스 설정"
+
+#: src/include/modules.h:71
+msgid "  * Netfilter Module Shutdown"
+msgstr "  * 넷필터 모듈 종료"
+
+#: src/include/init.h:344
+msgid "  * Prevented internal ping and traceroute request"
+msgstr "  * 내부로 들어오는 ping 과 traceroute 요청을 거부"
+
+#: src/include/init.h:276
+msgid "  * Reject All Syn Packet"
+msgstr "  * 모든 Syn 패킷을 거부"
+
+#: src/include/init.h:9
+msgid "  * Reset Basic Table"
+msgstr "  * 기본 테이블 초기화"
+
+#: src/include/init.h:87
+msgid "  * Reset Mangle Table"
+msgstr "  * Mangle 테이블 초기화"
+
+#: src/include/init.h:54
+msgid "  * Reset NAT Table"
+msgstr "  * NAT 테이블 초기화"
+
+#: src/include/command.h:34
+msgid "  * SSH Brute Force Attack Filter"
+msgstr "  * SSH Brute Force 공격 필터"
+
+#: src/sbin/oops-firewall:339
+msgid "  * TOS Not Config"
+msgstr "  * TOS 설정이 안되어 있음"
+
+#: src/include/command.h:100
+msgid "  * USER POST COMMAND (@) Not Config"
+msgstr "  * 실행 후 유저 명령(@)이 설정되어 있지 않음"
+
+#: src/include/command.h:97
+msgid "  * USER PRE COMMAND (%) Not Config"
+msgstr "  * 실행 전 유저 명령(%) 이 설정되어 있지 않음"
+
+#: src/include/command.h:103
+msgid "  * Unknown parameter"
+msgstr "  * 알수 없는 파라미터"
+
+#: src/include/bridge.h:126
+msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device"
+msgstr ""
+"  * MASQ 클라이언트 디바이스 값이 BRIDGE 로컬 디바이스 값과 동일 합니다."
+
+#: src/include/bridge.h:122
+msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device"
+msgstr ""
+"  * MASQ 클라이언트 디바이스의 값이 BRIDGE WAN 디바이스 값과 동일 합니다."
+
+#: src/include/rule.h:447
+#, sh-format
+msgid "  = Tos configuration in ${i} chain"
+msgstr "  = ${i} 체인 Tos 설정"
+
+#: src/include/print.h:10
+msgid "#      By Dec 29 2006 JoungKyun.Kim <http://oops.org>"
+msgstr "#      2006.12.29 김정균 <http://oops.org>"
+
+#: src/include/print.h:9
+#, sh-format
+msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
+msgstr "# OOPS Firewall - 설정이 간단한 iptables 프론트엔드 v${_ver}"
+
+#: src/sbin/oops-firewall:231
+#, sh-format
+msgid "${NB}. Allow All Service"
+msgstr "${NB}. 모든 서비스 허가"
+
+#: src/sbin/oops-firewall:274
+#, sh-format
+msgid "${NB}. Allow Incoming Service Configuration"
+msgstr "${NB}. 내부로 들어오는 서비스 허가"
+
+#: src/sbin/oops-firewall:253
+#, sh-format
+msgid "${NB}. Allow Outgoing Service Configuration"
+msgstr "${NB}. 외부로 나가는 서비스 허가"
+
+#: src/sbin/oops-firewall:208
+#, sh-format
+msgid "${NB}. Basic Kernel Parameter Configuration"
+msgstr "${NB}. 기본 커널 파라미터 설정"
+
+#: src/sbin/oops-firewall:50
+#, sh-format
+msgid "${NB}. Check user type"
+msgstr "${NB}. 실행 유저 체크"
+
+#: src/sbin/oops-firewall:350
+#, sh-format
+msgid "${NB}. Deny rule set configuration"
+msgstr "${NB}. 거부 규칙 설정"
+
+#: src/sbin/oops-firewall:220
+#, sh-format
+msgid "${NB}. Drop Invalid Package"
+msgstr "${NB}. 이상 패킷 제거"
+
+#: src/sbin/oops-firewall:322
+#, sh-format
+msgid "${NB}. Execute user defined post Command"
+msgstr "${NB}. 후처리 사용자 설정 규칙 추가"
+
+#: src/sbin/oops-firewall:242
+#, sh-format
+msgid "${NB}. Execute user defined pre command"
+msgstr "${NB}. 전처리 사용자 설정 규칙 추가"
+
+#: src/sbin/oops-firewall:310
+#, sh-format
+msgid "${NB}. Forwarding Configuration"
+msgstr "${NB}. 포워딩 설정"
+
+#: src/sbin/oops-firewall:93
+#, sh-format
+msgid "${NB}. IP address Check"
+msgstr "${NB}. IP 주소 체크"
+
+#: src/sbin/oops-firewall:196
+#, sh-format
+msgid "${NB}. Init Bridge Mode"
+msgstr "${NB}. Bridge 모드 초기화"
+
+#: src/sbin/oops-firewall:155
+#, sh-format
+msgid "${NB}. Interface Information"
+msgstr "${NB}. 인터페이스 정보"
+
+#: src/sbin/oops-firewall:68
+#, sh-format
+msgid "${NB}. Kernel version check"
+msgstr "${NB}. 커널 버전 검사"
+
+#: src/sbin/oops-firewall:298
+#, sh-format
+msgid "${NB}. Masqurade Configuration"
+msgstr "${NB}. 매스쿼레이드 설정"
+
+#: src/sbin/oops-firewall:181
+#, sh-format
+msgid "${NB}. Reset Netfilter"
+msgstr "${NB}. 넷필터 초기화"
+
+#: src/sbin/oops-firewall:333
+#, sh-format
+msgid "${NB}. TOS Configuration"
+msgstr "${NB}. TOS 설정"
+
+#: src/include/masq.h:20
+#, sh-format
+msgid "${i} is Deprecated."
+msgstr "${i} 은/는 만료되었습니다."
+
+#: src/include/modules.h:37
+msgid "Already Loading"
+msgstr "존재함"
+
+#: contrib/oops-firewall.init.redhat:120 contrib/oops-firewall.init.debian:130
+msgid "Destory Firewall Tables: "
+msgstr "OOPS Firewall 종료: "
+
+#: src/sbin/oops-firewall:73
+msgid "Enable to use over kernel 2.4.0"
+msgstr "커널 2.4.0 버전 부터 사용이 가능합니다."
+
+#: src/include/forward.h:30
+msgid "FORWARD_MASTER is Deprecated."
+msgstr "FORWARD_MASTER 는 사용되지 않습니다."
+
+#: src/include/print.h:19
+msgid "Options:"
+msgstr "옵션:"
+
+#: contrib/oops-firewall.init.redhat:43 contrib/oops-firewall.init.debian:53
+msgid "Starting OOPS Firewall: "
+msgstr "OOPS Firewall 시작: "
+
+#: src/sbin/oops-firewall:55
+msgid "U are not super user!"
+msgstr "수퍼 유저 권한으로 실행을 해야 합니다."
+
+#: contrib/oops-firewall.init.redhat:162 contrib/oops-firewall.init.debian:172
+msgid "Usage: $0 {start|right-stop|stop|restart|status}"
+msgstr "사용법: $0 {start|right-stop|stop|restart|status}"
+
+#: src/include/print.h:18
+msgid "Usage: oops-firewall -[option]"
+msgstr "사용법: oops-firewall -[옵션]"
+
+#: contrib/oops-firewall.init.redhat:139 contrib/oops-firewall.init.debian:149
+msgid "[ Legualar Table ]"
+msgstr "[ 기본 테이블 ]"
+
+#: contrib/oops-firewall.init.redhat:155 contrib/oops-firewall.init.debian:165
+msgid "[ MANGLE Table ]"
+msgstr "[ MANGLE 테이블 ]"
+
+#: contrib/oops-firewall.init.redhat:147 contrib/oops-firewall.init.debian:157
+msgid "[ NAT Table ]"
+msgstr "[ NAT 테이블 ]"

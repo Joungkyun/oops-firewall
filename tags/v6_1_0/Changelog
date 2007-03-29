@@ -1,0 +1,65 @@
+OOPS Firewall Chnages
+
+$Id: Changelog,v 1.68 2007-03-29 20:29:36 oops Exp $
+
+* 6.1.0
+---------------------------------------------------------------------
++ 2007.03.30
+	- minor version update to 6.1.0
+	- fixed wrong bridge filtering operation. rulset rewrite.
+	- fixed ftp delay problem
+	- fixed debian packaging format
+
++ 2007.03.29
+	- changed bridge interface name to brg0 from OOPS_BRG
+	  Previous name has BoF in if_readlist_proc
+	- fixed readd existed gateway in bridge mode
+
++ 2007.03.28
+	- start 6.0.4
+	- fixed wrong forwarding work
+	- add check FORWARD configuration value
+	- move from right-stop to stop that init 0 on ip_forward
+
+* 6.0.3
+---------------------------------------------------------------------
++ 2007.03.25 Sun JoungKyun.Kim <http://oops.org>
+	- support debian
+	- add debian directory and files for dep environment
+
+
+* 6.0.2
+---------------------------------------------------------------------
++ 2007.01.09 Tue JoungKyun.Kim <http://oops.org>
+	- fixed error of brctl check error on configure
+	- fixed wrong lo device policy
+	- add BRUTE_FORCE_LOG option
+
+
+* 6.0.1
+---------------------------------------------------------------------
++ 2007.01.08 Mon JoungKyun.Kim <http://oops.org>
+	- fixed syntax error on configure
+	- removed file condition of ifup
+	- added exception case on execution file check of configure
+	- enable not set bridge function on build time
+
++ 2007.01.02 Tue JoungKyun.Kim <http://oops.org>
+	- start 6.0.1
+
+
+* 6.0.0
+---------------------------------------------------------------------
++ 2006.12.29 Fri JoungKyun.Kim <http://oops.org>
+	- init 6.0.0 tree
+	- add INSTALL document
+	- release 6.0.0
+
+
+* old stuff *
+
+2005.12.04 JoungKyun.Kim <http://oops.org> version 5.0.0
+2003.06.18 JoungKyun.Kim <http://oops.org> version 4.0.0
+2001.10.11 JoungKyun.Kim <http://oops.org> version 3.0
+2001.03.21 JoungKyun.Kim <http://oops.org> version 2.0
+2000.08.16 JoungKyun.Kim <http://oops.org> version 1.0 
