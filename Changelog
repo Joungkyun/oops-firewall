@@ -1,15 +1,20 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.65 2007-03-29 08:13:25 oops Exp $
+$Id: Changelog,v 1.66 2007-03-29 17:56:02 oops Exp $
 
-* 6.0.4
+* 6.1.0
 ---------------------------------------------------------------------
++ 2007.03.30
+	- minor version update to 6.1.0
+	- fixed wrong bridge filtering operation. rulset rewrite.
+
 + 2007.03.29
 	- changed bridge interface name to brg0 from OOPS_BRG
 	  Previous name has BoF in if_readlist_proc
 	- fixed readd existed gateway in bridge mode
 
 + 2007.03.28
+	- start 6.0.4
 	- fixed wrong forwarding work
 	- add check FORWARD configuration value
 	- move from right-stop to stop that init 0 on ip_forward
