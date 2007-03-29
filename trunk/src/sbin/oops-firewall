@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.5 2007-01-09 14:19:37 oops Exp $
+# $Id: oops-firewall,v 1.6 2007-03-29 18:11:27 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -107,26 +107,26 @@ done
 # print device information
 for dv in ${devlist}
 do
-    chkIP=
-    chkSN=
-    chkNT=
+	chkIP=
+	chkSN=
+	chkNT=
 
-    parseDevice "${dv}" devName devNum
-    eval "chkIP=\${${devName}${devNum}_IPADDR}"
+	parseDevice "${dv}" devName devNum
+	eval "chkIP=\${${devName}${devNum}_IPADDR}"
 
-    if [ -n "${chkIP}" ]; then
+	if [ -n "${chkIP}" ]; then
 
-      eval "chkSN=\${${devName}${devNum}_SUBNET}"
-      eval "chkNT=\${${devName}${devNum}_NET}"
+		eval "chkSN=\${${devName}${devNum}_SUBNET}"
+		eval "chkNT=\${${devName}${devNum}_NET}"
 
-      o_echo $"  * ${devName}${devNum} Information"
-      o_echo -n $"    IP ADDRESS"
-      print_result 0 "${chkIP}" "yellow"
-      o_echo -n $"    SUBNET MASK"
-      print_result 0 "${chkSN}" "yellow"
-      o_echo -n $"    NETWORK"
-      print_result 0 "${chkNT}" "yellow"
-      o_echo
+		o_echo $"  * ${devName}${devNum} Information"
+		o_echo -n $"    IP ADDRESS"
+		print_result 0 "${chkIP}" "yellow"
+		o_echo -n $"    SUBNET MASK"
+		print_result 0 "${chkSN}" "yellow"
+		o_echo -n $"    NETWORK"
+		print_result 0 "${chkNT}" "yellow"
+		o_echo
     fi
 done
 
