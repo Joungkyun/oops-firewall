@@ -1,6 +1,6 @@
 # Bridge rule function
 #
-# $Id: bridge.h,v 1.4 2007-03-29 08:13:25 oops Exp $
+# $Id: bridge.h,v 1.5 2007-03-29 18:59:13 oops Exp $
 #
 
 bridge_wan_info() {
@@ -17,10 +17,12 @@ bridge_wan_info() {
 			$c_sed -e 's/addr:/BRIDGE_WANIP="/g' -e 's/Mask:/BRIDGE_WANMASK="/g'`
 
 		getDeviceNetwork "${BRIDGE_WANIP}" "${BRIDGE_WANMASK}" BRIDGE_WANNET
-		BRIDGE_SUBNET="${BRIDGE_WANNET}/${BRIDGE_WANMASK}"
+		getDevicePrefix "${BRIDGE_WANIP}" "${BRIDGE_WANMASK}" BRIDGE_PREFIX
+		BRIDGE_SUBNET="${BRIDGE_WANNET}/${BRIDGE_PREFIX}"
+		[ -z "${BRG0_NETPX}" -o "${BRG0_NETPX}" = "/" ] && BRG0_NETPX="${BRIDGE_SUBNET}"
 	fi
 
-	export BRIDGE_WANIP BRIDGE_WANMASK BRIDGE_WANNET BRIDGE_SUBNET
+	export BRIDGE_WANIP BRIDGE_WANMASK BRIDGE_WANNET BRIDGE_SUBNET BRG0_NETPX
 }
 
 bridge_dev_check() {
