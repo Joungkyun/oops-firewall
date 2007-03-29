@@ -1,6 +1,6 @@
 # Bridge rule function
 #
-# $Id: bridge.h,v 1.3 2007-03-29 07:55:12 oops Exp $
+# $Id: bridge.h,v 1.4 2007-03-29 08:13:25 oops Exp $
 #
 
 bridge_wan_info() {
@@ -96,7 +96,9 @@ init_bridge() {
 				$c_ifconfig $BRIDGE_NAME $BRIDGE_WANIP netmask $BRIDGE_WANMASK up
 
 		# Set gateway
-		[ -n "$BRIDGE_WANGW" ] && \
+		_gw_chk=$($c_route -n | $c_grep UG | $c_awk '{print $2}')
+
+		[ -n "$BRIDGE_WANGW" -a "$BRIDGE_WANGW" != "$_gw_chk" ] && \
 			o_echo "  * $c_route add default gw $BRIDGE_WANGW" && \
 			[ $_testmode -eq 0 ] && \
 				$c_route add default gw $BRIDGE_WANGW
