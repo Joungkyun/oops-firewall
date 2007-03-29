@@ -1,6 +1,6 @@
 # Device function
 #
-# $Id: device.h,v 1.2 2006-12-29 05:45:17 oops Exp $
+# $Id: device.h,v 1.3 2007-03-29 17:53:30 oops Exp $
 #
 
 # 네트워크 디바이스 (eth/ppp/bridge) 목록을 얻어오는 함수
@@ -64,14 +64,19 @@ makeDeviceEnv() {
 	getDeviceIP "${devEnvDevName}" devEnvVar_IP
 	getDeviceMask "${devEnvDevName}" devEnvVar_MASK
 	getDeviceNetwork "${devEnvVar_IP}" "${devEnvVar_MASK}" devEnvVar_NW
+	getDevicePrefix "${devEnvVar_IP}" "${devEnvVar_MASK}" devEnvVar_PF
 
 	devTmpVar="${devEnvVar_NAME}${devEnvVar_NUMBER}"
 	devTmpIP="${devTmpVar}_IPADDR=${devEnvVar_IP}"
 	devTmpSM="${devTmpVar}_SUBNET=${devEnvVar_MASK}"
 	devTmpNW="${devTmpVar}_NET=${devEnvVar_NW}"
+	devTmpPF="${devTmpVar}_PREFIX=${devEnvVar_PF}"
+	devTmpPP="${devTmpVar}_NETPX=\"${devEnvVar_NW}/${devEnvVar_PF}\""
 	eval ${devTmpIP}
 	eval ${devTmpSM}
 	eval ${devTmpNW}
+	eval ${devTmpPF}
+	eval ${devTmpPP}
 }
 
 parseDevice() {
@@ -80,7 +85,7 @@ parseDevice() {
 	parseDevNum=$3
 
 	parseTmpName=$(echo ${parseDevDeviceName} | ${c_sed} 's/[0-9]\+//g')
-	parseTmpNum=$(echo ${parseDevDeviceName} | ${c_sed} 's/eth\|ppp\|bond//g')
+	parseTmpNum=$(echo ${parseDevDeviceName} | ${c_sed} 's/eth\|ppp\|bond\|brg\|tun\|tap//g')
 
 	WordToUpper ${parseTmpName} parseTmpName
 
@@ -117,6 +122,21 @@ getDeviceMask() {
 	if [ -n "${getDeviceMaskVarName}" ]; then
 		getDeviceMaskTmpVar="${getDeviceMaskVarName}=\"${getDeviceMaskTmp}\""
 		eval ${getDeviceMaskTmpVar}
+	fi
+}
+
+getDevicePrefix() {
+	getDevicePfDevIP=$1
+	getDevicePfVarMask=$2
+	getDevicePfVarName=$3
+
+	getDevicePfTmp=$(${c_ipcalc -p ${getDevicePfDevIP} \
+								${getDevicePfVarMask} 2> /dev/null \
+								${c_awk} -F '=' '{print $2}')
+
+	if [ -n "${getDevicePfVarName}" ]; then
+		getDevicePfTmpVar="${getDevicePfVarName}=\"${getDevicePfTmp}\""
+		eval ${getDevicePfTmpVar}
 	fi
 }
 
