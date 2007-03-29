@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.6 2007-03-29 18:11:27 oops Exp $
+# $Id: oops-firewall,v 1.7 2007-03-29 18:29:23 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -118,6 +118,7 @@ do
 
 		eval "chkSN=\${${devName}${devNum}_SUBNET}"
 		eval "chkNT=\${${devName}${devNum}_NET}"
+		eval "chkPX=\${${devName}${devNum}_PREFIX}"
 
 		o_echo $"  * ${devName}${devNum} Information"
 		o_echo -n $"    IP ADDRESS"
@@ -126,6 +127,8 @@ do
 		print_result 0 "${chkSN}" "yellow"
 		o_echo -n $"    NETWORK"
 		print_result 0 "${chkNT}" "yellow"
+		o_echo -n $"    NETWORK PREPIX"
+		print_result 0 "${chkPX}" "yellow"
 		o_echo
     fi
 done
