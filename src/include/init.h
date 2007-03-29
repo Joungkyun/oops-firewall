@@ -1,6 +1,6 @@
 # Init function
 #
-# $Id: init.h,v 1.3 2007-03-29 17:53:30 oops Exp $
+# $Id: init.h,v 1.4 2007-03-29 19:13:46 oops Exp $
 #
 
 init_service() {
@@ -282,12 +282,12 @@ init_deny() {
 			*) _ptb="$_tb"
 		esac
 		[ ${USE_LOG} -eq 1 ] && {
-			o_echo "    iptables -A ${_ptb} -p tcp --syn ${_logformat} --log-prefix 'SYN Refuse'"
+			o_echo "    iptables -A ${_ptb} -p tcp -m state --state NEW ${_logformat} --log-prefix 'SYN Refuse'"
 			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${_tb} -p tcp --syn ${_logformat} --log-prefix 'SYN Refuse'
+				${c_iptables} -A ${_tb} -p tcp -m state --state NEW ${_logformat} --log-prefix 'SYN Refuse'
 		}
-		o_echo "    iptables -A ${_ptb} -p tcp --syn -j REJECT"
-		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p tcp --syn -j REJECT
+		o_echo "    iptables -A ${_ptb} -p tcp -m state --state NEW -j REJECT"
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p tcp -m state --state NEW -j REJECT
 	done
 
 	o_echo

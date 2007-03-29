@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.66 2007-03-29 17:56:02 oops Exp $
+$Id: Changelog,v 1.67 2007-03-29 19:13:46 oops Exp $
 
 * 6.1.0
 ---------------------------------------------------------------------
 + 2007.03.30
 	- minor version update to 6.1.0
 	- fixed wrong bridge filtering operation. rulset rewrite.
+	- fixed ftp delay problem
 
 + 2007.03.29
 	- changed bridge interface name to brg0 from OOPS_BRG
