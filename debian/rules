@@ -27,6 +27,7 @@ endif
 config.status: configure
 	dh_testdir
 	# Add here commands to configure the package.
+	rm -f COPYING
 	CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --bindir=/usr/sbin --confdir=/etc/oops-firewall --initdir=/etc/init.d
 
 
