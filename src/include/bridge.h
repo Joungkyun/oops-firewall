@@ -1,6 +1,6 @@
 # Bridge rule function
 #
-# $Id: bridge.h,v 1.2 2007-01-07 16:36:17 oops Exp $
+# $Id: bridge.h,v 1.3 2007-03-29 07:55:12 oops Exp $
 #
 
 bridge_wan_info() {
@@ -126,7 +126,7 @@ init_bridge() {
 }
 
 clear_bridge() {
-	$c_brctl show | $c_grep OOPS_BRG >& /dev/null
+	$c_brctl show | $c_grep brg0 >& /dev/null
 	cleardev=$?
 	$c_ifconfig $BRIDGE_NAME >& /dev/null
 	clearifc=$?

@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.4 2007-01-09 12:40:24 oops Exp $
+# $Id: rule.h,v 1.5 2007-03-29 07:55:12 oops Exp $
 #
 
 add_named_port() {
@@ -400,8 +400,8 @@ add_bricmp_host() {
 		o_echo $"    ==> for Bridge ${i_ct} service"
 		for v in ${i_ivalue}
 		do
-			o_echo "    iptables -A FORWARD -i OOPS_BRG -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
-			${c_iptables} -A FORWARD ${i_redir} OOPS_BRG -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
+			o_echo "    iptables -A FORWARD -i brg0 -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
+			${c_iptables} -A FORWARD ${i_redir} brg0 -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
 			[ "$i_ct" = "traceroute" ] && {
 				o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
 				o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -d ${v} -p udp --sport 32767:33167 -j ACCEPT"
