@@ -1,6 +1,6 @@
 # Init function
 #
-# $Id: init.h,v 1.2 2006-12-29 05:45:17 oops Exp $
+# $Id: init.h,v 1.3 2007-03-29 17:53:30 oops Exp $
 #
 
 init_service() {
@@ -319,28 +319,25 @@ init_deny() {
 		esac
 		if [ "${_tb}" = "FORWARD" ]; then
 			[ "${USE_LOG}" = "1" ] && {
-				o_echo "    iptables -A ${_ptb} -o ${BRIDGE_NAME} -p udp --dport 33434:33523 ${_logformat} --log-prefix 'UDP Traceroute'"
 				o_echo "    iptables -A ${_ptb} -i ${BRIDGE_NAME} -p udp --sport 32767:33167 ${_logformat} --log-prefix 'UDP Traceroute'"
-				if [ ${_testmode} -eq 0 ]; then
-					${c_iptables} -A ${_tb} -o ${BRIDGE_NAME} -p udp --dport 33434:33523 ${_logformat} --log-prefix 'UDP Traceroute'
-					${c_iptables} -A ${_tb} -i ${BRIDGE_NAME} -p udp --sport 32767:33167 ${_logformat} --log-prefix 'UDP Traceroute'
-				fi
+				[ ${_testmode} -eq 0 ] && \
+					o_echo "    iptables -A ${_ptb} -d ${BRG0_NETPX} -p udp --sport 32767:33167 ${_logformat} --log-prefix 'UDP Traceroute'"
 			}
-			o_echo "    iptables -A ${_ptb} -o ${BRIDGE_NAME} -p udp --dport 33434:33523 -j ACCEPT"
-			o_echo "    iptables -A ${_ptb} -i ${BRIDGE_NAME} -p udp --sport 32767:33167 -j ACCEPT"
-			if [ ${_testmode} -eq 0 ]; then
-				${c_iptables} -A ${_tb} -o ${BRIDGE_NAME}  -p udp --dport 33434:33523 -j ACCEPT 
-				${c_iptables} -A ${_tb} -i ${BRIDGE_NAME}  -p udp --sport 32767:33167 -j ACCEPT 
-			fi
+			o_echo "    iptables -A ${_ptb} -d ${BRG0_NETPX} -p udp --sport 32767:33167 -j ACCEPT"
+			[ ${_testmode} -eq 0 ] && \
+				${c_iptables} -A ${_tb} -d ${BRG0_NETPX} -p udp --sport 32767:33167 -j ACCEPT
+			_fdest=" -d ${BRG0_NETPX}"
+		else
+			_fdest=
 		fi
 
 		[ "${USE_LOG}" = "1" ] && {
-			o_echo "    iptables -A ${_ptb} -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'"
+			o_echo "    iptables -A ${_ptb}${_fdest} -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'"
 			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${_tb} -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'
+				${c_iptables} -A ${_tb}${_fdest} -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'
 		}
-		o_echo "    iptables -A ${_ptb} -p udp --dport ${_allport} -j DROP"
-		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p udp --dport ${_allport} -j DROP
+		o_echo "    iptables -A ${_ptb}${_fdest} -p udp --dport ${_allport} -j DROP"
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb}${_fdest} -p udp --dport ${_allport} -j DROP
 	done
 
 	o_echo
@@ -358,10 +355,10 @@ init_deny() {
 		o_echo "             ${_logformat} \\"
 		o_echo "             --log-prefix 'Traceroute Refuse'"
 		if [ ${BRIDGE_USED} -eq 1 ]; then
-			o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type echo-request \\"
+			o_echo "    iptables -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request \\"
 			o_echo "             ${_logformat} \\"
 			o_echo "             --log-prefix 'Traceroute Refuse'"
-			o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded \\"
+			o_echo "    iptables -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type time-exceeded \\"
 			o_echo "             ${_logformat} \\"
 			o_echo "             --log-prefix 'Traceroute Refuse'"
 		fi
@@ -371,9 +368,9 @@ init_deny() {
 			${c_iptables} -A OUTPUT -p icmp --icmp-type time-exceeded ${_logformat} \
 						--log-prefix 'Traceroute Refuse'
 			if [ ${BRIDGE_USED} -eq 1 ]; then
-				${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type echo-request ${_logformat} \
+				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request ${_logformat} \
 							--log-prefix 'PING request Refuse'
-				${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded ${_logformat} \
+				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type time-exceeded ${_logformat} \
 							--log-prefix 'Traceroute Refuse'
 			fi
 		}
@@ -381,19 +378,15 @@ init_deny() {
 	o_echo "    iptables -A INPUT   -p icmp --icmp-type echo-request -j REJECT"
 	o_echo "    iptables -A OUTPUT  -p icmp --icmp-type time-exceeded -j REJECT"
 	if [ ${BRIDGE_USED} -eq 1 ]; then
-		o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type echo-request -j ACCEPT"
-		o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded -j ACCEPT"
-		o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type echo-request -j REJECT"
-		o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded -j REJECT"
+		o_echo "    iptables -A FORWARD -s ${BRG0_NETPX} -p icmp --icmp-type echo-request -j ACCEPT"
+		o_echo "    iptables -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request -j REJECT"
 	fi
 	[ ${_testmode} -eq 0 ] && {
 		${c_iptables} -A INPUT -p icmp --icmp-type echo-request -j REJECT
 		${c_iptables} -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT
 		if [ ${BRIDGE_USED} -eq 1 ]; then
-			${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type echo-request -j ACCEPT
- 			${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded -j ACCEPT
- 			${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -p icmp --icmp-type echo-request -j REJECT
- 			${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -p icmp --icmp-type time-exceeded -j REJECT
+ 			${c_iptables} -A FORWARD -s ${BRG0_NETPX} -p icmp --icmp-type echo-request -j ACCEPT
+ 			${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request -j REJECT
 		fi
 	}
 }

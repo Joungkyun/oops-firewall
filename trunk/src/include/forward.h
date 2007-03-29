@@ -1,6 +1,6 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.7 2007-03-28 12:01:31 oops Exp $
+# $Id: forward.h,v 1.8 2007-03-29 17:53:30 oops Exp $
 #
 
 add_forward_init() {
@@ -71,7 +71,6 @@ add_forward_rule() {
 					IFS=':' read lports raddr rports
 					laddr=${FIREWALL_WAN}
 					ladd_dev=1
-
 					[ -z "${lports}" ] && _chk=1
 					[ -z "${raddr}" ] && _chk=1
 					[ -z "${rports}" ] && _chk=1
