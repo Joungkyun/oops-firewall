@@ -1,6 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.67 2007-03-29 19:13:46 oops Exp $
+$Id: Changelog,v 1.68 2007-03-29 20:29:36 oops Exp $
 
 * 6.1.0
 ---------------------------------------------------------------------
@@ -8,6 +8,7 @@ $Id: Changelog,v 1.67 2007-03-29 19:13:46 oops Exp $
 	- minor version update to 6.1.0
 	- fixed wrong bridge filtering operation. rulset rewrite.
 	- fixed ftp delay problem
+	- fixed debian packaging format
 
 + 2007.03.29
 	- changed bridge interface name to brg0 from OOPS_BRG
