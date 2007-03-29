@@ -1,9 +1,9 @@
 # header include file
 #
-# $Id: oops-firewall.h,v 1.2 2006-12-29 05:45:17 oops Exp $
+# $Id: oops-firewall.h,v 1.3 2007-03-29 07:55:12 oops Exp $
 #
 
-BRIDGE_NAME="OOPS_BRG"
+BRIDGE_NAME="brg0"
 
 source ${_includes}/color.h
 source ${_includes}/print.h
