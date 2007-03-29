@@ -1,6 +1,6 @@
 # Device function
 #
-# $Id: device.h,v 1.3 2007-03-29 17:53:30 oops Exp $
+# $Id: device.h,v 1.4 2007-03-29 18:01:43 oops Exp $
 #
 
 # 네트워크 디바이스 (eth/ppp/bridge) 목록을 얻어오는 함수
@@ -130,7 +130,7 @@ getDevicePrefix() {
 	getDevicePfVarMask=$2
 	getDevicePfVarName=$3
 
-	getDevicePfTmp=$(${c_ipcalc -p ${getDevicePfDevIP} \
+	getDevicePfTmp=$(${c_ipcalc} -p ${getDevicePfDevIP} \
 								${getDevicePfVarMask} 2> /dev/null \
 								${c_awk} -F '=' '{print $2}')
 
