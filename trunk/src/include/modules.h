@@ -1,6 +1,6 @@
 # IPTables Modules function
 #
-# $Id: modules.h,v 1.2 2006-12-29 05:45:17 oops Exp $
+# $Id: modules.h,v 1.3 2007-03-30 08:56:52 oops Exp $
 #
 
 ins_mod() {
@@ -17,30 +17,49 @@ ins_mod() {
 			msg=
 			chk=
 			load=
-			loads=$(${c_lsmod} | $c_grep "^${i}")
+
+			mod_name=${i%%:*}
+			mod_opts=${i##*:}
+
+			[ "${mod_name}" = "${mod_opts}" ] && mod_opts=
+			[ -z "${mod_name}" ] && mod_name=$i
+
+			loads=$(${c_lsmod} | $c_grep "^${mod_name}")
 
 			if [ -z "${loads}" ]; then
-				${c_modprobe} -k ${i} > /dev/null 2>&1
+				if [ "${mod_opts}" = "unload" ]; then
+					o_echo -n $"    Unload ${mod_name} module"
+					print_result 1 "skip" "yellow"
+					continue
+				fi
+
+				${c_modprobe} -k ${mod_name} ${mod_opts} > /dev/null 2>&1
 				chk=$?
 
 				if [ "${chk}" != 0 ]; then
-					if [ ! -f "/lib/modules/$(${c_uname} -r)/kernel/net/ipv4/netfilter/${i}" ]; then
+					if [ ! -f "/lib/modules/$(${c_uname} -r)/kernel/net/ipv4/netfilter/${mod_name}" ]; then
 						chk=0
 						msg="maybe builtin"
 					fi
 				fi
 
-				o_echo -n $"    Load ${i} module"
+				o_echo -n $"    Load ${mod_name} module"
+				[ -n "${mod_opts}" ] && o_echo -n " (${mod_opts})"
 				print_result ${chk} "${msg}"
 			else
-				o_echo -n $"    Load ${i} module"
+				if [ "${mod_opts}" = "unload" ]; then
+					rm_mod "${mod_name}"
+					continue
+				fi
+
+				o_echo -n $"    Load ${mod_name} module"
 				print_result 1 $"Already Loading"
 			fi
 		done
 	else
 		loads=$(${c_lsmod} | $c_grep "^${1}")
 		if [ -z "${loads}" ]; then
-			${c_modprobe} -k ${1} > /dev/null 2>&1
+			${c_modprobe} -k ${1} ${2} > /dev/null 2>&1
 			chk=$?
 
 			if [ "${chk}" != 0 ]; then
@@ -51,6 +70,7 @@ ins_mod() {
 			fi
 
 			o_echo -n $"    Load ${1} module"
+			[ -n "${2}" ] && o_echo -n " (${2})"
 			print_result ${chk} "${msg}"
 		else
 			o_echo -n $"    Load ${1} module"
@@ -81,9 +101,10 @@ rm_mod() {
 			fi
 		done
 	else
-		${c_rmmod} ${1} 2> /dev/null
+		_mod_name="${1}"
+		${c_rmmod} ${_mod_name} 2> /dev/null
 		CHKMOD=$? 
-		o_echo -n $"    Remove ${1} module"
+		o_echo -n $"    Remove ${_mod_name} module"
 		print_result ${CHKMOD}
 	fi
 }
