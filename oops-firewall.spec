@@ -11,7 +11,6 @@ URL: http://oops.org/?t=lecture&sb=firewall&n=1
 Source0: ftp://mirror.oops.org/pub/oops/oops-firewall/%{name}-%{version}.tar.bz2
 BuildRoot: /var/tmp/%{name}-root
 Requires: iptables perl sh-utils fileutils bridge-utils
-BuildRequires: perl iconv
 Conflicts: oops_firewall
 BuildArchitectures: noarch
 
