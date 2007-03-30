@@ -1,0 +1,72 @@
+# $Id: Makefile.in,v 1.7 2007-03-29 19:39:36 oops Exp $
+
+VERSION		= @version@
+CC			= @cc@
+PROG		= oops-firewall
+DESTDIR		= @destdir@
+CFLAGS		=
+
+prefix		= @prefix@
+bindir		= @bindir@
+shareddir	= @shareddir@
+includedir	= @includedir@
+confdir		= @confdir@
+initdir		= @initdir@
+
+INSTALL		= @install@
+RM			= @rm@
+MKDIR		= @mkdir@ -p
+LS			= @ls@
+SED			= @sed@
+
+all:
+	make -C po
+
+install: install-header install-conf install-po install-doc
+	$(MKDIR) $(DESTDIR)$(bindir)
+	$(MKDIR) $(DESTDIR)$(initdir)
+	$(INSTALL) -m 755 ./temp/sbin/$(PROG) $(DESTDIR)$(bindir)/$(PROG)
+	@echo "installed $(DESTDIR)$(bindir)/$(PROG)"
+	$(INSTALL) -m 755 ./temp/contrib/$(PROG).init $(DESTDIR)$(initdir)/$(PROG)
+	@echo "installed $(DESTDIR)$(initdir)/$(PROG)"
+	$(INSTALL) -m 644 ./temp/include/config.sed $(DESTDIR)$(includedir)/config.sed
+	@echo "installed $(DESTDIR)$(includedir)/config.sed"
+	$(INSTALL) -m 644 ./temp/include/user_pre.sed $(DESTDIR)$(includedir)/user_pre.sed
+	@echo "installed $(DESTDIR)$(includedir)/user_pre.sed"
+	$(INSTALL) -m 644 ./temp/include/user_post.sed $(DESTDIR)$(includedir)/user_post.sed
+	@echo "installed $(DESTDIR)$(includedir)/user_post.sed"
+	$(INSTALL) -m 644 ./temp/conf/modules.list $(DESTDIR)$(confdir)/modules.list
+	@echo "installed $(DESTDIR)$(confdir)/modules.list"
+
+install-header:
+	$(MKDIR) $(DESTDIR)$(includedir)
+	for i in `$(LS) ./temp/include/*.h | sed 's!.*/!!g'` ; do \
+		$(INSTALL) -m 644 ./temp/include/$$i $(DESTDIR)$(includedir)/$$i; \
+		echo "installed $(DESTDIR)$(includedir)/$$i" ; \
+	done
+
+install-conf:
+	$(MKDIR) $(DESTDIR)$(confdir)
+	for i in bridge.conf application.conf filter.conf forward.conf interface.conf masq.conf tos.conf user.conf ; do \
+		[ ! -f "$(DESTDIR)$(confdir)/$$i" ] && $(INSTALL) -m 644 ./temp/conf/$$i $(DESTDIR)$(confdir)/$$i ; \
+		echo "installed $(DESTDIR)$(confdir)/$$i" ; \
+	done
+
+install-po:
+	make -C po install
+
+install-doc:
+	$(MKDIR) $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)
+	[ -f "COPYING" ] && $(INSTALL) -m 644 COPYING $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/ ; \
+	$(INSTALL) -m 644 CREDIT $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 Changelog $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 doc/README $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 doc/README.DIALPAD $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 doc/README.SORIBADA $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+
+clean:
+	make -C po clean
+	-${RM} -rf ./temp
+
+init: clean
+	-${RM} -f Makefile po/Makefile
