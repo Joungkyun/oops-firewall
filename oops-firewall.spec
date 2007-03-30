@@ -11,6 +11,7 @@ URL: http://oops.org/?t=lecture&sb=firewall&n=1
 Source0: ftp://mirror.oops.org/pub/oops/oops-firewall/%{name}-%{version}.tar.bz2
 BuildRoot: /var/tmp/%{name}-root
 Requires: iptables perl sh-utils fileutils bridge-utils
+BuildRequires: perl iconv
 Conflicts: oops_firewall
 BuildArchitectures: noarch
 
@@ -62,6 +63,17 @@ mkdir -p $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
 
+utf8chk=$(echo $LANG | grep -i "utf\(8\|-8\)" 2> /dev/null)
+if [ -n "$utf8chk" ]; then
+	pushd $RPM_BUILD_DIR/etc/oops-firewall >& /dev/nul
+	for i in $(ls *.conf)
+	do
+		iconv -f EUC-KR -t UTF8 $i > ./tmp-str
+		mv -f ./tmp-str $i
+	done
+	popd >& /dev/null
+fi
+
 %post
 /sbin/chkconfig --add %{name}
 if [ $1 = 0 ]; then
@@ -101,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Fri Mar 30 2007 JoungKyun.Kim <http://oops.org> 34:6.1.0-1
 - update 6.1.0
+- utf8 support
 
 * Sun Mar 25 2007 JoungKyun.Kim <http://oops.org> 33:6.0.3-1
 - update 6.0.3
