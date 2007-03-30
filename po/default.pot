@@ -1,19 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # JoungKyun.Kim <http://oops.org>, 2007
 # made by
 #    xgettext -d default --from-code=euc-kr -L Shell -s \
-#       configure src/include/*.h src/sbin/oops-firewall contrib/oops-firewall.init
+#       configure src/include/*.h src/sbin/oops-firewall contrib/oops-firewall.init*
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.8 2007-03-29 20:37:17 oops Exp $
+# $Id: default.pot,v 1.9 2007-03-30 09:08:21 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-firewall 6.1.0\n"
+"Project-Id-Version: oops-firewall 6.1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-30 05:33+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -85,13 +85,13 @@ msgstr ""
 msgid "    If you want use this function, isntall bridge-utils package"
 msgstr ""
 
-#: src/include/modules.h:53 src/include/modules.h:56
+#: src/include/modules.h:72 src/include/modules.h:76
 msgid "    Load ${1} module"
 msgstr ""
 
-#: src/include/modules.h:33 src/include/modules.h:36
+#: src/include/modules.h:46 src/include/modules.h:55
 #, sh-format
-msgid "    Load ${i} module"
+msgid "    Load ${mod_name} module"
 msgstr ""
 
 #: src/sbin/oops-firewall:128
@@ -102,11 +102,12 @@ msgstr ""
 msgid "    NETWORK PREPIX"
 msgstr ""
 
-#: src/include/modules.h:86
-msgid "    Remove ${1} module"
+#: src/include/modules.h:107
+#, sh-format
+msgid "    Remove ${_mod_name} module"
 msgstr ""
 
-#: src/include/modules.h:79
+#: src/include/modules.h:99
 #, sh-format
 msgid "    Remove ${i} module"
 msgstr ""
@@ -157,6 +158,11 @@ msgstr ""
 
 #: src/sbin/oops-firewall:126
 msgid "    SUBNET MASK"
+msgstr ""
+
+#: src/include/modules.h:31
+#, sh-format
+msgid "    Unload ${mod_name} module"
 msgstr ""
 
 #: src/include/bridge.h:47
@@ -249,7 +255,7 @@ msgstr ""
 msgid "  * Name Service Configuration"
 msgstr ""
 
-#: src/include/modules.h:71
+#: src/include/modules.h:91
 msgid "  * Netfilter Module Shutdown"
 msgstr ""
 
@@ -405,7 +411,7 @@ msgstr ""
 msgid "${i} is Deprecated."
 msgstr ""
 
-#: src/include/modules.h:37
+#: src/include/modules.h:56
 msgid "Already Loading"
 msgstr ""
 
