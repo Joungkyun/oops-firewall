@@ -62,15 +62,15 @@ mkdir -p $RPM_BUILD_ROOT
 
 make DESTDIR=$RPM_BUILD_ROOT install
 
-utf8chk=$(echo $LANG | grep -i "utf\(8\|-8\)" 2> /dev/null)
+utf8chk=$(echo $LANG | grep -i "utf\(8\|-8\)" || true)
 if [ -n "$utf8chk" ]; then
-	pushd $RPM_BUILD_DIR/etc/oops-firewall >& /dev/nul
+	pushd $RPM_BUILD_DIR/etc/oops-firewall
 	for i in $(ls *.conf)
 	do
 		iconv -f EUC-KR -t UTF8 $i > ./tmp-str
 		mv -f ./tmp-str $i
 	done
-	popd >& /dev/null
+	popd
 fi
 
 %post
