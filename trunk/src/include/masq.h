@@ -1,6 +1,6 @@
 # Masq rule function
 #
-# $Id: masq.h,v 1.3 2007-04-01 18:28:47 oops Exp $
+# $Id: masq.h,v 1.4 2007-04-01 18:31:53 oops Exp $
 #
 
 add_masq_init() {
@@ -19,25 +19,26 @@ add_masq_init() {
 			o_echo -n "    ==> "
 			print_color $"${i} is Deprecated." red
 			o_echo -ne $" Use ${_alter} in interface.conf\n"
+			return 1
 		fi
 	done
 	o_echo
 
 	if [ -z "${MASQUERADE_WAN}" ]; then
-		WordToUpper ${MASQ_DEVICE} MASQ_DEVICE_UPPER
-		eval "MASQ_IPADDR=\"\$${MASQ_DEVICE_UPPER}_IPADDR\""
-		export MASQUERADE_WAN=${MASQ_DEVICE}
+		o_echo -n "  * "
+		print_color $"${MASQUERADE_WAN}"
+		o_echo $" is not set"
+		return 1
 	else
 		WordToUpper ${MASQUERADE_WAN} MASQ_DEVICE_UPPER
 		eval "MASQ_IPADDR=\"\$${MASQ_DEVICE_UPPER}_IPADDR\""
 	fi
   
 	if [ -z "${MASQUERADE_LOC}" ]; then
-		if [ -z "${MASQ_CLIENT_DEVICE}" ]; then
-			export MASQUERADE_LOC=eth1
-		else
-			export MASQUERADE_LOC=${MASQ_CLIENT_DEVICE}
-		fi
+		o_echo -n "  * "
+		print_color $"${MASQUERADE_LOC}"
+		o_echo $" is not set"
+		return 1
 	fi
   
 	# enabled packet forwarding
