@@ -1,6 +1,6 @@
 # Bridge rule function
 #
-# $Id: bridge.h,v 1.5 2007-03-29 18:59:13 oops Exp $
+# $Id: bridge.h,v 1.6 2007-04-01 18:33:56 oops Exp $
 #
 
 bridge_wan_info() {
@@ -115,14 +115,14 @@ init_bridge() {
 		${c_iptables} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
 	if [ $MASQ_USED -eq 1 ]; then
-		MASQ_DEVICE="$BRIDGE_WANDEV"
-		[ -z "${MASQ_CLIENT_DEVICE}" ] && MASQ_CLIENT_DEVICE="eth1"
+		[ -z "${MASQUERADE_WAN}" ] && MASQUERADE_WAN="$BRIDGE_WANDEV"
+		[ -z "${MASQUERADE_LOC}" ] && MASQUERADE_LOC="eth1"
 
-		[ "$MASQ_CLIENT_DEVICE" = "$BRIDGE_WANDEV" ] && \
+		[ "$MASQUERADE_LOC" = "$BRIDGE_WANDEV" ] && \
 			o_echo $"  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device" && \
 			o_echo $"  * MASQ mode changed off mode!" && \
 			export MASQ_USED=0
-		[ "$MASQ_CLIENT_DEVICE" = "$BRIDGE_LOCDEV" ] && \
+		[ "$MASQUERADE_LOC" = "$BRIDGE_LOCDEV" ] && \
 			o_echo $"  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device" && \
 			o_echo $"  * MASQ mode changed off mode!" && \
 			export MASQ_USED=0
