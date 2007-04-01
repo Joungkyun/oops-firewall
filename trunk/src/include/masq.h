@@ -1,6 +1,6 @@
 # Masq rule function
 #
-# $Id: masq.h,v 1.2 2006-12-29 05:45:17 oops Exp $
+# $Id: masq.h,v 1.3 2007-04-01 18:28:47 oops Exp $
 #
 
 add_masq_init() {
@@ -10,15 +10,15 @@ add_masq_init() {
 	ins_mod ip_nat_ftp
 	o_echo
 
-	o_echo $"    Deprecated Direction Check"
+	o_echo $"  * Deprecated Direction Check"
 	for i in MASQ_DEVICE MASQ_CLIENT_DEVICE
 	do
 		eval "masq_chk_direction=\$${i}"
 		[ "${i}" = "MASQ_DEVICE" ] && _alter="MASQUERADE_WAN" || _alter="MASQUERADE_LOC"
 		if [ -n "${masq_chk_direction}" ]; then
-			o_echo -n "    * "
+			o_echo -n "    ==> "
 			print_color $"${i} is Deprecated." red
-			o_echo -ne " Use ${_alter} in interface.conf\n"
+			o_echo -ne $" Use ${_alter} in interface.conf\n"
 		fi
 	done
 	o_echo
