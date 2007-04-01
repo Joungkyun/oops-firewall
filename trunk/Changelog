@@ -1,11 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.71 2007-04-01 17:48:27 oops Exp $
+$Id: Changelog,v 1.72 2007-04-01 18:34:01 oops Exp $
 
 * 6.1.2
 ---------------------------------------------------------------------
 + 2007.04.02
 	- start 6.1.2
+	- complete deprecated direction support stop on MASQ configuration
+	- fixed wrong masquearding operation when use bridge
 
 * 6.1.1
 ---------------------------------------------------------------------
