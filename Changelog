@@ -1,6 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.74 2007-04-08 12:03:51 oops Exp $
+$Id: Changelog,v 1.75 2007-04-08 12:25:59 oops Exp $
 
 * 6.1.2
 ---------------------------------------------------------------------
@@ -12,10 +12,12 @@ $Id: Changelog,v 1.74 2007-04-08 12:03:51 oops Exp $
 	- complete deprecated direction support stop on MASQ configuration
 	- fixed wrong masquearding operation when use bridge
 
+
 * 6.1.1
 ---------------------------------------------------------------------
 + 2007.03.30
 	- add netfilter module option control function
+
 
 * 6.1.0
 ---------------------------------------------------------------------
@@ -35,6 +37,7 @@ $Id: Changelog,v 1.74 2007-04-08 12:03:51 oops Exp $
 	- fixed wrong forwarding work
 	- add check FORWARD configuration value
 	- move from right-stop to stop that init 0 on ip_forward
+
 
 * 6.0.3
 ---------------------------------------------------------------------
