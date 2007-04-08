@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.6 2007-03-29 17:53:30 oops Exp $
+# $Id: rule.h,v 1.7 2007-04-08 12:02:06 oops Exp $
 #
 
 add_named_port() {
@@ -137,9 +137,14 @@ add_all_rule() {
 			eval ${var_NT}
 
 			if [ -n "${varNT}" -a -n "${varSN}" ]; then
-				o_echo "  * iptables -A INPUT  -s ${varNT}/${varSN} -j ACCEPT"
-				[ "${_testmode}" = 0 ] && \
-					${c_iptables} -A INPUT -s ${varNT}/${varSN} -j ACCEPT
+				for intf in INPUT OUTPUT
+				do
+					[ "${intf}" = "INTPUT" ] && pintf="INPUT " || pintf="OUTPUT"
+					[ "${intf}" = "INTPUT" ] && redir="-s" || redir="-d"
+					o_echo "  * iptables -A %{pintf} ${redir} ${varNT}/${varSN} -j ACCEPT"
+					[ "${_testmode}" = 0 ] && \
+						${c_iptables} -A %{intf} ${redir} ${varNT}/${varSN} -j ACCEPT
+				done
 			fi
 		else
 			# 자신의 IP 만 열기
@@ -147,9 +152,14 @@ add_all_rule() {
 			eval ${var_IP}
 
 			if [ -n "${varIP}" ]; then
-				o_echo "  * iptables -A INPUT  -s ${varIP} -j ACCEPT"
-				[ "${_testmode}" = 0 ] && \
-					${c_iptables} -A INPUT -s ${varIP} -j ACCEPT
+				for intf in INTPUT OUTPUT
+				do
+					[ "${intf}" = "INTPUT" ] && pintf="INPUT " || pintf="OUTPUT"
+					[ "${intf}" = "INTPUT" ] && redir="-s" || redir="-d"
+					o_echo "  * iptables -A ${pintf} ${redir} ${varIP} -j ACCEPT"
+					[ "${_testmode}" = 0 ] && \
+						${c_iptables} -A ${intf} ${redir} ${varIP} -j ACCEPT
+				done
 			fi
 		fi
 	done
@@ -157,9 +167,14 @@ add_all_rule() {
 	if [ "${ALLOWALL}" != "" ] ; then
 		for values in ${ALLOWALL}
 		do
-			o_echo "  * iptables -A INPUT  -s ${values} -j ACCEPT"
-			[ "${_testmode}" = 0 ] && \
-				${c_iptables} -A INPUT -s ${values} -j ACCEPT
+			for intf in INTPUT OUTPUT
+			do
+				[ "${intf}" = "INTPUT" ] && pintf="INPUT " || pintf="OUTPUT"
+				[ "${intf}" = "INTPUT" ] && redir="-s" || redir="-d"
+				o_echo "  * iptables -A ${pintf} ${redir} ${values} -j ACCEPT"
+				[ "${_testmode}" = 0 ] && \
+					${c_iptables} -A ${intf} ${redir} ${values} -j ACCEPT
+			done
 		done
 	fi
 
