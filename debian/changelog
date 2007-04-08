@@ -1,6 +1,8 @@
 oops-firewall (6.1.2-1) stable; urgency=low
 
-  * Debina package
+  * complete deprecated direction support stop on MASQ configuration
+  * fixed wrong masquearding operation when use bridge
+  * add OUTPUT rule on ALLOWALL
 
- -- JoungKyun Kim <http://oops.org>  Fri, 30 Mar 2007 02:55:00 +0900
+ -- JoungKyun Kim <http://oops.org>  Fri, 08 Apr 2007 21:21:00 +0900
 
