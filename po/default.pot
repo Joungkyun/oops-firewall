@@ -8,14 +8,14 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.10 2007-04-01 17:48:27 oops Exp $
+# $Id: default.pot,v 1.11 2007-04-08 12:23:27 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: oops-firewall 6.1.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-30 05:33+0900\n"
+"POT-Creation-Date: 2007-04-08 21:21+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,12 +43,12 @@ msgstr ""
 msgid "         -v                     verbose mode"
 msgstr ""
 
-#: src/include/rule.h:387
+#: src/include/rule.h:402
 #, sh-format
 msgid "    ==> for ${i_ct} service"
 msgstr ""
 
-#: src/include/rule.h:414
+#: src/include/rule.h:429
 #, sh-format
 msgid "    ==> for Bridge ${i_ct} service"
 msgstr ""
@@ -71,10 +71,6 @@ msgstr ""
 
 #: src/include/init.h:65 src/include/init.h:99
 msgid "    Accept All PREROUTING Chain"
-msgstr ""
-
-#: src/include/masq.h:13
-msgid "    Deprecated Direction Check"
 msgstr ""
 
 #: src/sbin/oops-firewall:124
@@ -173,7 +169,7 @@ msgstr ""
 msgid "    c_brctl environment on command.h"
 msgstr ""
 
-#: src/include/rule.h:221
+#: src/include/rule.h:236
 #, sh-format
 msgid "  * ${a_ment} service"
 msgstr ""
@@ -209,7 +205,7 @@ msgstr ""
 msgid "  * BRIDGE not support on build time"
 msgstr ""
 
-#: src/include/rule.h:305
+#: src/include/rule.h:320
 #, sh-format
 msgid "  * Bridge ${a_ment} service"
 msgstr ""
@@ -231,7 +227,7 @@ msgstr ""
 msgid "  * Deny Ping at BroadCast"
 msgstr ""
 
-#: src/include/forward.h:27
+#: src/include/forward.h:27 src/include/masq.h:13
 msgid "  * Deprecated Direction Check"
 msgstr ""
 
@@ -307,9 +303,18 @@ msgstr ""
 msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device"
 msgstr ""
 
-#: src/include/rule.h:447
+#: src/include/rule.h:462
 #, sh-format
 msgid "  = Tos configuration in ${i} chain"
+msgstr ""
+
+#: src/include/masq.h:21
+#, sh-format
+msgid " Use ${_alter} in interface.conf\\n"
+msgstr ""
+
+#: src/include/masq.h:30 src/include/masq.h:40
+msgid " is not set"
 msgstr ""
 
 #: src/include/print.h:10
@@ -319,6 +324,16 @@ msgstr ""
 #: src/include/print.h:9
 #, sh-format
 msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
+msgstr ""
+
+#: src/include/masq.h:39
+#, sh-format
+msgid "${MASQUERADE_LOC}"
+msgstr ""
+
+#: src/include/masq.h:29
+#, sh-format
+msgid "${MASQUERADE_WAN}"
 msgstr ""
 
 #: src/sbin/oops-firewall:231
@@ -415,7 +430,7 @@ msgstr ""
 msgid "Already Loading"
 msgstr ""
 
-#: contrib/oops-firewall.init.redhat:120 contrib/oops-firewall.init.debian:130
+#: contrib/oops-firewall.init.debian:130 contrib/oops-firewall.init.redhat:120
 msgid "Destory Firewall Tables: "
 msgstr ""
 
@@ -431,7 +446,7 @@ msgstr ""
 msgid "Options:"
 msgstr ""
 
-#: contrib/oops-firewall.init.redhat:43 contrib/oops-firewall.init.debian:53
+#: contrib/oops-firewall.init.debian:53 contrib/oops-firewall.init.redhat:43
 msgid "Starting OOPS Firewall: "
 msgstr ""
 
@@ -439,7 +454,7 @@ msgstr ""
 msgid "U are not super user!"
 msgstr ""
 
-#: contrib/oops-firewall.init.redhat:162 contrib/oops-firewall.init.debian:172
+#: contrib/oops-firewall.init.debian:172 contrib/oops-firewall.init.redhat:162
 msgid "Usage: $0 {start|right-stop|stop|restart|status}"
 msgstr ""
 
@@ -447,14 +462,14 @@ msgstr ""
 msgid "Usage: oops-firewall -[option]"
 msgstr ""
 
-#: contrib/oops-firewall.init.redhat:139 contrib/oops-firewall.init.debian:149
+#: contrib/oops-firewall.init.debian:149 contrib/oops-firewall.init.redhat:139
 msgid "[ Legualar Table ]"
 msgstr ""
 
-#: contrib/oops-firewall.init.redhat:155 contrib/oops-firewall.init.debian:165
+#: contrib/oops-firewall.init.debian:165 contrib/oops-firewall.init.redhat:155
 msgid "[ MANGLE Table ]"
 msgstr ""
 
-#: contrib/oops-firewall.init.redhat:147 contrib/oops-firewall.init.debian:157
+#: contrib/oops-firewall.init.debian:157 contrib/oops-firewall.init.redhat:147
 msgid "[ NAT Table ]"
 msgstr ""
