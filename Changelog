@@ -1,9 +1,11 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.72 2007-04-01 18:34:01 oops Exp $
+$Id: Changelog,v 1.73 2007-04-08 12:02:06 oops Exp $
 
 * 6.1.2
 ---------------------------------------------------------------------
++ 2007.04.08
+	- add OUTPUT rule on ALLOWALL
 + 2007.04.02
 	- start 6.1.2
 	- complete deprecated direction support stop on MASQ configuration
