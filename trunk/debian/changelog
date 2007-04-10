@@ -1,8 +1,6 @@
-oops-firewall (6.1.2-1) stable; urgency=low
+oops-firewall (6.1.3-1) stable; urgency=low
 
-  * complete deprecated direction support stop on MASQ configuration
-  * fixed wrong masquearding operation when use bridge
-  * add OUTPUT rule on ALLOWALL
+  * fixed typo on rule.h
 
  -- JoungKyun Kim <http://oops.org>  Fri, 08 Apr 2007 21:21:00 +0900
 
