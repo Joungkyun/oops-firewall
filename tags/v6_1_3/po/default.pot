@@ -1,0 +1,475 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# JoungKyun.Kim <http://oops.org>, 2007
+# made by
+#    xgettext -d default --from-code=euc-kr -L Shell -s \
+#       configure src/include/*.h src/sbin/oops-firewall contrib/oops-firewall.init*
+# if you merge new version, msgmerge -U old.po new.po
+# xgettext 0.13 support shell script
+#
+# $Id: default.pot,v 1.12 2007-04-10 11:36:58 oops Exp $
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: oops-firewall 6.1.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-04-08 21:21+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/include/print.h:23
+msgid "         -V                     print current version"
+msgstr ""
+
+#: src/include/print.h:20
+msgid "         -c config_directory    set configuration directory"
+msgstr ""
+
+#: src/include/print.h:24
+msgid "         -h                     help (this) message"
+msgstr ""
+
+#: src/include/print.h:21
+msgid "         -t                     run test mode"
+msgstr ""
+
+#: src/include/print.h:22
+msgid "         -v                     verbose mode"
+msgstr ""
+
+#: src/include/rule.h:402
+#, sh-format
+msgid "    ==> for ${i_ct} service"
+msgstr ""
+
+#: src/include/rule.h:429
+#, sh-format
+msgid "    ==> for Bridge ${i_ct} service"
+msgstr ""
+
+#: src/include/init.h:44 src/include/init.h:143
+msgid "    Accept All FORWARD Chain"
+msgstr ""
+
+#: src/include/init.h:20 src/include/init.h:129
+msgid "    Accept All INPUT Chain"
+msgstr ""
+
+#: src/include/init.h:32 src/include/init.h:113
+msgid "    Accept All OUTPUT Chain"
+msgstr ""
+
+#: src/include/init.h:77 src/include/init.h:157
+msgid "    Accept All POSTROUTING Chain"
+msgstr ""
+
+#: src/include/init.h:65 src/include/init.h:99
+msgid "    Accept All PREROUTING Chain"
+msgstr ""
+
+#: src/sbin/oops-firewall:124
+msgid "    IP ADDRESS"
+msgstr ""
+
+#: src/include/bridge.h:46
+msgid "    If you want use this function, isntall bridge-utils package"
+msgstr ""
+
+#: src/include/modules.h:72 src/include/modules.h:76
+msgid "    Load ${1} module"
+msgstr ""
+
+#: src/include/modules.h:46 src/include/modules.h:55
+#, sh-format
+msgid "    Load ${mod_name} module"
+msgstr ""
+
+#: src/sbin/oops-firewall:128
+msgid "    NETWORK"
+msgstr ""
+
+#: src/sbin/oops-firewall:130
+msgid "    NETWORK PREPIX"
+msgstr ""
+
+#: src/include/modules.h:107
+#, sh-format
+msgid "    Remove ${_mod_name} module"
+msgstr ""
+
+#: src/include/modules.h:99
+#, sh-format
+msgid "    Remove ${i} module"
+msgstr ""
+
+#: src/include/init.h:150
+msgid "    Remove rule of FORWARD"
+msgstr ""
+
+#: src/include/init.h:38
+msgid "    Remove rule of FORWARD Chain"
+msgstr ""
+
+#: src/include/init.h:136
+msgid "    Remove rule of INPUT"
+msgstr ""
+
+#: src/include/init.h:26
+msgid "    Remove rule of INPUT Chain"
+msgstr ""
+
+#: src/include/init.h:120
+msgid "    Remove rule of OUTPUT"
+msgstr ""
+
+#: src/include/init.h:50
+msgid "    Remove rule of OUTPUT Chain"
+msgstr ""
+
+#: src/include/init.h:83 src/include/init.h:164
+msgid "    Remove rule of POSTROUTING"
+msgstr ""
+
+#: src/include/init.h:71 src/include/init.h:106
+msgid "    Remove rule of PREROUTING"
+msgstr ""
+
+#: src/include/init.h:14
+msgid "    Reset Chain Counter "
+msgstr ""
+
+#: src/include/init.h:92
+msgid "    Reset MANGLE Tabel Counter"
+msgstr ""
+
+#: src/include/init.h:59
+msgid "    Reset NAT Tabel Counter"
+msgstr ""
+
+#: src/sbin/oops-firewall:126
+msgid "    SUBNET MASK"
+msgstr ""
+
+#: src/include/modules.h:31
+#, sh-format
+msgid "    Unload ${mod_name} module"
+msgstr ""
+
+#: src/include/bridge.h:47
+msgid "    and, set 1 on BRIDGE_SET default.h and, configure path of"
+msgstr ""
+
+#: src/include/bridge.h:48
+msgid "    c_brctl environment on command.h"
+msgstr ""
+
+#: src/include/rule.h:236
+#, sh-format
+msgid "  * ${a_ment} service"
+msgstr ""
+
+#: src/sbin/oops-firewall:123
+#, sh-format
+msgid "  * ${devName}${devNum} Information"
+msgstr ""
+
+#: src/include/init.h:187
+msgid "  * Allow to use TCP SYNCOOKIES"
+msgstr ""
+
+#: src/include/bridge.h:36
+#, sh-format
+msgid "  * BRIDGE Local Interface name \"$BRIDGE_LOCDEV\" is not found"
+msgstr ""
+
+#: src/include/bridge.h:32 src/include/bridge.h:37
+msgid "  * BRIDGE MODE go off!"
+msgstr ""
+
+#: src/include/bridge.h:31
+#, sh-format
+msgid "  * BRIDGE WAN Interface name \"$BRIDGE_WANDEV\" is not found"
+msgstr ""
+
+#: src/include/bridge.h:53
+msgid "  * BRIDGE mode don't set"
+msgstr ""
+
+#: src/include/bridge.h:45
+msgid "  * BRIDGE not support on build time"
+msgstr ""
+
+#: src/include/rule.h:320
+#, sh-format
+msgid "  * Bridge ${a_ment} service"
+msgstr ""
+
+#: src/sbin/oops-firewall:263
+msgid "  * Bridge Name Service Configuration"
+msgstr ""
+
+#: src/include/init.h:203
+#, sh-format
+msgid "  * CHK IP SPOOFING ${dev}"
+msgstr ""
+
+#: src/include/init.h:214
+msgid "  * Deny Invalid MSG"
+msgstr ""
+
+#: src/include/init.h:238
+msgid "  * Deny Ping at BroadCast"
+msgstr ""
+
+#: src/include/forward.h:27 src/include/masq.h:13
+msgid "  * Deprecated Direction Check"
+msgstr ""
+
+#: src/include/init.h:294
+msgid "  * Drop All TCP packet"
+msgstr ""
+
+#: src/include/init.h:312
+msgid "  * Drop All UDP packet"
+msgstr ""
+
+#: src/include/modules.h:11
+msgid "  * Load Netfilter Module"
+msgstr ""
+
+#: src/include/bridge.h:123 src/include/bridge.h:127
+msgid "  * MASQ mode changed off mode!"
+msgstr ""
+
+#: src/sbin/oops-firewall:259
+msgid "  * Name Service Configuration"
+msgstr ""
+
+#: src/include/modules.h:91
+msgid "  * Netfilter Module Shutdown"
+msgstr ""
+
+#: src/include/init.h:344
+msgid "  * Prevented internal ping and traceroute request"
+msgstr ""
+
+#: src/include/init.h:276
+msgid "  * Reject All Syn Packet"
+msgstr ""
+
+#: src/include/init.h:9
+msgid "  * Reset Basic Table"
+msgstr ""
+
+#: src/include/init.h:87
+msgid "  * Reset Mangle Table"
+msgstr ""
+
+#: src/include/init.h:54
+msgid "  * Reset NAT Table"
+msgstr ""
+
+#: src/include/command.h:34
+msgid "  * SSH Brute Force Attack Filter"
+msgstr ""
+
+#: src/sbin/oops-firewall:339
+msgid "  * TOS Not Config"
+msgstr ""
+
+#: src/include/command.h:100
+msgid "  * USER POST COMMAND (@) Not Config"
+msgstr ""
+
+#: src/include/command.h:97
+msgid "  * USER PRE COMMAND (%) Not Config"
+msgstr ""
+
+#: src/include/command.h:103
+msgid "  * Unknown parameter"
+msgstr ""
+
+#: src/include/bridge.h:126
+msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device"
+msgstr ""
+
+#: src/include/bridge.h:122
+msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device"
+msgstr ""
+
+#: src/include/rule.h:462
+#, sh-format
+msgid "  = Tos configuration in ${i} chain"
+msgstr ""
+
+#: src/include/masq.h:21
+#, sh-format
+msgid " Use ${_alter} in interface.conf\\n"
+msgstr ""
+
+#: src/include/masq.h:30 src/include/masq.h:40
+msgid " is not set"
+msgstr ""
+
+#: src/include/print.h:10
+msgid "#      By Dec 29 2006 JoungKyun.Kim <http://oops.org>"
+msgstr ""
+
+#: src/include/print.h:9
+#, sh-format
+msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
+msgstr ""
+
+#: src/include/masq.h:39
+#, sh-format
+msgid "${MASQUERADE_LOC}"
+msgstr ""
+
+#: src/include/masq.h:29
+#, sh-format
+msgid "${MASQUERADE_WAN}"
+msgstr ""
+
+#: src/sbin/oops-firewall:231
+#, sh-format
+msgid "${NB}. Allow All Service"
+msgstr ""
+
+#: src/sbin/oops-firewall:274
+#, sh-format
+msgid "${NB}. Allow Incoming Service Configuration"
+msgstr ""
+
+#: src/sbin/oops-firewall:253
+#, sh-format
+msgid "${NB}. Allow Outgoing Service Configuration"
+msgstr ""
+
+#: src/sbin/oops-firewall:208
+#, sh-format
+msgid "${NB}. Basic Kernel Parameter Configuration"
+msgstr ""
+
+#: src/sbin/oops-firewall:50
+#, sh-format
+msgid "${NB}. Check user type"
+msgstr ""
+
+#: src/sbin/oops-firewall:350
+#, sh-format
+msgid "${NB}. Deny rule set configuration"
+msgstr ""
+
+#: src/sbin/oops-firewall:220
+#, sh-format
+msgid "${NB}. Drop Invalid Package"
+msgstr ""
+
+#: src/sbin/oops-firewall:322
+#, sh-format
+msgid "${NB}. Execute user defined post Command"
+msgstr ""
+
+#: src/sbin/oops-firewall:242
+#, sh-format
+msgid "${NB}. Execute user defined pre command"
+msgstr ""
+
+#: src/sbin/oops-firewall:310
+#, sh-format
+msgid "${NB}. Forwarding Configuration"
+msgstr ""
+
+#: src/sbin/oops-firewall:93
+#, sh-format
+msgid "${NB}. IP address Check"
+msgstr ""
+
+#: src/sbin/oops-firewall:196
+#, sh-format
+msgid "${NB}. Init Bridge Mode"
+msgstr ""
+
+#: src/sbin/oops-firewall:155
+#, sh-format
+msgid "${NB}. Interface Information"
+msgstr ""
+
+#: src/sbin/oops-firewall:68
+#, sh-format
+msgid "${NB}. Kernel version check"
+msgstr ""
+
+#: src/sbin/oops-firewall:298
+#, sh-format
+msgid "${NB}. Masqurade Configuration"
+msgstr ""
+
+#: src/sbin/oops-firewall:181
+#, sh-format
+msgid "${NB}. Reset Netfilter"
+msgstr ""
+
+#: src/sbin/oops-firewall:333
+#, sh-format
+msgid "${NB}. TOS Configuration"
+msgstr ""
+
+#: src/include/masq.h:20
+#, sh-format
+msgid "${i} is Deprecated."
+msgstr ""
+
+#: src/include/modules.h:56
+msgid "Already Loading"
+msgstr ""
+
+#: contrib/oops-firewall.init.debian:130 contrib/oops-firewall.init.redhat:120
+msgid "Destory Firewall Tables: "
+msgstr ""
+
+#: src/sbin/oops-firewall:73
+msgid "Enable to use over kernel 2.4.0"
+msgstr ""
+
+#: src/include/forward.h:30
+msgid "FORWARD_MASTER is Deprecated."
+msgstr ""
+
+#: src/include/print.h:19
+msgid "Options:"
+msgstr ""
+
+#: contrib/oops-firewall.init.debian:53 contrib/oops-firewall.init.redhat:43
+msgid "Starting OOPS Firewall: "
+msgstr ""
+
+#: src/sbin/oops-firewall:55
+msgid "U are not super user!"
+msgstr ""
+
+#: contrib/oops-firewall.init.debian:172 contrib/oops-firewall.init.redhat:162
+msgid "Usage: $0 {start|right-stop|stop|restart|status}"
+msgstr ""
+
+#: src/include/print.h:18
+msgid "Usage: oops-firewall -[option]"
+msgstr ""
+
+#: contrib/oops-firewall.init.debian:149 contrib/oops-firewall.init.redhat:139
+msgid "[ Legualar Table ]"
+msgstr ""
+
+#: contrib/oops-firewall.init.debian:165 contrib/oops-firewall.init.redhat:155
+msgid "[ MANGLE Table ]"
+msgstr ""
+
+#: contrib/oops-firewall.init.debian:157 contrib/oops-firewall.init.redhat:147
+msgid "[ NAT Table ]"
+msgstr ""
