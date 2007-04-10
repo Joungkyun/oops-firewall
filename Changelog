@@ -1,11 +1,12 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.76 2007-04-10 11:36:58 oops Exp $
+$Id: Changelog,v 1.77 2007-04-10 11:37:35 oops Exp $
 
 * 6.1.3
 ---------------------------------------------------------------------
 + 2007.04.10
 	- start 6.1.3
+	- fixed typo in rule.h that miss operated ALLOWSELF direction
 
 
 * 6.1.2
