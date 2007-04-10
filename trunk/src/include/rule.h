@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.8 2007-04-08 13:04:28 oops Exp $
+# $Id: rule.h,v 1.9 2007-04-10 11:37:35 oops Exp $
 #
 
 add_named_port() {
@@ -141,9 +141,9 @@ add_all_rule() {
 				do
 					[ "${intf}" = "INPUT" ] && pintf="INPUT " || pintf="OUTPUT"
 					[ "${intf}" = "INPUT" ] && redir="-s" || redir="-d"
-					o_echo "  * iptables -A %{pintf} ${redir} ${varNT}/${varSN} -j ACCEPT"
+					o_echo "  * iptables -A ${pintf} ${redir} ${varNT}/${varSN} -j ACCEPT"
 					[ "${_testmode}" = 0 ] && \
-						${c_iptables} -A %{intf} ${redir} ${varNT}/${varSN} -j ACCEPT
+						${c_iptables} -A ${intf} ${redir} ${varNT}/${varSN} -j ACCEPT
 				done
 			fi
 		else
