@@ -8,14 +8,15 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.14 2007-05-10 17:46:51 oops Exp $
+# $Id: default.pot,v 1.15 2007-05-10 19:13:26 oops Exp $
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: oops-firewall 6.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-08 21:21+0900\n"
+"POT-Creation-Date: 2007-05-11 04:02+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,6 +42,37 @@ msgstr ""
 
 #: src/include/print.h:22
 msgid "         -v                     verbose mode"
+msgstr ""
+
+#: src/include/command.h:116 src/include/command.h:128
+#: src/include/command.h:138
+#, sh-format
+msgid "     ${value} => ${l_chain} can't use with ${l_table}"
+msgstr ""
+
+#: src/include/command.h:95
+#, sh-format
+msgid "     ${value} => ${l_table} is unknown table"
+msgstr ""
+
+#: src/include/command.h:105
+#, sh-format
+msgid "     ${value} => CHAIN value must need"
+msgstr ""
+
+#: src/include/command.h:146
+#, sh-format
+msgid "     ${value} => PROTO must be setting"
+msgstr ""
+
+#: src/include/command.h:167
+#, sh-format
+msgid "     ${value} => action MARK is needed mark value"
+msgstr ""
+
+#: src/include/command.h:158
+#, sh-format
+msgid "     ${value} => action value is used with DROP/MARK"
 msgstr ""
 
 #: src/include/rule.h:402
@@ -214,6 +246,10 @@ msgstr ""
 msgid "  * Bridge Name Service Configuration"
 msgstr ""
 
+#: src/include/command.h:34
+msgid "  * Brute Force Attack Filter"
+msgstr ""
+
 #: src/include/init.h:203
 #, sh-format
 msgid "  * CHK IP SPOOFING ${dev}"
@@ -237,6 +273,10 @@ msgstr ""
 
 #: src/include/init.h:312
 msgid "  * Drop All UDP packet"
+msgstr ""
+
+#: src/include/command.h:80
+msgid "  * LAYER7 Filter"
 msgstr ""
 
 #: src/include/modules.h:11
@@ -275,23 +315,19 @@ msgstr ""
 msgid "  * Reset NAT Table"
 msgstr ""
 
-#: src/include/command.h:34
-msgid "  * Brute Force Attack Filter"
-msgstr ""
-
 #: src/sbin/oops-firewall:339
 msgid "  * TOS Not Config"
 msgstr ""
 
-#: src/include/command.h:100
+#: src/include/command.h:224
 msgid "  * USER POST COMMAND (@) Not Config"
 msgstr ""
 
-#: src/include/command.h:97
+#: src/include/command.h:221
 msgid "  * USER PRE COMMAND (%) Not Config"
 msgstr ""
 
-#: src/include/command.h:103
+#: src/include/command.h:227
 msgid "  * Unknown parameter"
 msgstr ""
 

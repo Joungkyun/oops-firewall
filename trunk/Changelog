@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.79 2007-05-10 17:46:51 oops Exp $
+$Id: Changelog,v 1.80 2007-05-10 19:13:26 oops Exp $
 
 * 6.2.0
 ---------------------------------------------------------------------
 + 2007.05.11
 	- start 6.2.0
 	- expend BRUTE_FORCE_FILTER with port:seconds:hit format
+	- add LAYER7_FILTER in application.conf
 
 
 * 6.1.3

@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.6 2007-05-10 17:46:51 oops Exp $
+# $Id: command.h,v 1.7 2007-05-10 19:13:26 oops Exp $
 #
 
 # command line command
@@ -74,12 +74,126 @@ brute_force_set() {
 	done
 }
 
+layer7_set() {
+	[ -z "${LAYER7_FILTER}" ] && return
+	
+	o_echo $"  * LAYER7 Filter"
+
+	for value in ${LAYER7_FILTER}
+	do
+
+		echo "${value}" | {
+			IFS=':' read l_table l_chain l_proto l_action l_mark l_dir
+
+			# TABLE checking
+			#
+			case "${l_table}" in
+				"nat")    ;;
+				"mangle") ;;
+				*)
+					if [ -n "${l_table}" ]; then
+						o_echo $"     ${value} => ${l_table} is unknown table"
+						continue
+					fi
+			esac
+
+			[ -n "${l_table}" ] && pr_table="-t ${l_table} " || pr_table=
+
+			# Chain Checking
+			#
+			if [ -z "${l_chain}" ]; then
+				o_echo $"     ${value} => CHAIN value must need"
+				continue;
+			fi
+
+			case "${l_table}" in
+				"nat")
+					case "${l_chain}" in
+						"PREROUTING")  ;;
+						"POSTROUTING") ;;
+						"OUTPUT")      ;;
+						*)
+							o_echo $"     ${value} => ${l_chain} can't use with ${l_table}"
+							continue
+					esac
+					;;
+				"mangle")
+					case "${l_chain}" in
+						"PREROUTING")  ;;
+						"POSTROUTING") ;;
+						"FORWARD")     ;;
+						"OUTPUT")      ;;
+						"INPUT")       ;;
+						*)
+							o_echo $"     ${value} => ${l_chain} can't use with ${l_table}"
+							continue
+					esac
+					;;
+				*)
+					case "${l_chain}" in
+						"OUTPUT")  ;;
+						"INPUT")   ;;
+						"FORWARD") ;;
+						*)
+							o_echo $"     ${value} => ${l_chain} can't use with ${l_table}"
+							continue
+					esac
+			esac
+
+			# PROTO Checking
+			#
+			if [ -z "${l_proto}" ]; then
+				o_echo $"     ${value} => PROTO must be setting"
+				continue
+			fi
+
+			# Action Checking
+			#
+			[ -z "${l_action}" ] && l_action="DROP"
+
+			case "${l_action}" in
+				"DROP")   ;;
+				"MARK")   ;;
+				*)
+					o_echo $"     ${value} => action value is used with DROP/MARK"
+					continue;
+			esac
+
+			# Mark check
+			#
+			case "${l_action}" in
+				"MARK")
+					if [ -z "${l_mark}" ]; then
+						o_echo $"     ${value} => action MARK is needed mark value"
+						continue
+					fi
+					;;
+				"DROP")
+					[ -n "${l_mark}" ] && l_mark=
+					;;
+			esac
+
+			[ -n "${l_mark}" ] && pr_mark=" --set-mark ${l_mark}" || pr_mark=
+			[ -n "${l_dir}" ] && pr_dir="--l7dir ${l_dir} " || pr_dir=
+
+
+				o_echo "    iptables ${pr_table}-A ${l_chain} -m layer7 --l7proto ${l_proto} \\"
+				o_echo "             ${pr_dir}-j ${l_action}${pr_mark}"
+				[ ${_testmode} -eq 0 ] && \
+					${c_iptables} ${pr_table}-A ${l_chain} -m layer7 --l7proto ${l_proto} \
+								${pr_dir}-j ${l_action}${pr_mark}
+
+		}
+		o_echo
+	done
+}
 
 # 사용자 실행을 위한 함수
 user_cmd () {
 	case "$1" in
 		pre) 
 			brute_force_set
+			layer7_set
 			USERCHK=$(${c_sed} -n -f ${_includes}/user_pre.sed ${_confdir}/user.conf)
 			IFS='%'
 			;;
