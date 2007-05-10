@@ -8,7 +8,7 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.13 2007-05-10 17:45:20 oops Exp $
+# $Id: default.pot,v 1.14 2007-05-10 17:46:51 oops Exp $
 #
 #, fuzzy
 msgid ""
@@ -276,7 +276,7 @@ msgid "  * Reset NAT Table"
 msgstr ""
 
 #: src/include/command.h:34
-msgid "  * SSH Brute Force Attack Filter"
+msgid "  * Brute Force Attack Filter"
 msgstr ""
 
 #: src/sbin/oops-firewall:339

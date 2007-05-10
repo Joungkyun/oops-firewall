@@ -8,7 +8,7 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.20 2007-05-10 17:45:20 oops Exp $
+# $Id: ko.po,v 1.21 2007-05-10 17:46:51 oops Exp $
 #
 #, fuzzy
 msgid ""
@@ -276,8 +276,8 @@ msgid "  * Reset NAT Table"
 msgstr "  * NAT 테이블 초기화"
 
 #: src/include/command.h:34
-msgid "  * SSH Brute Force Attack Filter"
-msgstr "  * SSH Brute Force 공격 필터"
+msgid "  * Brute Force Attack Filter"
+msgstr "  * Brute Force 공격 필터"
 
 #: src/sbin/oops-firewall:339
 msgid "  * TOS Not Config"
