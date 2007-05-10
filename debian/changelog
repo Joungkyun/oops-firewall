@@ -1,6 +1,7 @@
 oops-firewall (6.2.0-1) stable; urgency=low
 
   * expend BRUTE_FORCE_FILTER with port:seconds:hit format
+  * add LAYER7_FILTER in application.conf
 
  -- JoungKyun Kim <http://oops.org>  Fri, 08 Apr 2007 21:21:00 +0900
 
