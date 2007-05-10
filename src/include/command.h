@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.5 2007-01-09 14:19:37 oops Exp $
+# $Id: command.h,v 1.6 2007-05-10 17:46:51 oops Exp $
 #
 
 # command line command
@@ -31,37 +31,47 @@ export c_iptables c_ifconfig c_brctl c_route
 brute_force_set() {
 	[ -z "${BRUTE_FORCE_FILTER}" ] && return
 	
-	o_echo $"  * SSH Brute Force Attack Filter"
+	o_echo $"  * Brute Force Attack Filter"
 
-	echo "${BRUTE_FORCE_FILTER}" | {
-		IFS=':' read b_sec b_hit
+	for value in ${BRUTE_FORCE_FILTER}
+	do
 
-		for b_dev in INPUT FORWARD
-		do
-			o_echo "    iptables -A ${b_dev} -p tcp --dport 22 -m state --state NEW \\"
-			o_echo "             -m recent --set --name SSHSCAN"
-			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${b_dev} -p tcp --dport 22 -m state --state NEW \
-							-m recent --set --name SSHSCAN
-			if [ $BRUTE_FORCE_LOG -eq 1 ]; then
-				o_echo "    iptables -A ${b_dev} -p tcp --dport 22 -m state --state NEW \\"
-				o_echo "             -m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \\"
-				o_echo "             --name SSHSCAN -j LOG --log-prefix SSH_Scan:"
-				[ ${_testmode} -eq 0 ] && \
-					${c_iptables} -A ${b_dev} -p tcp --dport 22 -m state --state NEW \
-								-m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \
-								--name SSHSCAN -j LOG --log-prefix SSH_Scan:
+		echo "${value}" | {
+			IFS=':' read b_port b_sec b_hit
+
+			if [ -z "${b_hit}" ]; then
+				b_hit=${b_sec}
+				b_sec=${b_port}
+				b_port=22
 			fi
-			o_echo "    iptables -A ${b_dev} -p tcp --dport 22 -m state --state NEW \\"
-			o_echo "             -m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \\"
-			o_echo "             --name SSHSCAN -j DROP"
-			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${b_dev} -p tcp --dport 22 -m state --state NEW \
-							-m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \
-							--name SSHSCAN -j DROP
-		done
-	}
-	o_echo
+
+			for b_dev in INPUT FORWARD
+			do
+				o_echo "    iptables -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \\"
+				o_echo "             -m recent --set --name SSHSCAN"
+				[ ${_testmode} -eq 0 ] && \
+					${c_iptables} -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \
+								-m recent --set --name SSHSCAN
+				if [ $BRUTE_FORCE_LOG -eq 1 ]; then
+					o_echo "    iptables -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \\"
+					o_echo "             -m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \\"
+					o_echo "             --name SSHSCAN -j LOG --log-prefix SSH_Scan:"
+					[ ${_testmode} -eq 0 ] && \
+						${c_iptables} -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \
+									-m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \
+									--name SSHSCAN -j LOG --log-prefix SSH_Scan:
+				fi
+				o_echo "    iptables -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \\"
+				o_echo "             -m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \\"
+				o_echo "             --name SSHSCAN -j DROP"
+				[ ${_testmode} -eq 0 ] && \
+					${c_iptables} -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \
+								-m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \
+								--name SSHSCAN -j DROP
+			done
+		}
+		o_echo
+	done
 }
 
 
