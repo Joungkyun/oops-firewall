@@ -1,4 +1,4 @@
-oops-firewall (6.1.3-1) stable; urgency=low
+oops-firewall (6.2.0-1) stable; urgency=low
 
   * fixed typo on rule.h
 

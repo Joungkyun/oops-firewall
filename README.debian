@@ -5,11 +5,11 @@ follows:
 
 1. untar oops-firewall tar ball.
 
-   tar xvfpj oops-firewall-6.1.3.tar.bz2
+   tar xvfpj oops-firewall-6.2.0.tar.bz2
 
 2. run dh_make set
 
-   cd oops-firewall-6.1.3
+   cd oops-firewall-6.2.0
    debian/rule binary
 
-3. create oops-firewall_6.1.3-1.deb file parrent directory in current directory
+3. create oops-firewall_6.2.0-1.deb file parrent directory in current directory
