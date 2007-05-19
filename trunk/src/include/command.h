@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.7 2007-05-10 19:13:26 oops Exp $
+# $Id: command.h,v 1.8 2007-05-19 19:37:42 oops Exp $
 #
 
 # command line command
@@ -48,26 +48,26 @@ brute_force_set() {
 			for b_dev in INPUT FORWARD
 			do
 				o_echo "    iptables -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \\"
-				o_echo "             -m recent --set --name SSHSCAN"
+				o_echo "             -m recent --set --name OFIRE_${b_port}"
 				[ ${_testmode} -eq 0 ] && \
 					${c_iptables} -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \
-								-m recent --set --name SSHSCAN
+								-m recent --set --name OFIRE_${b_port}
 				if [ $BRUTE_FORCE_LOG -eq 1 ]; then
 					o_echo "    iptables -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \\"
 					o_echo "             -m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \\"
-					o_echo "             --name SSHSCAN -j LOG --log-prefix SSH_Scan:"
+					o_echo "             --name OFIRE_${b_port} -j LOG --log-prefix SSH_Scan:"
 					[ ${_testmode} -eq 0 ] && \
 						${c_iptables} -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \
 									-m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \
-									--name SSHSCAN -j LOG --log-prefix SSH_Scan:
+									--name OFIRE_${b_port} -j LOG --log-prefix SSH_Scan:
 				fi
 				o_echo "    iptables -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \\"
 				o_echo "             -m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \\"
-				o_echo "             --name SSHSCAN -j DROP"
+				o_echo "             --name OFIRE_${b_port} -j DROP"
 				[ ${_testmode} -eq 0 ] && \
 					${c_iptables} -A ${b_dev} -p tcp --dport ${b_port} -m state --state NEW \
 								-m recent --update --seconds ${b_sec} --hitcount ${b_hit} --rttl \
-								--name SSHSCAN -j DROP
+								--name OFIRE_${b_port} -j DROP
 			done
 		}
 		o_echo
