@@ -1,0 +1,31 @@
+# $Id: Makefile.in,v 1.2 2005-12-03 19:29:33 oops Exp $
+
+CC		= @cc@
+CFLAGS	= @cflags@
+DESTDIR	= @destdir@
+
+PROG	= oops-firewall
+langdir	= @shareddir@/locale
+
+INSTALL	= @install@
+LS		= @ls@
+RM		= @rm@ -f
+SED		= @sed@
+MKDIR	= @mkdir@ -p
+MSGFMT	= @msgfmt@
+
+all:
+	for i in `$(LS) *.po | $(SED) 's/\.po//'` ; do \
+		$(MSGFMT) $$i.po -o $$i.mo ; \
+	done
+
+install:
+	for i in `$(LS) *.po | $(SED) 's/\.po//'` ; do \
+		$(MKDIR) $(DESTDIR)$(langdir)/$$i/LC_MESSAGES/ ; \
+		$(INSTALL) -m644 $$i.mo $(DESTDIR)$(langdir)/$$i/LC_MESSAGES/$(PROG).mo ; \
+		echo "installed $(DESTDIR)$(langdir)/$$i/LC_MESSAGES/$(PROG).mo" ; \
+	done
+
+clean:
+	-$(RM) *.mo
+

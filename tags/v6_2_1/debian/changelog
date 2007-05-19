@@ -1,0 +1,6 @@
+oops-firewall (6.2.1-1) stable; urgency=low
+
+  * fixed BRUTE_FORCE_FILTER NAME
+
+ -- JoungKyun Kim <http://oops.org>  Sun, 20 May 2007 04:40:00 +0900
+
