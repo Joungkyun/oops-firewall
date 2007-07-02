@@ -1,7 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.81 2007-05-19 19:37:42 oops Exp $
+$Id: Changelog,v 1.82 2007-07-02 03:50:45 oops Exp $
 
+
+* 6.2.2
+---------------------------------------------------------------------
++ 2007.07.02
+	- add defence code when bridge-utils is not installed and
+	  stop filewall
 
 * 6.2.1
 ---------------------------------------------------------------------
