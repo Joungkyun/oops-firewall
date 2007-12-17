@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.9 2007-04-10 11:37:35 oops Exp $
+# $Id: rule.h,v 1.10 2007-12-17 15:44:58 oops Exp $
 #
 
 add_named_port() {
@@ -304,6 +304,7 @@ add_brport_rule() {
 		fi
 
 		[ -n "$(echo ${i} | $c_grep HOSTPERPORT)" ] && a_host=1 || a_host=0
+		[ $a_host -eq 1 ] && a_ment="${a_ment} per HOST"
 
 		a_redir1="-s ${BRG0_NETPX}"
 		a_redir2="-d ${BRG0_NETPX}"
