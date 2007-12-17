@@ -1,6 +1,6 @@
 OOPS Firewall README
 
-$Id: README,v 1.4 2006-12-29 08:08:47 oops Exp $
+$Id: README,v 1.5 2007-12-17 16:57:41 oops Exp $
 
 
 이 문서는 OOPS Firewall 6.x 트리에 관련된 문서이다.
@@ -57,4 +57,22 @@ OOPS Firewall 6.x 트리의 특징은 다음과 같다.
 경우 공백문자를 구분자로 나열하면 된다. 주의할것은 BRIDGE Local 구간의 인
 터페이스와 MASQ Local 구간의 인터페이스는 동일하게 사용할 수 없다.
 
+만약, Bridge WAN device 와 MASQ WAN device 가 동일할 경우, 즉 다음의 그림
+과 같은 구조라면..
 
+                      FIREWALL
+
+               ┌───────────┐
+               │                ┌──┴─┐
+               │                │  ETH1  ├─ Bridge Zone
+         ┌──┴──┐          └──┬─┘   (Public Network)
+  WAN  ─┤   ETH0   │  BRIDGE        │
+         └──┬──┘          ┌──┴─┐
+               │                │  ETH2  ├─ Masq Zone
+               │                └──┬─┘   (Private Network)
+               └───────────┘
+
+MASQUERADE_WAN 은 주의해야 할 점이 있다. oops-firewall 은 bridge interface
+를 직접 다루기 때문에, Bridge 를 설정하는 순간, MASQUERADE_WAN 으로 사용할
+eth0 이 brg0 으로 변경된 후에 MASQ 를 처리하게 된다. 그러므로 이 경우 MASQ
+의 WAN device 를 brg0 으로 지정을 해 주어야 한다.
