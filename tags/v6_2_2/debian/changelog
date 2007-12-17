@@ -1,0 +1,8 @@
+oops-firewall (6.2.2-1) stable; urgency=low
+
+  * add defence code when bridge-utils is not installed and stop filewall
+  * fixed Bridge TCP/UDP per HOST debug message
+  * fixed bridge TCP/UDP per HOST miss operation
+
+ -- JoungKyun Kim <http://oops.org>  Tue, 18 Dec 2007 04:40:00 +0900
+
