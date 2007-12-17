@@ -1,12 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.83 2007-12-17 15:44:58 oops Exp $
-
-
-* 6.2.3
----------------------------------------------------------------------
-+ 2007.12.18
-	- fixed Bridge TCP/UDP per HOST debug message
+$Id: Changelog,v 1.84 2007-12-17 15:46:21 oops Exp $
 
 
 * 6.2.2
@@ -14,6 +8,9 @@ $Id: Changelog,v 1.83 2007-12-17 15:44:58 oops Exp $
 + 2007.07.02
 	- add defence code when bridge-utils is not installed and
 	  stop filewall
+
++ 2007.12.18
+	- fixed Bridge TCP/UDP per HOST debug message
 
 
 * 6.2.1
