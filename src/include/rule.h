@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.11 2007-12-17 16:33:54 oops Exp $
+# $Id: rule.h,v 1.12 2007-12-17 16:37:22 oops Exp $
 #
 
 add_named_port() {
@@ -354,11 +354,11 @@ add_brport_rule() {
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
 				if [ ${a_host} -eq 1 ]; then
 					if [ "${a_proto}" = "tcp" ]; then
-						o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname1} ${oport} ${t_connect2} -j ACCEPT"
-						o_echo "    iptables -A FORWARD${hosts2} -p ${a_proto} ${a_pname2} ${oport} ${t_connect1} -j ACCEPT"
+						o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
+						o_echo "    iptables -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
 						[ ${_testmode} -eq 0 ] && {
-							${c_iptables} -A FORWARD${hosts1} -p ${a_proto} ${a_pname1} ${oport} ${t_connect2} -j ACCEPT
-							${c_iptables} -A FORWARD${hosts2} -p ${a_proto} ${a_pname2} ${oport} ${t_connect1} -j ACCEPT
+							${c_iptables} -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
+							${c_iptables} -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
 						}
 					else
 						o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} -j ACCEPT"
