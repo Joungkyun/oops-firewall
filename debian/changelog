@@ -1,6 +1,7 @@
-oops-firewall (6.2.1-1) stable; urgency=low
+oops-firewall (6.2.2-1) stable; urgency=low
 
-  * fixed BRUTE_FORCE_FILTER NAME
+  * add defence code when bridge-utils is not installed and stop filewall
+  * fixed Bridge TCP/UDP per HOST debug message
 
- -- JoungKyun Kim <http://oops.org>  Sun, 20 May 2007 04:40:00 +0900
+ -- JoungKyun Kim <http://oops.org>  Tue, 18 Dec 2007 04:40:00 +0900
 
