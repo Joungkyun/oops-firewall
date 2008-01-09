@@ -1,6 +1,6 @@
 # IPTables Modules function
 #
-# $Id: modules.h,v 1.3 2007-03-30 08:56:52 oops Exp $
+# $Id: modules.h,v 1.4 2008-01-09 18:08:45 oops Exp $
 #
 
 ins_mod() {
@@ -74,7 +74,7 @@ ins_mod() {
 			print_result ${chk} "${msg}"
 		else
 			o_echo -n $"    Load ${1} module"
-			print_result 1 "Already Loading" "yellow"
+			print_result 1 $"Already Loading" "yellow"
 		fi
 	fi
 }
