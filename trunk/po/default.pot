@@ -1,22 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
+# oops-firewall templete file.
 # Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# JoungKyun.Kim <http://oops.org>, 2007
+# This file is distributed under the same license as the oops-firewall package.
+# JoungKyun.Kim <http://oops.org>, 2000
+#
 # made by
 #    xgettext -d default --from-code=euc-kr -L Shell -s \
 #       configure src/include/*.h src/sbin/oops-firewall contrib/oops-firewall.init*
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.18 2008-01-09 17:07:23 oops Exp $
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# $Id: default.pot,v 1.19 2008-01-09 17:53:54 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: oops-firewall 6.2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-11 04:02+0900\n"
+"POT-Creation-Date: 2008-01-10 02:39+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,12 +75,12 @@ msgstr ""
 msgid "     ${value} => action value is used with DROP/MARK"
 msgstr ""
 
-#: src/include/rule.h:402
+#: src/include/rule.h:403
 #, sh-format
 msgid "    ==> for ${i_ct} service"
 msgstr ""
 
-#: src/include/rule.h:429
+#: src/include/rule.h:430
 #, sh-format
 msgid "    ==> for Bridge ${i_ct} service"
 msgstr ""
@@ -237,7 +237,7 @@ msgstr ""
 msgid "  * BRIDGE not support on build time"
 msgstr ""
 
-#: src/include/rule.h:320
+#: src/include/rule.h:321
 #, sh-format
 msgid "  * Bridge ${a_ment} service"
 msgstr ""
@@ -263,7 +263,7 @@ msgstr ""
 msgid "  * Deny Ping at BroadCast"
 msgstr ""
 
-#: src/include/forward.h:27 src/include/masq.h:13
+#: src/include/forward.h:27 src/include/masq.h:12
 msgid "  * Deprecated Direction Check"
 msgstr ""
 
@@ -273,6 +273,10 @@ msgstr ""
 
 #: src/include/init.h:312
 msgid "  * Drop All UDP packet"
+msgstr ""
+
+#: src/sbin/oops-firewall:287
+msgid "  * ICMP service Configuration"
 msgstr ""
 
 #: src/include/command.h:80
@@ -315,8 +319,13 @@ msgstr ""
 msgid "  * Reset NAT Table"
 msgstr ""
 
-#: src/sbin/oops-firewall:339
+#: src/sbin/oops-firewall:338
 msgid "  * TOS Not Config"
+msgstr ""
+
+#: src/include/rule.h:463
+#, sh-format
+msgid "  * Tos configuration in ${i} chain"
 msgstr ""
 
 #: src/include/command.h:224
@@ -339,17 +348,12 @@ msgstr ""
 msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device"
 msgstr ""
 
-#: src/include/rule.h:462
-#, sh-format
-msgid "  = Tos configuration in ${i} chain"
-msgstr ""
-
-#: src/include/masq.h:21
+#: src/include/masq.h:20
 #, sh-format
 msgid " Use ${_alter} in interface.conf\\n"
 msgstr ""
 
-#: src/include/masq.h:30 src/include/masq.h:40
+#: src/include/masq.h:29 src/include/masq.h:39
 msgid " is not set"
 msgstr ""
 
@@ -360,16 +364,6 @@ msgstr ""
 #: src/include/print.h:9
 #, sh-format
 msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
-msgstr ""
-
-#: src/include/masq.h:39
-#, sh-format
-msgid "${MASQUERADE_LOC}"
-msgstr ""
-
-#: src/include/masq.h:29
-#, sh-format
-msgid "${MASQUERADE_WAN}"
 msgstr ""
 
 #: src/sbin/oops-firewall:231
@@ -397,7 +391,7 @@ msgstr ""
 msgid "${NB}. Check user type"
 msgstr ""
 
-#: src/sbin/oops-firewall:350
+#: src/sbin/oops-firewall:349
 #, sh-format
 msgid "${NB}. Deny rule set configuration"
 msgstr ""
@@ -457,7 +451,7 @@ msgstr ""
 msgid "${NB}. TOS Configuration"
 msgstr ""
 
-#: src/include/masq.h:20
+#: src/include/masq.h:19
 #, sh-format
 msgid "${i} is Deprecated."
 msgstr ""

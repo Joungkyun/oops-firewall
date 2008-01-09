@@ -1,6 +1,6 @@
 # Masq rule function
 #
-# $Id: masq.h,v 1.6 2008-01-09 17:37:28 oops Exp $
+# $Id: masq.h,v 1.7 2008-01-09 17:53:55 oops Exp $
 #
 
 add_masq_init() {
@@ -25,7 +25,7 @@ add_masq_init() {
 
 	if [ -z "${MASQUERADE_WAN}" ]; then
 		o_echo -n "  * "
-		print_color $"${MASQUERADE_WAN}"
+		print_color "MASQUERADE_WAN"
 		o_echo $" is not set"
 		return 1
 	else
@@ -35,7 +35,7 @@ add_masq_init() {
   
 	if [ -z "${MASQUERADE_LOC}" ]; then
 		o_echo -n "  * "
-		print_color $"${MASQUERADE_LOC}"
+		print_color "MASQUERADE_LOC"
 		o_echo $" is not set"
 		return 1
 	fi

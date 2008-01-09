@@ -1,13 +1,13 @@
 # Print function
 #
-# $Id: print.h,v 1.3 2007-01-09 14:19:37 oops Exp $
+# $Id: print.h,v 1.4 2008-01-09 17:53:55 oops Exp $
 #
 
 printBanner() {
 	[ "${1}" = "clear" ] && clear || echo
 	echo  "############################################################################"
 	echo $"# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
-	echo $"#      By Dec 29 2006 JoungKyun.Kim <http://oops.org>"
+	echo $"#      By Jan 10 2008 JoungKyun.Kim <http://oops.org>"
 	echo  "############################################################################"
 	echo
 }
