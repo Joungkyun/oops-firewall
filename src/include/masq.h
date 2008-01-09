@@ -1,12 +1,11 @@
 # Masq rule function
 #
-# $Id: masq.h,v 1.5 2008-01-09 17:15:01 oops Exp $
+# $Id: masq.h,v 1.6 2008-01-09 17:37:28 oops Exp $
 #
 
 add_masq_init() {
 	[ "${MASQ_USED}" = "0" ] && return 1
 
-	o_echo
 	ins_mod ip_nat_ftp
 	o_echo
 

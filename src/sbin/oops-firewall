@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.7 2007-03-29 18:29:23 oops Exp $
+# $Id: oops-firewall,v 1.8 2008-01-09 17:37:28 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -284,7 +284,7 @@ add_brport_rule incoming BR_TCP_ALLOWPORT BR_TCP_HOSTPERPORT BR_UDP_ALLOWPORT BR
 
 # for icmp
 
-o_echo "  * ICMP service Configuration"
+o_echo $"  * ICMP service Configuration"
 add_icmp_host ICMP_HOSTPERPING ICMP_HOSTPERTRACE
 add_bricmp_host BR_ICMP_HOSTPERPING BR_ICMP_HOSTPERTRACE
 
@@ -331,7 +331,6 @@ user_cmd "post"
 next_numbering
 o_echo
 o_echo $"${NB}. TOS Configuration"
-o_echo
 
 add_tos_rule
 [ $? -ne 0 ] && {
