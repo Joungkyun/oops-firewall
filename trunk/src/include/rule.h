@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.13 2008-01-09 17:07:23 oops Exp $
+# $Id: rule.h,v 1.14 2008-01-09 17:37:28 oops Exp $
 #
 
 add_named_port() {
@@ -460,14 +460,14 @@ add_tos_rule() {
 	for i in ${TOS_TABLE}
 	do
 		o_echo
-		o_echo $"  = Tos configuration in ${i} chain"
+		o_echo $"  * Tos configuration in ${i} chain"
 		for v in ${USE_TOS}
 		do
 			echo ${v} | {
 				IFS=':' read port tosv
 				port=$(echo "${port}" | ${c_sed} 's/-/:/g')
-				o_echo "    * iptables -t mangle -A ${i} -p tcp --dport ${port} -j TOS --set-tos ${tosv}"
-				o_echo "    * iptables -t mangle -A ${i} -p tcp --sport ${port} -j TOS --set-tos ${tosv}"
+				o_echo "    iptables -t mangle -A ${i} -p tcp --dport ${port} -j TOS --set-tos ${tosv}"
+				o_echo "    iptables -t mangle -A ${i} -p tcp --sport ${port} -j TOS --set-tos ${tosv}"
 				if [ "${_testmode}" = 0 ]; then
 					${c_iptables} -t mangle -A ${i} -p tcp --dport ${port} -j TOS --set-tos ${tosv}
 					${c_iptables} -t mangle -A ${i} -p tcp --sport ${port} -j TOS --set-tos ${tosv}

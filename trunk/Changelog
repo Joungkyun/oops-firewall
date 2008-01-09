@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.86 2008-01-09 17:15:01 oops Exp $
+$Id: Changelog,v 1.87 2008-01-09 17:37:28 oops Exp $
 
 
 * 6.2.3
 ---------------------------------------------------------------------
 + 2008.01.10
 	- fixed miss operation of MASQ and Forward When Bridge mode on
+	- fixed indent
 
 
 * 6.2.2
