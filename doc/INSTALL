@@ -1,6 +1,6 @@
 OOPS Firewall Installation 문서
 
-$Id: INSTALL,v 1.14 2007-12-17 16:52:36 oops Exp $
+$Id: INSTALL,v 1.15 2008-01-09 17:07:23 oops Exp $
 
 
 이 문서는 OOPS Firewall 6.x 설치에 대한 설명을 기술한다.
@@ -51,7 +51,7 @@ OOPS Firewall 은 Redhat 호환 시스템 (/etc/init.d 와 RPM) 을 겨냥하여 제작
 또한, Redhat 호환으로 제작이 되었기 때문에 스스로 빌드를 하지 말고 RPM 으
 로 제작을 해서 설치를 하는 것을 권장한다. RPM 제작은
 
-shell> rpmbuild -tb oops-firewall-6.2.2.tar.bz2
+shell> rpmbuild -tb oops-firewall-6.2.3.tar.bz2
 
 와 같은 명령으로 제작할 수 있으며, /usr/src/redhat/RPMS/noarch/ 에 제작된
 RPM 이 생성이 된다. 설치된 파일 리스트는 패키지가 설치 되어 있을 경우
@@ -60,7 +60,7 @@ shell> rpm -qf oops-firewall
 
 또는, 패키지가 설치가 되어 있지 않을 경우
 
-shell> rpm -qfp oops-firewall-6.2.2-1.noarch.rpm
+shell> rpm -qfp oops-firewall-6.2.3-1.noarch.rpm
 
 으로 확인을 할 수 있다.
 
