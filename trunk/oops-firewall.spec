@@ -5,7 +5,7 @@ Name: oops-firewall
 Version: 6.2.3
 Release: 1
 Epoch: 41
-Copyright: GPL
+License: GPL
 Group: Applications/Security
 URL: http://oops.org/?t=lecture&sb=firewall&n=1
 Source0: ftp://mirror.oops.org/pub/oops/oops-firewall/%{name}-%{version}.tar.bz2
