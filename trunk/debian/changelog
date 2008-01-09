@@ -1,4 +1,4 @@
-oops-firewall (6.2.2-1) stable; urgency=low
+oops-firewall (6.2.3-1) stable; urgency=low
 
   * add defence code when bridge-utils is not installed and stop filewall
   * fixed Bridge TCP/UDP per HOST debug message

@@ -1,9 +1,9 @@
 #!/bin/sh
-# $Id: configure,v 1.30 2007-12-17 15:49:31 oops Exp $
+# $Id: configure,v 1.31 2008-01-09 17:07:23 oops Exp $
 
 NAME=oops-firewall
 GCOL=40
-version=6.2.2
+version=6.2.3
 OS=$(uname)
 LOCALDIR=/usr/local
 CHKDIR="/bin /sbin /usr/bin /usr/sbin ${LOCALDIR}/bin ${LOCALDIR}/sbin"

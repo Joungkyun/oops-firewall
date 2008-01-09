@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.12 2007-12-17 16:37:22 oops Exp $
+# $Id: rule.h,v 1.13 2008-01-09 17:07:23 oops Exp $
 #
 
 add_named_port() {
@@ -403,10 +403,10 @@ add_icmp_host() {
 		o_echo $"    ==> for ${i_ct} service"
 		for v in ${i_ivalue}
 		do
-			o_echo "    iptables -A ${i_pchain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
+			o_echo "      iptables -A ${i_pchain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
 			${c_iptables} -A ${i_chain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
 			[ "$i_ct" = "traceroute" ] && {
-				o_echo "    iptables -A ${i_pchain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
+				o_echo "      iptables -A ${i_pchain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
 				${c_iptables} -A ${i_chain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
 			}
 		done
