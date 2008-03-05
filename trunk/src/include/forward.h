@@ -1,6 +1,6 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.9 2008-01-09 17:15:01 oops Exp $
+# $Id: forward.h,v 1.10 2008-03-05 05:03:34 oops Exp $
 #
 
 add_forward_init() {
@@ -54,7 +54,7 @@ add_forward_rule() {
 			if [ "${BRIDGE_USED}" -ne 0 ]; then
 				o_echo "  * iptables -A FORWARD -s ${dest} -d ${target} -j ACCEPT"
 				[ "${_testmode}" = 0 ] && \
-					${_iptables} -A FORWARD -s ${dest} -d ${target} -j ACCEPT
+					${c_iptables} -A FORWARD -s ${dest} -d ${target} -j ACCEPT
 			fi
 		}
 	done
