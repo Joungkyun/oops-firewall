@@ -9,22 +9,22 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.26 2008-01-09 17:53:55 oops Exp $
+# $Id: ko.po,v 1.27 2008-06-19 11:51:30 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-fireall 6.2.3\n"
+"Project-Id-Version: oops-fireall 6.2.4\n"
 "Report-Msgid-Bugs-To: http://oops.org\n"
-"POT-Creation-Date: 2008-01-10 02:39+0900\n"
-"PO-Revision-Date: 2003-08-01 19:02+0900\n"
+"POT-Creation-Date: 2008-06-19 20:44+0900\n"
+"PO-Revision-Date: 2008-06-19 20:48+0900\n"
 "Last-Translator: JoungKyun.Kim <http://oops.org>\n"
 "Language-Team: AnNyung Packaging Team <http://annyung.oops.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=EUC-KR\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: src/include/print.h:23
+#: src/include/print.h:24
 msgid "         -V                     print current version"
 msgstr "         -V                     현재 버전 출력"
 
@@ -32,9 +32,13 @@ msgstr "         -V                     현재 버전 출력"
 msgid "         -c config_directory    set configuration directory"
 msgstr "         -c config_directory    설정 파일 디렉토리 지정"
 
-#: src/include/print.h:24
+#: src/include/print.h:25
 msgid "         -h                     help (this) message"
 msgstr "         -h                     도움말"
+
+#: src/include/print.h:23
+msgid "         -n                     don't print ansi mode"
+msgstr "         -n                     안시 모드 출력 하지 않음"
 
 #: src/include/print.h:21
 msgid "         -t                     run test mode"
@@ -75,12 +79,12 @@ msgstr "     ${value} => actoin MARK 는 mark 값이 요구됩니다."
 msgid "     ${value} => action value is used with DROP/MARK"
 msgstr "     ${value} => ACTION 값은 DROP/MAKR 둘중에 하나로 지정해야 합니다."
 
-#: src/include/rule.h:403
+#: src/include/rule.h:422
 #, sh-format
 msgid "    ==> for ${i_ct} service"
 msgstr "    ==> ${i_ct} 서비스 설정"
 
-#: src/include/rule.h:430
+#: src/include/rule.h:449
 #, sh-format
 msgid "    ==> for Bridge ${i_ct} service"
 msgstr "    ==> Bridge ${i_ct} 서비스 설정"
@@ -105,7 +109,7 @@ msgstr "    모든 POSTROUTING 사슬 허가"
 msgid "    Accept All PREROUTING Chain"
 msgstr "    FORWARD 규칙 제거"
 
-#: src/sbin/oops-firewall:124
+#: src/sbin/oops-firewall:125
 msgid "    IP ADDRESS"
 msgstr "    IP 주소"
 
@@ -122,11 +126,11 @@ msgstr "    ${1} 모듈 등록"
 msgid "    Load ${mod_name} module"
 msgstr "    ${mod_name} 모듈 등록"
 
-#: src/sbin/oops-firewall:128
+#: src/sbin/oops-firewall:129
 msgid "    NETWORK"
 msgstr "    네트워크"
 
-#: src/sbin/oops-firewall:130
+#: src/sbin/oops-firewall:131
 msgid "    NETWORK PREPIX"
 msgstr "    네트워크 프리픽스"
 
@@ -184,7 +188,7 @@ msgstr "    MANGLE 테이블 카운터 초기화"
 msgid "    Reset NAT Tabel Counter"
 msgstr "    NAT 테이블 카운터 초기화"
 
-#: src/sbin/oops-firewall:126
+#: src/sbin/oops-firewall:127
 msgid "    SUBNET MASK"
 msgstr "    서브넷 마스크"
 
@@ -201,12 +205,12 @@ msgstr "    그리고 default.h 의 BRIDGE_SET 의 갓을 1로 설정하십시오."
 msgid "    c_brctl environment on command.h"
 msgstr "    다음, command.h 의 c_brctl 변수에 brctl 의 경로를 설정 하십시오."
 
-#: src/include/rule.h:236
+#: src/include/rule.h:255
 #, sh-format
 msgid "  * ${a_ment} service"
 msgstr "  * ${a_ment} 서비스"
 
-#: src/sbin/oops-firewall:123
+#: src/sbin/oops-firewall:124
 #, sh-format
 msgid "  * ${devName}${devNum} Information"
 msgstr "  * ${devName}${devNum} 정보"
@@ -237,12 +241,12 @@ msgstr "  * BRIDGE 모드가 셋팅되지 않았습니다."
 msgid "  * BRIDGE not support on build time"
 msgstr "  * 빌드시에 BRIDGE 를 지원하지 않도록 설정 되었습니다."
 
-#: src/include/rule.h:321
+#: src/include/rule.h:340
 #, sh-format
 msgid "  * Bridge ${a_ment} service"
 msgstr "  * Bridge ${a_ment} 서비스"
 
-#: src/sbin/oops-firewall:263
+#: src/sbin/oops-firewall:264
 msgid "  * Bridge Name Service Configuration"
 msgstr "  * Bridge DNS 서비스 설정"
 
@@ -275,7 +279,7 @@ msgstr "  * 모든 TCP 패킷을 Drop"
 msgid "  * Drop All UDP packet"
 msgstr "  * 모든 UDP 패킷을 Drop"
 
-#: src/sbin/oops-firewall:287
+#: src/sbin/oops-firewall:288
 msgid "  * ICMP service Configuration"
 msgstr "  * ICMP 서비스 설정"
 
@@ -291,7 +295,7 @@ msgstr "  * 넷필터 모듈 등록"
 msgid "  * MASQ mode changed off mode!"
 msgstr "  * MASQ 모드가 비활성화 됩니다!"
 
-#: src/sbin/oops-firewall:259
+#: src/sbin/oops-firewall:260
 msgid "  * Name Service Configuration"
 msgstr "  * DNS 서비스 설정"
 
@@ -319,11 +323,11 @@ msgstr "  * Mangle 테이블 초기화"
 msgid "  * Reset NAT Table"
 msgstr "  * NAT 테이블 초기화"
 
-#: src/sbin/oops-firewall:338
+#: src/sbin/oops-firewall:339
 msgid "  * TOS Not Config"
 msgstr "  * TOS 설정이 안되어 있음"
 
-#: src/include/rule.h:463
+#: src/include/rule.h:482
 #, sh-format
 msgid "  * Tos configuration in ${i} chain"
 msgstr "  * ${i} 체인 Tos 설정"
@@ -366,87 +370,87 @@ msgstr "#      2008.01.10 김정균 <http://oops.org>"
 msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
 msgstr "# OOPS Firewall - 설정이 간단한 iptables 프론트엔드 v${_ver}"
 
-#: src/sbin/oops-firewall:231
+#: src/sbin/oops-firewall:232
 #, sh-format
 msgid "${NB}. Allow All Service"
 msgstr "${NB}. 모든 서비스 허가"
 
-#: src/sbin/oops-firewall:274
+#: src/sbin/oops-firewall:275
 #, sh-format
 msgid "${NB}. Allow Incoming Service Configuration"
 msgstr "${NB}. 내부로 들어오는 서비스 허가"
 
-#: src/sbin/oops-firewall:253
+#: src/sbin/oops-firewall:254
 #, sh-format
 msgid "${NB}. Allow Outgoing Service Configuration"
 msgstr "${NB}. 외부로 나가는 서비스 허가"
 
-#: src/sbin/oops-firewall:208
+#: src/sbin/oops-firewall:209
 #, sh-format
 msgid "${NB}. Basic Kernel Parameter Configuration"
 msgstr "${NB}. 기본 커널 파라미터 설정"
 
-#: src/sbin/oops-firewall:50
+#: src/sbin/oops-firewall:51
 #, sh-format
 msgid "${NB}. Check user type"
 msgstr "${NB}. 실행 유저 체크"
 
-#: src/sbin/oops-firewall:349
+#: src/sbin/oops-firewall:350
 #, sh-format
 msgid "${NB}. Deny rule set configuration"
 msgstr "${NB}. 거부 규칙 설정"
 
-#: src/sbin/oops-firewall:220
+#: src/sbin/oops-firewall:221
 #, sh-format
 msgid "${NB}. Drop Invalid Package"
 msgstr "${NB}. 이상 패킷 제거"
 
-#: src/sbin/oops-firewall:322
+#: src/sbin/oops-firewall:323
 #, sh-format
 msgid "${NB}. Execute user defined post Command"
 msgstr "${NB}. 후처리 사용자 설정 규칙 추가"
 
-#: src/sbin/oops-firewall:242
+#: src/sbin/oops-firewall:243
 #, sh-format
 msgid "${NB}. Execute user defined pre command"
 msgstr "${NB}. 전처리 사용자 설정 규칙 추가"
 
-#: src/sbin/oops-firewall:310
+#: src/sbin/oops-firewall:311
 #, sh-format
 msgid "${NB}. Forwarding Configuration"
 msgstr "${NB}. 포워딩 설정"
 
-#: src/sbin/oops-firewall:93
+#: src/sbin/oops-firewall:94
 #, sh-format
 msgid "${NB}. IP address Check"
 msgstr "${NB}. IP 주소 체크"
 
-#: src/sbin/oops-firewall:196
+#: src/sbin/oops-firewall:197
 #, sh-format
 msgid "${NB}. Init Bridge Mode"
 msgstr "${NB}. Bridge 모드 초기화"
 
-#: src/sbin/oops-firewall:155
+#: src/sbin/oops-firewall:156
 #, sh-format
 msgid "${NB}. Interface Information"
 msgstr "${NB}. 인터페이스 정보"
 
-#: src/sbin/oops-firewall:68
+#: src/sbin/oops-firewall:69
 #, sh-format
 msgid "${NB}. Kernel version check"
 msgstr "${NB}. 커널 버전 검사"
 
-#: src/sbin/oops-firewall:298
+#: src/sbin/oops-firewall:299
 #, sh-format
 msgid "${NB}. Masqurade Configuration"
 msgstr "${NB}. 매스쿼레이드 설정"
 
-#: src/sbin/oops-firewall:181
+#: src/sbin/oops-firewall:182
 #, sh-format
 msgid "${NB}. Reset Netfilter"
 msgstr "${NB}. 넷필터 초기화"
 
-#: src/sbin/oops-firewall:333
+#: src/sbin/oops-firewall:334
 #, sh-format
 msgid "${NB}. TOS Configuration"
 msgstr "${NB}. TOS 설정"
@@ -456,7 +460,7 @@ msgstr "${NB}. TOS 설정"
 msgid "${i} is Deprecated."
 msgstr "${i} 은/는 만료되었습니다."
 
-#: src/include/modules.h:56
+#: src/include/modules.h:56 src/include/modules.h:77
 msgid "Already Loading"
 msgstr "존재함"
 
@@ -464,7 +468,7 @@ msgstr "존재함"
 msgid "Destory Firewall Tables: "
 msgstr "OOPS Firewall 종료: "
 
-#: src/sbin/oops-firewall:73
+#: src/sbin/oops-firewall:74
 msgid "Enable to use over kernel 2.4.0"
 msgstr "커널 2.4.0 버전 부터 사용이 가능합니다."
 
@@ -480,7 +484,7 @@ msgstr "옵션:"
 msgid "Starting OOPS Firewall: "
 msgstr "OOPS Firewall 시작: "
 
-#: src/sbin/oops-firewall:55
+#: src/sbin/oops-firewall:56
 msgid "U are not super user!"
 msgstr "수퍼 유저 권한으로 실행을 해야 합니다."
 

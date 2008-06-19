@@ -9,14 +9,14 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.19 2008-01-09 17:53:54 oops Exp $
+# $Id: default.pot,v 1.20 2008-06-19 11:51:30 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-firewall 6.2.3\n"
+"Project-Id-Version: oops-firewall 6.2.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-10 02:39+0900\n"
+"POT-Creation-Date: 2008-06-19 20:44+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/include/print.h:23
+#: src/include/print.h:24
 msgid "         -V                     print current version"
 msgstr ""
 
@@ -32,8 +32,12 @@ msgstr ""
 msgid "         -c config_directory    set configuration directory"
 msgstr ""
 
-#: src/include/print.h:24
+#: src/include/print.h:25
 msgid "         -h                     help (this) message"
+msgstr ""
+
+#: src/include/print.h:23
+msgid "         -n                     don't print ansi mode"
 msgstr ""
 
 #: src/include/print.h:21
@@ -75,12 +79,12 @@ msgstr ""
 msgid "     ${value} => action value is used with DROP/MARK"
 msgstr ""
 
-#: src/include/rule.h:403
+#: src/include/rule.h:422
 #, sh-format
 msgid "    ==> for ${i_ct} service"
 msgstr ""
 
-#: src/include/rule.h:430
+#: src/include/rule.h:449
 #, sh-format
 msgid "    ==> for Bridge ${i_ct} service"
 msgstr ""
@@ -105,7 +109,7 @@ msgstr ""
 msgid "    Accept All PREROUTING Chain"
 msgstr ""
 
-#: src/sbin/oops-firewall:124
+#: src/sbin/oops-firewall:125
 msgid "    IP ADDRESS"
 msgstr ""
 
@@ -122,11 +126,11 @@ msgstr ""
 msgid "    Load ${mod_name} module"
 msgstr ""
 
-#: src/sbin/oops-firewall:128
+#: src/sbin/oops-firewall:129
 msgid "    NETWORK"
 msgstr ""
 
-#: src/sbin/oops-firewall:130
+#: src/sbin/oops-firewall:131
 msgid "    NETWORK PREPIX"
 msgstr ""
 
@@ -184,7 +188,7 @@ msgstr ""
 msgid "    Reset NAT Tabel Counter"
 msgstr ""
 
-#: src/sbin/oops-firewall:126
+#: src/sbin/oops-firewall:127
 msgid "    SUBNET MASK"
 msgstr ""
 
@@ -201,12 +205,12 @@ msgstr ""
 msgid "    c_brctl environment on command.h"
 msgstr ""
 
-#: src/include/rule.h:236
+#: src/include/rule.h:255
 #, sh-format
 msgid "  * ${a_ment} service"
 msgstr ""
 
-#: src/sbin/oops-firewall:123
+#: src/sbin/oops-firewall:124
 #, sh-format
 msgid "  * ${devName}${devNum} Information"
 msgstr ""
@@ -237,12 +241,12 @@ msgstr ""
 msgid "  * BRIDGE not support on build time"
 msgstr ""
 
-#: src/include/rule.h:321
+#: src/include/rule.h:340
 #, sh-format
 msgid "  * Bridge ${a_ment} service"
 msgstr ""
 
-#: src/sbin/oops-firewall:263
+#: src/sbin/oops-firewall:264
 msgid "  * Bridge Name Service Configuration"
 msgstr ""
 
@@ -275,7 +279,7 @@ msgstr ""
 msgid "  * Drop All UDP packet"
 msgstr ""
 
-#: src/sbin/oops-firewall:287
+#: src/sbin/oops-firewall:288
 msgid "  * ICMP service Configuration"
 msgstr ""
 
@@ -291,7 +295,7 @@ msgstr ""
 msgid "  * MASQ mode changed off mode!"
 msgstr ""
 
-#: src/sbin/oops-firewall:259
+#: src/sbin/oops-firewall:260
 msgid "  * Name Service Configuration"
 msgstr ""
 
@@ -319,11 +323,11 @@ msgstr ""
 msgid "  * Reset NAT Table"
 msgstr ""
 
-#: src/sbin/oops-firewall:338
+#: src/sbin/oops-firewall:339
 msgid "  * TOS Not Config"
 msgstr ""
 
-#: src/include/rule.h:463
+#: src/include/rule.h:482
 #, sh-format
 msgid "  * Tos configuration in ${i} chain"
 msgstr ""
@@ -358,7 +362,7 @@ msgid " is not set"
 msgstr ""
 
 #: src/include/print.h:10
-msgid "#      By Dec 29 2006 JoungKyun.Kim <http://oops.org>"
+msgid "#      By Jan 10 2008 JoungKyun.Kim <http://oops.org>"
 msgstr ""
 
 #: src/include/print.h:9
@@ -366,87 +370,87 @@ msgstr ""
 msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
 msgstr ""
 
-#: src/sbin/oops-firewall:231
+#: src/sbin/oops-firewall:232
 #, sh-format
 msgid "${NB}. Allow All Service"
 msgstr ""
 
-#: src/sbin/oops-firewall:274
+#: src/sbin/oops-firewall:275
 #, sh-format
 msgid "${NB}. Allow Incoming Service Configuration"
 msgstr ""
 
-#: src/sbin/oops-firewall:253
+#: src/sbin/oops-firewall:254
 #, sh-format
 msgid "${NB}. Allow Outgoing Service Configuration"
 msgstr ""
 
-#: src/sbin/oops-firewall:208
+#: src/sbin/oops-firewall:209
 #, sh-format
 msgid "${NB}. Basic Kernel Parameter Configuration"
 msgstr ""
 
-#: src/sbin/oops-firewall:50
+#: src/sbin/oops-firewall:51
 #, sh-format
 msgid "${NB}. Check user type"
 msgstr ""
 
-#: src/sbin/oops-firewall:349
+#: src/sbin/oops-firewall:350
 #, sh-format
 msgid "${NB}. Deny rule set configuration"
 msgstr ""
 
-#: src/sbin/oops-firewall:220
+#: src/sbin/oops-firewall:221
 #, sh-format
 msgid "${NB}. Drop Invalid Package"
 msgstr ""
 
-#: src/sbin/oops-firewall:322
+#: src/sbin/oops-firewall:323
 #, sh-format
 msgid "${NB}. Execute user defined post Command"
 msgstr ""
 
-#: src/sbin/oops-firewall:242
+#: src/sbin/oops-firewall:243
 #, sh-format
 msgid "${NB}. Execute user defined pre command"
 msgstr ""
 
-#: src/sbin/oops-firewall:310
+#: src/sbin/oops-firewall:311
 #, sh-format
 msgid "${NB}. Forwarding Configuration"
 msgstr ""
 
-#: src/sbin/oops-firewall:93
+#: src/sbin/oops-firewall:94
 #, sh-format
 msgid "${NB}. IP address Check"
 msgstr ""
 
-#: src/sbin/oops-firewall:196
+#: src/sbin/oops-firewall:197
 #, sh-format
 msgid "${NB}. Init Bridge Mode"
 msgstr ""
 
-#: src/sbin/oops-firewall:155
+#: src/sbin/oops-firewall:156
 #, sh-format
 msgid "${NB}. Interface Information"
 msgstr ""
 
-#: src/sbin/oops-firewall:68
+#: src/sbin/oops-firewall:69
 #, sh-format
 msgid "${NB}. Kernel version check"
 msgstr ""
 
-#: src/sbin/oops-firewall:298
+#: src/sbin/oops-firewall:299
 #, sh-format
 msgid "${NB}. Masqurade Configuration"
 msgstr ""
 
-#: src/sbin/oops-firewall:181
+#: src/sbin/oops-firewall:182
 #, sh-format
 msgid "${NB}. Reset Netfilter"
 msgstr ""
 
-#: src/sbin/oops-firewall:333
+#: src/sbin/oops-firewall:334
 #, sh-format
 msgid "${NB}. TOS Configuration"
 msgstr ""
@@ -456,7 +460,7 @@ msgstr ""
 msgid "${i} is Deprecated."
 msgstr ""
 
-#: src/include/modules.h:56
+#: src/include/modules.h:56 src/include/modules.h:77
 msgid "Already Loading"
 msgstr ""
 
@@ -464,7 +468,7 @@ msgstr ""
 msgid "Destory Firewall Tables: "
 msgstr ""
 
-#: src/sbin/oops-firewall:73
+#: src/sbin/oops-firewall:74
 msgid "Enable to use over kernel 2.4.0"
 msgstr ""
 
@@ -480,7 +484,7 @@ msgstr ""
 msgid "Starting OOPS Firewall: "
 msgstr ""
 
-#: src/sbin/oops-firewall:55
+#: src/sbin/oops-firewall:56
 msgid "U are not super user!"
 msgstr ""
 
