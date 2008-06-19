@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.8 2008-01-09 17:37:28 oops Exp $
+# $Id: oops-firewall,v 1.9 2008-06-19 11:51:30 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -22,7 +22,7 @@ source ${_includes}/oops-firewall.h
 ${c_depmod} -a &> /dev/null
 
 # parse option
-opts=$(${c_getopt} ac:htvV $*)
+opts=$(${c_getopt} ac:hntvV $*)
 [ $? -ne 0 ] && usage
 set -- ${opts}
 
@@ -32,6 +32,7 @@ do
 		-a) _bridgeclear=1; shift;;
 		-t) _testmode=1; shift;;
 		-v) _verbose=1; shift;;
+		-n) _noansi=1; shift;;
 		-c) _confdir=$2; shift; shift;;
 		-V) printVersion;;
 		--) shift; break;;

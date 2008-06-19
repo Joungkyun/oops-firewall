@@ -1,6 +1,6 @@
 # Print function
 #
-# $Id: print.h,v 1.4 2008-01-09 17:53:55 oops Exp $
+# $Id: print.h,v 1.5 2008-06-19 11:51:30 oops Exp $
 #
 
 printBanner() {
@@ -20,6 +20,7 @@ usage() {
 	echo $"         -c config_directory    set configuration directory"
 	echo $"         -t                     run test mode"
 	echo $"         -v                     verbose mode"
+	echo $"         -n                     don't print ansi mode"
 	echo $"         -V                     print current version"
 	echo $"         -h                     help (this) message"
 	echo
@@ -66,9 +67,13 @@ print_result() {
 	__cstart="1;${__mcol}m"
 
 	if [ $_verbose -eq 1 ]; then
-		echo -ne "\\033[${_gcol}G"
-		echo -n ": "
-		echo -ne "[${__cstart}${__result}[${__cend}\n"
+		if [ $_noansi -eq 0 ]; then
+			echo -ne "\\033[${_gcol}G"
+			echo -n ": "
+			echo -ne "[${__cstart}${__result}[${__cend}\n"
+		else
+			echo " : ${__result}"
+		fi
 	fi
 }
 
@@ -88,7 +93,11 @@ print_color() {
 	__mcol=$?
 	__cstart="1;${__mcol}m"
 
-	echo -ne "[${__cstart}${__msg}[${__cend}"
+	if [ $_noansi -eq 0 ]; then
+		echo -ne "[${__cstart}${__msg}[${__cend}"
+	else
+		echo -n ${__msg}
+	fi
 }
 
 o_echo() {
