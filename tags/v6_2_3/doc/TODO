@@ -1,0 +1,4 @@
+1. ftp passive/active mode 지연 문제
+   outgoing 시 passive mode 의 지연 문제
+2. Bridge mode 에서 inbound service 잘 되는지 확인 못함
+   Bridge mode outbound 는 확인 완료

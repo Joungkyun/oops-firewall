@@ -1,0 +1,7 @@
+oops-firewall (6.2.3-1) stable; urgency=low
+
+  * fixed miss operation of MASQ and Forward When Bridge mode on
+  * fixed indent
+
+ -- JoungKyun Kim <http://oops.org>  Tue, 18 Dec 2007 04:40:00 +0900
+
