@@ -1,12 +1,13 @@
 # Default variables define
 #
-# $Id: default.h,v 1.4 2007-03-30 08:56:52 oops Exp $
+# $Id: default.h,v 1.5 2008-06-19 12:00:17 oops Exp $
 #
 
 _ver=$(${c_cat} ${_includes}/version.h)
 _gcol=50
 _testmode=0
 _verbose=0
+_noansi=0
 _bridgeclear=0
 
 export _ver _gcol _testmode _verbose _bridgeclear _ftppassive
