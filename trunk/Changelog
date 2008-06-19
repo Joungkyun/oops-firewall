@@ -1,10 +1,14 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.88 2008-03-05 05:03:34 oops Exp $
+$Id: Changelog,v 1.89 2008-06-19 10:54:29 oops Exp $
 
 
 * 6.2.4
 ---------------------------------------------------------------------
++ 2008.06.19
+	- support iprange on ALLOWALL
+	  ALLOWALL = 10.0.0.1-10.0.0.24
+
 + 2008.03.05
 	- fixed miss operation of forward rule (fixed typo)
 

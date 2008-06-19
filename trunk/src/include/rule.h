@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.14 2008-01-09 17:37:28 oops Exp $
+# $Id: rule.h,v 1.15 2008-06-19 10:54:29 oops Exp $
 #
 
 add_named_port() {
@@ -167,10 +167,17 @@ add_all_rule() {
 	if [ "${ALLOWALL}" != "" ] ; then
 		for values in ${ALLOWALL}
 		do
+			rangechk=$(echo "${values}" | ${c_grep} -- '-')
+
 			for intf in INPUT OUTPUT
 			do
 				[ "${intf}" = "INPUT" ] && pintf="INPUT " || pintf="OUTPUT"
-				[ "${intf}" = "INPUT" ] && redir="-s" || redir="-d"
+				if [ -n "${rangechk}" ]; then
+					redir="-p all -m iprange "
+					[ "${intf}" = "INPUT" ] && redir="${redir}--src-range" || redir="${redir}--dst-range"
+				else
+					[ "${intf}" = "INPUT" ] && redir="-s" || redir="-d"
+				fi
 				o_echo "  * iptables -A ${pintf} ${redir} ${values} -j ACCEPT"
 				[ "${_testmode}" = 0 ] && \
 					${c_iptables} -A ${intf} ${redir} ${values} -j ACCEPT
@@ -181,11 +188,23 @@ add_all_rule() {
 	if [ ${BRIDGE_USED} -eq 1 -a -n "${BR_ALLOWALL}" ]; then
 		for values in ${BR_ALLOWALL}
 		do
-			o_echo "  * iptables -A FORWARD -d ${BRG0_NETPX} -s ${values} -j ACCEPT"
-			o_echo "  * iptables -A FORWARD -s ${BRG0_NETPX} -d ${values} -j ACCEPT"
-			if [ "${_testmode}" = 0 ]; then
-				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${values} -j ACCEPT
-				${c_iptables} -A FORWARD -s ${BRG0_NETPX} -d ${values} -j ACCEPT
+			rangechk=$(echo "${values}" | ${c_grep} -- '-')
+
+			if [ -n "${rangechk}" ]; then
+				rangemode="-p all -m iprange "
+				o_echo "  * iptables -A FORWARD -d ${BRG0_NETPX} ${rangemode} --src-range ${values} -j ACCEPT"
+				o_echo "  * iptables -A FORWARD -s ${BRG0_NETPX} ${rangemode} --dst-range ${values} -j ACCEPT"
+				if [ "${_testmode}" = 0 ]; then
+					${c_iptables} -A FORWARD -d ${BRG0_NETPX} ${rangemode} --src-range ${values} -j ACCEPT
+					${c_iptables} -A FORWARD -s ${BRG0_NETPX} ${rangemode} --dst-range ${values} -j ACCEPT
+				fi
+			else
+				o_echo "  * iptables -A FORWARD -d ${BRG0_NETPX} -s ${values} -j ACCEPT"
+				o_echo "  * iptables -A FORWARD -s ${BRG0_NETPX} -d ${values} -j ACCEPT"
+				if [ "${_testmode}" = 0 ]; then
+					${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${values} -j ACCEPT
+					${c_iptables} -A FORWARD -s ${BRG0_NETPX} -d ${values} -j ACCEPT
+				fi
 			fi
 		done
 	fi
