@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.1.2.1 2008-07-17 18:49:06 oops Exp $
+# $Id: oops-firewall,v 1.1.2.2 2008-07-17 19:08:09 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -23,7 +23,7 @@ iprange_mod_check
 _iprange=$?
 
 # parse option
-opts=$(${c_getopt} c:htvV $*)
+opts=$(${c_getopt} c:hntvV $*)
 [ $? -ne 0 ] && usage
 set -- ${opts}
 
@@ -32,6 +32,7 @@ do
 	case "$i" in
 		-t) _testmode=1; shift;;
 		-v) _verbose=1; shift;;
+		-n) _noansi=1; shift;;
 		-c) _confdir=$2; shift; shift;;
 		-V) printVersion;;
 		--) shift; break;;
