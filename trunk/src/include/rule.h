@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.17 2008-07-17 17:49:16 oops Exp $
+# $Id: rule.h,v 1.18 2008-07-17 18:40:55 oops Exp $
 #
 
 add_named_port() {
@@ -365,8 +365,9 @@ add_brport_rule() {
 
 			echo ${v} | {
 				if [ ${a_host} -eq 1 ]; then
-					IFS=':' read hosts oport
+					IFS=':' read _hosts oport
 
+					iprange_set ${_hosts} hosts
 					iprange_check ${hosts}
 					rangechk=$?
 
@@ -449,8 +450,9 @@ add_icmp_host() {
 		eval "i_ivalue=\$${i}"
 
 		o_echo $"    ==> for ${i_ct} service"
-		for v in ${i_ivalue}
+		for _v in ${i_ivalue}
 		do
+			iprange_set ${_v} v
 			iprange_check ${v}
 			rangechk=$?
 
