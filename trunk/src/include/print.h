@@ -1,6 +1,6 @@
 # Print function
 #
-# $Id: print.h,v 1.5 2008-06-19 11:51:30 oops Exp $
+# $Id: print.h,v 1.6 2008-07-17 19:10:03 oops Exp $
 #
 
 printBanner() {
@@ -72,7 +72,7 @@ print_result() {
 			echo -n ": "
 			echo -ne "[${__cstart}${__result}[${__cend}\n"
 		else
-			echo " : ${__result}"
+			printf "%20s: %s\n" " " "${__result}"
 		fi
 	fi
 }
