@@ -6,325 +6,325 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.7 2005-12-03 19:29:33 oops Exp $
+# $Id: ko.po,v 1.7.2.1 2008-07-17 19:19:26 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: oops-fireall 5.0.0\n"
-"Report-Msgid-Bugs-To: http://www.oops.org\n"
-"POT-Creation-Date: 2005-12-04 00:59+0900\n"
-"PO-Revision-Date: 2003-08-01 19:02+0900\n"
-"Last-Translator: JoungKyun Kim <http://www.oops.org>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-07-18 04:12+0900\n"
+"PO-Revision-Date: 2008-07-18 04:15+0900\n"
+"Last-Translator: JoungKyun.Kim <http://oops.org>\n"
 "Language-Team: AnNyung Packaging Team <http://annyung.oops.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=EUC-KR\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: include/print.h:23
+#: src/include/print.h:24
 msgid "         -V                     print current version"
 msgstr "         -V                     현재 버전 출력"
 
-#: include/print.h:20
+#: src/include/print.h:20
 msgid "         -c config_directory    set configuration directory"
 msgstr "         -c config_directory    설정 파일 디렉토리 지정"
 
-#: include/print.h:24
+#: src/include/print.h:25
 msgid "         -h                     help (this) message"
 msgstr "         -h                     도움말"
 
-#: include/print.h:21
+#: src/include/print.h:22
+msgid "         -n                     don't print ansi mode"
+msgstr "         -t                     안시 출력 안함"
+
+#: src/include/print.h:21
 msgid "         -t                     run test mode"
 msgstr "         -t                     테스트 모드로 실행"
 
-#: include/print.h:22
+#: src/include/print.h:23
 msgid "         -v                     verbose mode"
 msgstr "         -v                     상세 모드"
 
-#: include/rule.h:169
+#: src/include/rule.h:189
 #, sh-format
 msgid "    ==> for ${__ct} service"
 msgstr "    ==> ${__ct} 서비스 설정"
 
-#: include/init.h:44 include/init.h:143
+#: src/include/init.h:44 src/include/init.h:143
 msgid "    Accept All FORWARD Chain"
 msgstr "    모든 FORWARD 사슬 허가"
 
-#: include/init.h:20 include/init.h:129
+#: src/include/init.h:20 src/include/init.h:129
 msgid "    Accept All INPUT Chain"
 msgstr "    모든 INPUT 사슬 허가"
 
-#: include/init.h:32 include/init.h:113
+#: src/include/init.h:32 src/include/init.h:113
 msgid "    Accept All OUTPUT Chain"
 msgstr "    모든 OUTPUT 사슬을 허가"
 
-#: include/init.h:77 include/init.h:157
+#: src/include/init.h:77 src/include/init.h:157
 msgid "    Accept All POSTROUTING Chain"
 msgstr "    모든 POSTROUTING 사슬 허가"
 
-#: include/init.h:65 include/init.h:99
+#: src/include/init.h:65 src/include/init.h:99
 msgid "    Accept All PREROUTING Chain"
 msgstr "    FORWARD 규칙 제거"
 
-#: sbin/oops-firewall.h:115
+#: src/sbin/oops-firewall:119
 msgid "    IP ADDRESS"
 msgstr "    IP 주소"
 
-#: include/modules.h:53 include/modules.h:56
+#: src/include/modules.h:53 src/include/modules.h:56
 msgid "    Load ${1} module"
 msgstr "    ${1} 모듈 등록"
 
-#: include/modules.h:33 include/modules.h:36
+#: src/include/modules.h:33 src/include/modules.h:36
 #, sh-format
 msgid "    Load ${i} module"
 msgstr "    ${i} 모듈 등록"
 
-#: sbin/oops-firewall.h:119
+#: src/sbin/oops-firewall:123
 msgid "    NETWORK"
 msgstr "    네트워크"
 
-#: include/modules.h:86
+#: src/include/modules.h:86
 msgid "    Remove ${1} module"
 msgstr "    ${i} 모듈 제거"
 
-#: include/modules.h:79
+#: src/include/modules.h:79
 #, sh-format
 msgid "    Remove ${i} module"
 msgstr "    ${i} 모듈 제거"
 
-#: include/init.h:150
+#: src/include/init.h:150
 msgid "    Remove rule of FORWARD"
 msgstr "    FORWARD 규칙 제거"
 
-#: include/init.h:38
+#: src/include/init.h:38
 msgid "    Remove rule of FORWARD Chain"
 msgstr "    FORWARD 사슬의 규칙 제거"
 
-#: include/init.h:136
+#: src/include/init.h:136
 msgid "    Remove rule of INPUT"
 msgstr "    INPUT 규칙을 제거"
 
-#: include/init.h:26
+#: src/include/init.h:26
 msgid "    Remove rule of INPUT Chain"
 msgstr "    INPUT 사슬의 규칙 제거"
 
-#: include/init.h:120
+#: src/include/init.h:120
 msgid "    Remove rule of OUTPUT"
 msgstr "    OUTPUT 규칙을 제거"
 
-#: include/init.h:50
+#: src/include/init.h:50
 msgid "    Remove rule of OUTPUT Chain"
 msgstr "    OUTPUT 사슬의 규칙 제거"
 
-#: include/init.h:83 include/init.h:164
+#: src/include/init.h:83 src/include/init.h:164
 msgid "    Remove rule of POSTROUTING"
 msgstr "    POSTROUTING 규칙 제거"
 
-#: include/init.h:71 include/init.h:106
+#: src/include/init.h:71 src/include/init.h:106
 msgid "    Remove rule of PREROUTING"
 msgstr "    PREROUTING 규칙 제거"
 
-#: include/init.h:14
+#: src/include/init.h:14
 msgid "    Reset Chain Counter "
 msgstr "    사슬 카운터 초기화"
 
-#: include/init.h:92
+#: src/include/init.h:92
 msgid "    Reset MANGLE Tabel Counter"
 msgstr "    MANGLE 테이블 카운터 초기화"
 
-#: include/init.h:59
+#: src/include/init.h:59
 msgid "    Reset NAT Tabel Counter"
 msgstr "    NAT 테이블 카운터 초기화"
 
-#: sbin/oops-firewall.h:117
+#: src/sbin/oops-firewall:121
 msgid "    SUBNET MASK"
 msgstr "    서브넷 마스크"
 
-#: include/rule.h:119
+#: src/include/rule.h:125
 #, sh-format
 msgid "  * ${__ment} service"
 msgstr "  * ${__ment} 서비스"
 
-#: sbin/oops-firewall.h:114
+#: src/sbin/oops-firewall:118
 #, sh-format
 msgid "  * ${devName}${devNum} Information"
 msgstr "  * ${devName}${devNum} 정보"
 
-#: include/init.h:187
+#: src/include/init.h:187
 msgid "  * Allow to use TCP SYNCOOKIES"
 msgstr "  * TCP SYNCOOKIES 파라미터 사용"
 
-#: include/init.h:202
+#: src/include/init.h:202
 #, sh-format
 msgid "  * CHK IP SPOOFING ${dev}"
 msgstr "  * ${dev} IP 스푸핑 체크"
 
-#: include/init.h:213
+#: src/include/init.h:213
 msgid "  * Deny Invalid MSG"
 msgstr "  * 유효하지 않은 메세지 거절"
 
-#: include/init.h:237
+#: src/include/init.h:237
 msgid "  * Deny Ping at BroadCast"
 msgstr "  * BroadCast 로의 Ping 을 거부"
 
-#: include/modules.h:11
+#: src/include/modules.h:11
 msgid "  * Load Netfilter Module"
 msgstr "  * 넷필터 모듈 등록"
 
-#: sbin/oops-firewall.h:210
-#, fuzzy
+#: src/sbin/oops-firewall:214
 msgid "  * Name Service Configuration"
 msgstr "  * DNS 서비스 설정"
 
-#: include/modules.h:71
+#: src/include/modules.h:71
 msgid "  * Netfilter Module Shutdown"
 msgstr "  * 넷필터 모듈 종료"
 
-#: include/init.h:9
+#: src/include/init.h:9
 msgid "  * Reset Basic Table"
 msgstr "  * 기본 테이블 초기화"
 
-#: include/init.h:87
+#: src/include/init.h:87
 msgid "  * Reset Mangle Table"
 msgstr "  * Mangle 테이블 초기화"
 
-#: include/init.h:54
+#: src/include/init.h:54
 msgid "  * Reset NAT Table"
 msgstr "  * NAT 테이블 초기화"
 
-#: sbin/oops-firewall.h:273
+#: src/sbin/oops-firewall:277
 msgid "  * TOS Not Config"
 msgstr "  * TOS 설정이 안되어 있음"
 
-#: include/command.h:60
+#: src/include/command.h:60
 msgid "  * USER POST COMMAND (@) Not Config"
 msgstr "  * 실행 후 유저 명령(@)이 설정되어 있지 않음"
 
-#: include/command.h:57
+#: src/include/command.h:57
 msgid "  * USER PRE COMMAND (%) Not Config"
 msgstr "  * 실행 전 유저 명령(%) 이 설정되어 있지 않음"
 
-#: include/command.h:63
+#: src/include/command.h:63
 msgid "  * Unknown parameter"
 msgstr "  * 알수 없는 파라미터"
 
-#: include/rule.h:200
+#: src/include/rule.h:233
 #, sh-format
 msgid "  = Tos configuration in ${i} chain"
 msgstr "  = ${i} 체인 Tos 설정"
 
-#: include/print.h:10
-#, fuzzy
-msgid "#      By Sep 27 2005 JoungKyun.Kim <http://www.oops.org>"
-msgstr "#      2005.09.27 김정균 <http://www.oops.org>"
+#: src/include/print.h:10
+msgid "#      By Jul 18 2008 JoungKyun.Kim <http://oops.org>"
+msgstr "#      2008.07.18 김정균 <http://oops.org>"
 
-#: include/print.h:9
+#: src/include/print.h:9
 #, sh-format
 msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
 msgstr "# OOPS Firewall - 설정이 간단한 iptables 프론트엔드 v${_ver}"
 
-#: sbin/oops-firewall:46
+#: src/sbin/oops-firewall:50
 msgid "1. Check user type"
 msgstr "1. 실행 유저 체크"
 
-#: sbin/oops-firewall:219
+#: src/sbin/oops-firewall:223
 msgid "10. Allow Incoming Service Configuration"
 msgstr "10. 내부로 들어오는 서비스 허가"
 
-#: sbin/oops-firewall:235
+#: src/sbin/oops-firewall:239
 msgid "11. Masqurade Configuration"
 msgstr "11. 매스쿼레이드 설정"
 
-#: sbin/oops-firewall:246
+#: src/sbin/oops-firewall:250
 msgid "12. Forwarding Configuration"
 msgstr "12. 포워딩 설정"
 
-#: sbin/oops-firewall:257
+#: src/sbin/oops-firewall:261
 msgid "13. Execute user defined post Command"
 msgstr "13. 후처리 사용자 설정 규칙 추가"
 
-#: sbin/oops-firewall:267
+#: src/sbin/oops-firewall:271
 msgid "14. TOS Configuration"
 msgstr "14. TOS 설정"
 
-#: sbin/oops-firewall:283
+#: src/sbin/oops-firewall:287
 msgid "15. Deny rule set configuration"
 msgstr "15. 거부 규칙 설정"
 
-#: sbin/oops-firewall:63
+#: src/sbin/oops-firewall:67
 msgid "2. Kernel version check"
 msgstr "2. 커널 버전 검사"
 
-#: sbin/oops-firewall:87
-#, fuzzy
+#: src/sbin/oops-firewall:91
 msgid "3. IP address Check"
 msgstr "3. IP 주소 체크"
 
-#: sbin/oops-firewall:148
+#: src/sbin/oops-firewall:152
 msgid "4. Reset Netfilter"
 msgstr "4. 넷필터 초기화"
 
-#: sbin/oops-firewall:163
+#: src/sbin/oops-firewall:167
 msgid "5. Basic Kernel Parameter Configuration"
 msgstr "5. 기본 커널 파라미터 설정"
 
-#: sbin/oops-firewall:174
+#: src/sbin/oops-firewall:178
 msgid "6. Drop Invalid Package"
 msgstr "6. 이상 패킷 제거"
 
-#: sbin/oops-firewall:184
+#: src/sbin/oops-firewall:188
 msgid "7. Allow All Service"
 msgstr "7. 모든 서비스 허가"
 
-#: sbin/oops-firewall:194
+#: src/sbin/oops-firewall:198
 msgid "8. Execute user defined pre command"
 msgstr "8. 전처리 사용자 설정 규칙 추가"
 
-#: sbin/oops-firewall:204
+#: src/sbin/oops-firewall:208
 msgid "9. Allow Outgoing Service Configuration"
 msgstr "9. 외부로 나가는 서비스 허가"
 
-#: include/modules.h:37
+#: src/include/modules.h:37
 msgid "Already Loading"
 msgstr "존재함"
 
-#: contrib/oops-firewall.init:121
+#: contrib/oops-firewall.init:123
 msgid "Destory Firewall Tables: "
 msgstr "OOPS Firewall 종료: "
 
-#: sbin/oops-firewall:68
+#: src/sbin/oops-firewall:72
 msgid "Enable to use over kernel 2.4.0"
 msgstr "커널 2.4.0 버전 부터 사용이 가능합니다."
 
-#: include/print.h:19
+#: src/include/print.h:19
 msgid "Options:"
 msgstr "옵션:"
 
-#: contrib/oops-firewall.init:41
+#: contrib/oops-firewall.init:43
 msgid "Starting OOPS Firewall: "
 msgstr "OOPS Firewall 시작: "
 
-#: sbin/oops-firewall:51
+#: src/sbin/oops-firewall:55
 msgid "U are not super user!"
 msgstr "수퍼 유저 권한으로 실행을 해야 합니다."
 
-#: contrib/oops-firewall.init:156
+#: contrib/oops-firewall.init:158
 msgid "Usage: $0 {start|stop|restart|status}"
 msgstr "사용법: $0 {start|stop|restart|status}"
 
-#: include/print.h:18
+#: src/include/print.h:18
 msgid "Usage: oops-firewall -[option]"
 msgstr "사용법: oops-firewall -[옵션]"
 
-#: contrib/oops-firewall.init:133
+#: contrib/oops-firewall.init:135
 msgid "[ Legualar Table ]"
 msgstr "[ 기본 테이블 ]"
 
-#: contrib/oops-firewall.init:149
+#: contrib/oops-firewall.init:151
 msgid "[ MANGLE Table ]"
 msgstr "[ MANGLE 테이블 ]"
 
-#: contrib/oops-firewall.init:141
+#: contrib/oops-firewall.init:143
 msgid "[ NAT Table ]"
 msgstr "[ NAT 테이블 ]"
-
