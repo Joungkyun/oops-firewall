@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.15 2008-06-19 10:54:29 oops Exp $
+# $Id: rule.h,v 1.16 2008-07-17 17:28:20 oops Exp $
 #
 
 add_named_port() {
@@ -275,10 +275,12 @@ add_port_rule() {
 
 					t_connect="-m state --state ${tconnect}"
 					add_ftp_rule ${oport} ${a_type} "${hosts}"
+				else
+					t_connect=""
 				fi
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
-				if [ ${a_host} -eq 1 -a "${a_proto}" = "tcp" ]; then
+				if [ ${a_host} -eq 1 ]; then
 					o_echo "    iptables -A ${ap_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT"
 					[ ${_testmode} -eq 0 ] && \
 						${c_iptables} -A ${a_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT
@@ -368,25 +370,19 @@ add_brport_rule() {
 					t_connect1="-m state --state ${tconnect1}"
 					t_connect2="-m state --state ${tconnect2}"
 					add_ftp_rule ${oport} BR_${a_type} "${hosts}"
+				else
+					t_connect1=""
+					t_connect2=""
 				fi
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
 				if [ ${a_host} -eq 1 ]; then
-					if [ "${a_proto}" = "tcp" ]; then
-						o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
-						o_echo "    iptables -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
-						[ ${_testmode} -eq 0 ] && {
-							${c_iptables} -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
-							${c_iptables} -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
-						}
-					else
-						o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} -j ACCEPT"
-						o_echo "    iptables -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} -j ACCEPT"
-						[ ${_testmode} -eq 0 ] && {
-							${c_iptables} -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} -j ACCEPT
-							${c_iptables} -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} -j ACCEPT
-						}
-					fi
+					o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
+					o_echo "    iptables -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
+					[ ${_testmode} -eq 0 ] && {
+						${c_iptables} -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
+						${c_iptables} -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
+					}
 				else
 					o_echo "    iptables -A FORWARD ${a_redir1} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
 					o_echo "    iptables -A FORWARD ${a_redir2} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
