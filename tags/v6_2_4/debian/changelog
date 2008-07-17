@@ -1,0 +1,9 @@
+oops-firewall (6.2.4-1) stable; urgency=low
+
+  * support iprange syntax
+  * add no ansi print mode
+  * fixed make wrong rule of HOSTPERUDP
+  * fixed miss operation of forward rule (fixed typo)
+
+ -- JoungKyun Kim <http://oops.org>  Fri, 18 Jul 2008 04:24:00 +0900
+
