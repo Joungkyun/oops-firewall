@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.16 2008-07-17 17:28:20 oops Exp $
+# $Id: rule.h,v 1.17 2008-07-17 17:49:16 oops Exp $
 #
 
 add_named_port() {
@@ -165,16 +165,18 @@ add_all_rule() {
 	done
 
 	if [ "${ALLOWALL}" != "" ] ; then
-		for values in ${ALLOWALL}
+		for _values in ${ALLOWALL}
 		do
-			rangechk=$(echo "${values}" | ${c_grep} -- '-')
+			iprange_set ${_values} values
+			iprange_check ${values}
+			rangechk=$?
 
 			for intf in INPUT OUTPUT
 			do
 				[ "${intf}" = "INPUT" ] && pintf="INPUT " || pintf="OUTPUT"
-				if [ -n "${rangechk}" ]; then
-					redir="-p all -m iprange "
-					[ "${intf}" = "INPUT" ] && redir="${redir}--src-range" || redir="${redir}--dst-range"
+				if [ ${rangechk} -eq 1 ]; then
+					r_mode="-p all -m iprange"
+					[ "${intf}" = "INPUT" ] && redir="${r_mode} --src-range" || redir="${r_mode} --dst-range"
 				else
 					[ "${intf}" = "INPUT" ] && redir="-s" || redir="-d"
 				fi
@@ -186,17 +188,19 @@ add_all_rule() {
 	fi
 
 	if [ ${BRIDGE_USED} -eq 1 -a -n "${BR_ALLOWALL}" ]; then
-		for values in ${BR_ALLOWALL}
+		for _values in ${BR_ALLOWALL}
 		do
-			rangechk=$(echo "${values}" | ${c_grep} -- '-')
+			iprange_set ${_values} values
+			iprange_check ${values}
+			rangechk=$?
 
-			if [ -n "${rangechk}" ]; then
-				rangemode="-p all -m iprange "
-				o_echo "  * iptables -A FORWARD -d ${BRG0_NETPX} ${rangemode} --src-range ${values} -j ACCEPT"
-				o_echo "  * iptables -A FORWARD -s ${BRG0_NETPX} ${rangemode} --dst-range ${values} -j ACCEPT"
+			if [ ${rangechk} -eq 1 ]; then
+				r_mode="-p all -m iprange "
+				o_echo "  * iptables -A FORWARD -d ${BRG0_NETPX} ${r_mode} --src-range ${values} -j ACCEPT"
+				o_echo "  * iptables -A FORWARD -s ${BRG0_NETPX} ${r_mode} --dst-range ${values} -j ACCEPT"
 				if [ "${_testmode}" = 0 ]; then
-					${c_iptables} -A FORWARD -d ${BRG0_NETPX} ${rangemode} --src-range ${values} -j ACCEPT
-					${c_iptables} -A FORWARD -s ${BRG0_NETPX} ${rangemode} --dst-range ${values} -j ACCEPT
+					${c_iptables} -A FORWARD -d ${BRG0_NETPX} ${r_mode} --src-range ${values} -j ACCEPT
+					${c_iptables} -A FORWARD -s ${BRG0_NETPX} ${r_mode} --dst-range ${values} -j ACCEPT
 				fi
 			else
 				o_echo "  * iptables -A FORWARD -d ${BRG0_NETPX} -s ${values} -j ACCEPT"
@@ -263,8 +267,9 @@ add_port_rule() {
 
 			echo ${v} | {
 				if [ ${a_host} -eq 1 ]; then
-					IFS=':' read hosts oport
-					hosts=" -s ${hosts}"
+					IFS=':' read _hosts oport
+					iprange_set ${_hosts} c_hosts
+					hosts=" -s ${c_hosts}"
 				else
 					IFS=':' read oport tconnect
 				fi
@@ -281,9 +286,19 @@ add_port_rule() {
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
 				if [ ${a_host} -eq 1 ]; then
-					o_echo "    iptables -A ${ap_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT"
-					[ ${_testmode} -eq 0 ] && \
-						${c_iptables} -A ${a_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT
+					iprange_check ${c_hosts}
+					rangechk=$?
+
+					if [ ${rangechk} -eq 1 ]; then
+						[ "${a_pname}" = "--dport" ] && h_target="--src-range" || h_target="--dst-target"
+						o_echo "    iptables -A ${ap_table} -p ${a_proto} -m iprange ${h_target} ${c_hosts} ${a_pname} ${oport} ${t_connect} -j ACCEPT"
+						[ ${_testmode} -eq 0 ] && \
+							${c_iptables} -A ${a_table} -p ${a_proto} -m iprange ${h_target} ${c_hosts} ${a_pname} ${oport} ${t_connect} -j ACCEPT
+					else
+						o_echo "    iptables -A ${ap_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT"
+						[ ${_testmode} -eq 0 ] && \
+							${c_iptables} -A ${a_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT
+					fi
 				else
 					for a_int in ${a_List}
 					do
@@ -351,8 +366,17 @@ add_brport_rule() {
 			echo ${v} | {
 				if [ ${a_host} -eq 1 ]; then
 					IFS=':' read hosts oport
-					hosts1=" -d ${hosts}"
-					hosts2=" -s ${hosts}"
+
+					iprange_check ${hosts}
+					rangechk=$?
+
+					if [ ${rangechk} -eq 1 ]; then
+						hosts1=" --dst-range ${hosts}"
+						hosts2=" --src-range ${hosts}"
+					else
+						hosts1=" -d ${hosts}"
+						hosts2=" -s ${hosts}"
+					fi
 				else
 					IFS=':' read oport tconnect
 				fi
@@ -377,12 +401,21 @@ add_brport_rule() {
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
 				if [ ${a_host} -eq 1 ]; then
-					o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
-					o_echo "    iptables -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
-					[ ${_testmode} -eq 0 ] && {
-						${c_iptables} -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
-						${c_iptables} -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
-					}
+					if [ ${rangechk} -eq 1 ]; then
+						o_echo "    iptables -A FORWARD -p ${a_proto} -m iprange ${hosts1} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
+						o_echo "    iptables -A FORWARD -p ${a_proto} -m iprange ${hosts2} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
+						[ ${_testmode} -eq 0 ] && {
+							${c_iptables} -A FORWARD -p ${a_proto} -m iprange ${hosts1} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
+							${c_iptables} -A FORWARD -p ${a_proto} -m iprange ${hosts2} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
+						}
+					else
+						o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
+						o_echo "    iptables -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
+						[ ${_testmode} -eq 0 ] && {
+							${c_iptables} -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
+							${c_iptables} -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
+						}
+					fi
 				else
 					o_echo "    iptables -A FORWARD ${a_redir1} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
 					o_echo "    iptables -A FORWARD ${a_redir2} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
@@ -418,12 +451,24 @@ add_icmp_host() {
 		o_echo $"    ==> for ${i_ct} service"
 		for v in ${i_ivalue}
 		do
-			o_echo "      iptables -A ${i_pchain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
-			${c_iptables} -A ${i_chain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
-			[ "$i_ct" = "traceroute" ] && {
-				o_echo "      iptables -A ${i_pchain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
-				${c_iptables} -A ${i_chain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
-			}
+			iprange_check ${v}
+			rangechk=$?
+
+			if [ ${rangechk} -eq 1 ]; then
+				o_echo "      iptables -A ${i_pchain} -p icmp --icmp-type ${i_ctype} -m iprange --src-range ${v} -j ACCEPT"
+				${c_iptables} -A ${i_chain} -p icmp --icmp-type ${i_ctype} -m iprange --src-range ${v} -j ACCEPT
+				[ "$i_ct" = "traceroute" ] && {
+					o_echo "      iptables -A ${i_pchain} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT"
+					${c_iptables} -A ${i_chain} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT
+				}
+			else
+				o_echo "      iptables -A ${i_pchain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
+				${c_iptables} -A ${i_chain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
+				[ "$i_ct" = "traceroute" ] && {
+					o_echo "      iptables -A ${i_pchain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
+					${c_iptables} -A ${i_chain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
+				}
+			fi
 		done
 		o_echo
 	done
@@ -445,14 +490,28 @@ add_bricmp_host() {
 		o_echo $"    ==> for Bridge ${i_ct} service"
 		for v in ${i_ivalue}
 		do
-			o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
-			${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
-			[ "$i_ct" = "traceroute" ] && {
-				o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
-				o_echo "      iptables -A FORWARD -s ${BRG0_NETPX} -d ${v} -p udp --sport 32767:33167 -j ACCEPT"
-				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
-				${c_iptables} -A FORWARD -s ${BRG0_NETPX} -d ${v} -p udp --sport 32767:33167 -j ACCEPT
-			}
+			iprange_check ${v}
+			rangechk=$?
+
+			if [ ${rangechk} -eq 1 ]; then
+				o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type ${i_ctype} -m iprange --src-range ${v} -j ACCEPT"
+				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type ${i_ctype} -m iprange --src-range ${v} -j ACCEPT
+				[ "$i_ct" = "traceroute" ] && {
+					o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT"
+					o_echo "      iptables -A FORWARD -s ${BRG0_NETPX} -p udp -m iprange --dst-range ${v} --sport 32767:33167 -j ACCEPT"
+					${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT
+					${c_iptables} -A FORWARD -s ${BRG0_NETPX} -p udp -m iprange --dst-range ${v} --sport 32767:33167 -j ACCEPT
+				}
+			else
+				o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
+				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
+				[ "$i_ct" = "traceroute" ] && {
+					o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
+					o_echo "      iptables -A FORWARD -s ${BRG0_NETPX} -d ${v} -p udp --sport 32767:33167 -j ACCEPT"
+					${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
+					${c_iptables} -A FORWARD -s ${BRG0_NETPX} -d ${v} -p udp --sport 32767:33167 -j ACCEPT
+				}
+			fi
 		done
 		o_echo
 	done

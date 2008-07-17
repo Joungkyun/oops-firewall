@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.9 2008-06-19 11:51:30 oops Exp $
+# $Id: oops-firewall,v 1.10 2008-07-17 17:49:16 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -20,6 +20,9 @@ source ${_includes}/oops-firewall.h
 
 # init modules
 ${c_depmod} -a &> /dev/null
+
+iprange_mod_check
+_iprange=$?
 
 # parse option
 opts=$(${c_getopt} ac:hntvV $*)
