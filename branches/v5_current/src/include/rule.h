@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.2 2005-12-14 05:01:27 oops Exp $
+# $Id: rule.h,v 1.2.2.1 2008-07-17 18:08:10 oops Exp $
 #
 
 add_named_port() {
@@ -135,16 +135,20 @@ add_port_rule() {
 					[ "${__type}" = "incoming" ] && tconnect="${_nN},${_nE}"
 					t_connect="-m state --state ${tconnect}"
 					add_ftp_rule ${oport} ${__type} "${hosts}"
+				else
+					t_connect=""
 				fi
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
-				if [ ${__host} -eq 1 -a "${__proto}" = "tcp" ]; then
-					o_echo "    iptables -A INPUT${hosts} -p tcp --dport ${oport} ${t_connect}  -j ACCEPT"
+				if [ ${__host} -eq 1 ]; then
+					o_echo "    iptables -A INPUT${hosts} -p ${__proto} --dport ${oport} ${t_connect}  -j ACCEPT"
+					[ ${_testmode} -eq 0 ] && \
+						${c_iptables} -A INPUT${hosts} -p ${__proto} --dport ${oport} ${t_connect}  -j ACCEPT
 				else
 					o_echo "    iptables -A INPUT${hosts} -p ${__proto} ${__pname} ${oport} ${t_connect} -j ACCEPT"
+					[ ${_testmode} -eq 0 ] && \
+						${c_iptables} -A INPUT${hosts} -p ${__proto} ${__pname} ${oport} ${t_connect} -j ACCEPT
 				fi
-				[ ${_testmode} -eq 0 ] && \
-					${c_iptables} -A INPUT${hosts} -p ${__proto} ${__pname} ${oport} ${t_connect} -j ACCEPT
 			}
 		done
 
