@@ -1,6 +1,6 @@
 # Default variables define
 #
-# $Id: default.h,v 1.5 2008-06-19 12:00:17 oops Exp $
+# $Id: default.h,v 1.6 2008-07-17 17:49:16 oops Exp $
 #
 
 _ver=$(${c_cat} ${_includes}/version.h)
@@ -9,8 +9,9 @@ _testmode=0
 _verbose=0
 _noansi=0
 _bridgeclear=0
+_iprange=0
 
-export _ver _gcol _testmode _verbose _bridgeclear _ftppassive
+export _ver _gcol _testmode _verbose _bridgeclear _ftppassive _iprange
 
 _tmpifile="/tmp/oops-firewall-tmpi.$$"
 _tmpofile="/tmp/oops-firewall-tmpo.$$"

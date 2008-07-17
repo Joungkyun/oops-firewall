@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.91 2008-07-17 17:28:20 oops Exp $
+$Id: Changelog,v 1.92 2008-07-17 17:49:16 oops Exp $
 
 
 * 6.2.4
 ---------------------------------------------------------------------
 + 2008.07.18
 	- fixed make wrong rule of HOSTPERUDP
+	- support iprange on HOSTPER direction and icmp direction
 
 + 2008.06.19
 	- support iprange on ALLOWALL
