@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.2.2.1 2008-07-17 18:08:10 oops Exp $
+# $Id: rule.h,v 1.2.2.2 2008-07-17 18:49:06 oops Exp $
 #
 
 add_named_port() {
@@ -85,11 +85,16 @@ add_all_rule() {
 	done
 
 	if [ "${ALLOWALL}" != "" ] ; then
-		for values in ${ALLOWALL}
+		for _values in ${ALLOWALL}
 		do
-			o_echo "  * iptables -A INPUT -s ${values} -j ACCEPT"
+			iprange_set ${_values} values
+			iprange_check ${values}
+			rangechk=$?
+
+			[ ${rangechk} -eq 1 ] && redir="-p all -m iprange --src-range" || redir="-s"
+			o_echo "  * iptables -A INPUT ${redir} ${values} -j ACCEPT"
 			[ "${_testmode}" = 0 ] && \
-				${c_iptables} -A INPUT -s ${values} -j ACCEPT
+				${c_iptables} -A INPUT ${redir} ${values} -j ACCEPT
 		done
 	fi
 }
@@ -123,8 +128,9 @@ add_port_rule() {
 		do
 			echo ${v} | {
 				if [ ${__host} -eq 1 ]; then
-					IFS=':' read hosts oport
-					hosts=" -s ${hosts}"
+					IFS=':' read _hosts oport
+					iprange_set ${_hosts} c_hosts
+					hosts=" -s ${c_hosts}"
 				else
 					IFS=':' read oport tconnect
 					hosts=""
@@ -141,9 +147,18 @@ add_port_rule() {
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
 				if [ ${__host} -eq 1 ]; then
-					o_echo "    iptables -A INPUT${hosts} -p ${__proto} --dport ${oport} ${t_connect}  -j ACCEPT"
-					[ ${_testmode} -eq 0 ] && \
-						${c_iptables} -A INPUT${hosts} -p ${__proto} --dport ${oport} ${t_connect}  -j ACCEPT
+					iprange_check ${c_hosts}
+					rangechk=$?
+
+					if [ ${rangechk} -eq 1 ]; then
+						o_echo "    iptables -A INPUT -p ${__proto} -m iprange --src-range ${c_hosts} --dport ${oport} ${t_connect}  -j ACCEPT"
+						[ ${_testmode} -eq 0 ] && \
+							${c_iptables} -A INPUT -p ${__proto} -m iprange --src-range ${c_hosts} --dport ${oport} ${t_connect}  -j ACCEPT
+					else
+						o_echo "    iptables -A INPUT${hosts} -p ${__proto} --dport ${oport} ${t_connect}  -j ACCEPT"
+						[ ${_testmode} -eq 0 ] && \
+							${c_iptables} -A INPUT${hosts} -p ${__proto} --dport ${oport} ${t_connect}  -j ACCEPT
+					fi
 				else
 					o_echo "    iptables -A INPUT${hosts} -p ${__proto} ${__pname} ${oport} ${t_connect} -j ACCEPT"
 					[ ${_testmode} -eq 0 ] && \
@@ -172,14 +187,27 @@ add_icmp_host() {
 		eval "__ivalue=\$${i}"
 
 		o_echo $"    ==> for ${__ct} service"
-		for v in ${__ivalue}
+		for _v in ${__ivalue}
 		do
-			o_echo "    iptables -A ${__chain} -s ${v} -p icmp --icmp-type ${__ctype} -j ACCEPT"
-			${c_iptables} -A ${__chain} -s ${v} -p icmp --icmp-type ${__ctype} -j ACCEPT
-			[ "$__ct" = "traceroute" ] && {
-				o_echo "    iptables -A INPUT -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
-				${c_iptables} -A ${__chain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
-			}
+			iprange_set ${_v} v
+			iprange_check ${v}
+			rangechk=$?
+
+			if [ ${rangechk} -eq 1 ]; then
+				o_echo "    iptables -A ${__chain} -p icmp --icmp-type ${__ctype} -m iprange --src-range ${v} -j ACCEPT"
+				${c_iptables} -A ${__chain} -p icmp --icmp-type ${__ctype} -m iprange --src-range ${v} -j ACCEPT
+				[ "$__ct" = "traceroute" ] && {
+					o_echo "    iptables -A INPUT -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT"
+					${c_iptables} -A ${__chain} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT
+				}
+			else
+				o_echo "    iptables -A ${__chain} -s ${v} -p icmp --icmp-type ${__ctype} -j ACCEPT"
+				${c_iptables} -A ${__chain} -s ${v} -p icmp --icmp-type ${__ctype} -j ACCEPT
+				[ "$__ct" = "traceroute" ] && {
+					o_echo "    iptables -A INPUT -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
+					${c_iptables} -A ${__chain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
+				}
+			fi
 		done
 		o_echo
 	done

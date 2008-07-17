@@ -1,14 +1,15 @@
 # Default variables define
 #
-# $Id: default.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id: default.h,v 1.1.2.1 2008-07-17 18:49:06 oops Exp $
 #
 
 _ver=$(${c_cat} ${_includes}/version.h)
 _gcol=40
 _testmode=0
 _verbose=0
+_iprange=0
 
-export _ver _gcol _testmode _verbose
+export _ver _gcol _testmode _verbose _iprange
 
 _tmpfile="/tmp/oops-firewall-tmp.$$"
 _userport="1024:65535"

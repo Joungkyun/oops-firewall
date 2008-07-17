@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.2 2005-12-26 18:10:07 oops Exp $
+# $Id: command.h,v 1.2.2.1 2008-07-17 18:49:06 oops Exp $
 #
 
 # command line command
@@ -62,5 +62,56 @@ user_cmd () {
 			*)
 				o_echo $"  * Unknown parameter" > /dev/stderr
 		esac
+	fi
+}
+
+iprange_set() {
+	value=$1
+	varname=$2
+
+	if [ $_iprange -eq 0 ]; then
+		[ -n "${varname}" ] && eval "${varname}=\"${value}\""
+
+		#iprange_check $value
+		#chk=$?
+		#
+		#if [ $chk -eq 1 ]; exit 1
+		#   o_echo " !!!!!! IP set ${value}, but This kernel don't support iprange extension"
+		#   exit 1
+		#fi
+		return
+	fi
+
+	primary=${value%%-*}
+	secondary=${value##*-}
+
+	[ -n "${varname}" ] && unset $varname
+
+	if [ "${primary}" == "${secondary}" ]; then
+		[ -n "${varname}" ] && eval "${varname}=\"${value}\""
+		return
+	fi
+
+	dot=$(echo "${secondary}" | ${c_sed} 's/[^.]//g')
+
+	case "$dot" in
+		"...")
+			prefix=
+			;;
+		"..")
+			prefix=$(echo ${primary} | ${c_sed} 's/[0-9]\+\.[0-9]\+\.[0-9]\+$//g')
+			;;
+		".")
+			prefix=$(echo ${primary} | ${c_sed} 's/[0-9]\+\.[0-9]\+$//g')
+			;;
+		*)
+			prefix=$(echo ${primary} | ${c_sed} 's/[0-9]\+$//g')
+	esac
+
+	secondary="${prefix}${secondary}"
+
+	if [ -n "${varname}" ]; then
+		eval "${varname}=\"${primary}-${secondary}\""
+		export ${varname}
 	fi
 }

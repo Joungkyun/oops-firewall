@@ -1,6 +1,6 @@
 # Check function
 #
-# $Id: check.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id: check.h,v 1.1.2.1 2008-07-17 18:49:06 oops Exp $
 #
 
 isroot() {
@@ -35,4 +35,20 @@ kernelCheck() {
 	else
 		return 1
 	fi
+}
+
+iprange_mod_check() {
+	ipt="/lib/modules/$(uname -r)/kernel/net/ipv4/netfilter"
+	[ -f "${ipt}/ipt_iprange.ko" ] && return 1
+	[ -f "${ipt}/ipt_iprange.o" ] && return 1
+ 
+	return 0
+}
+
+iprange_check() {
+	value=$1
+	echo "${value}" | grep -- '-' >& /dev/null
+	[ $? -eq 0 ] && return 1
+ 
+	return 0
 }
