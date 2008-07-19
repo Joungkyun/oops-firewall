@@ -1,0 +1,20 @@
+# oops-firewall configuration syntax
+# $Id: CONFIG_SYNTAX,v 1.2 2005-12-26 18:17:55 oops Exp $
+
+1. default syntax
+
+	DIRECTIVE = vlaue
+
+2. if value is true or false,
+
+	DIRECTIVE = true or value
+	DIRECTIVE = yes  or no
+	DIRECTIVE = 1    or 0
+
+3. if values is very long
+
+	DIRECTIVE = 10.0.0.1 10.0.0.2 10.0.0.3 10.0.0.4
+	DIRECTIVE = 10.0.0.1 \
+				10.0.0.2 \
+				10.0.0.3 \
+				10.0.0.4
