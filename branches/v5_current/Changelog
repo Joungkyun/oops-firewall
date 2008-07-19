@@ -1,8 +1,8 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.44.2.3 2008-07-17 19:08:09 oops Exp $
+$Id: Changelog,v 1.44.2.4 2008-07-19 06:42:15 oops Exp $
 
-2008.07.18 JoungKyun.Kim <http://oops.org>
+2008.07.18 JoungKyun.Kim <http://oops.org> 5.1.0
 - fixed make wrong rule on *_HOSTPERPORT
 - support iprange on HOSTPER direction and icmp direction
 	enable on ALLOWALL *_*_HOSTPERPORT *_ICMP_HOSTPERPING *_ICMP_HOSTPERTRACEROUTE
