@@ -1,6 +1,6 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.2 2006-03-10 04:29:23 oops Exp $
+# $Id: forward.h,v 1.2.2.1 2008-07-19 06:58:10 oops Exp $
 #
 
 add_forward_init() {
@@ -43,7 +43,7 @@ add_forward_rule() {
 		case "${i}" in
 			TCP*) proto="tcp";;
 			UDP*) proto="udp";;
-		easc
+		esac
 
 		for v in $_fv
 		do
