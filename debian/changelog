@@ -1,4 +1,4 @@
-oops-firewall (6.2.4-1) stable; urgency=low
+oops-firewall (6.2.5-1) stable; urgency=low
 
   * support iprange syntax
   * add no ansi print mode
