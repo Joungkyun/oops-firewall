@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.95 2009-01-02 17:23:48 oops Exp $
+$Id: Changelog,v 1.96 2009-01-02 18:10:57 oops Exp $
 
 
 * 6.2.5
 ---------------------------------------------------------------------
 + 2009.01.03
 	- fixed start failed when bridge device don't exist
+	- add bridge device control configuration that use oops-firewall or system
 
 
 * 6.2.4
