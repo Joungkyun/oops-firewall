@@ -1,10 +1,12 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.94 2008-07-31 12:51:12 oops Exp $
+$Id: Changelog,v 1.95 2009-01-02 17:23:48 oops Exp $
 
 
 * 6.2.5
 ---------------------------------------------------------------------
++ 2009.01.03
+	- fixed start failed when bridge device don't exist
 
 
 * 6.2.4

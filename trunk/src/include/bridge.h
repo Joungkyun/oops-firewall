@@ -1,6 +1,6 @@
 # Bridge rule function
 #
-# $Id: bridge.h,v 1.7 2007-07-02 03:50:45 oops Exp $
+# $Id: bridge.h,v 1.8 2009-01-02 17:23:48 oops Exp $
 #
 
 bridge_wan_info() {
@@ -126,11 +126,13 @@ init_bridge() {
 			o_echo $"  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device" && \
 			o_echo $"  * MASQ mode changed off mode!" && \
 			export MASQ_USED=0
+
+		makeDeviceEnv $BRIDGE_NAME
 	fi
 }
 
 clear_bridge() {
-	$c_brctl show 2> /dev/null | $c_grep brg0 >& /dev/null
+	$c_brctl show 2> /dev/null | $c_grep "$BRIDGE_NAME" >& /dev/null
 	cleardev=$?
 	$c_ifconfig $BRIDGE_NAME >& /dev/null
 	clearifc=$?
