@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.7 2007-03-29 19:39:36 oops Exp $
+# $Id: Makefile.in,v 1.8 2009-04-30 18:44:49 oops Exp $
 
 VERSION		= @version@
 CC			= @cc@
@@ -61,8 +61,6 @@ install-doc:
 	$(INSTALL) -m 644 CREDIT $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 	$(INSTALL) -m 644 Changelog $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 	$(INSTALL) -m 644 doc/README $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
-	$(INSTALL) -m 644 doc/README.DIALPAD $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
-	$(INSTALL) -m 644 doc/README.SORIBADA $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 
 clean:
 	make -C po clean
