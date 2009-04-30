@@ -1,4 +1,4 @@
-# $Id: user_pre.sed,v 1.2 2009-04-30 13:27:49 oops Exp $
+# $Id: user_pre.sed,v 1.3 2009-04-30 13:33:37 oops Exp $
 
 :sumline
 # Case that the last character of ther line is '/'
@@ -8,7 +8,7 @@
 
   # 
   # remove '/' character and newline
-  s/[ \t]*\\[ \t]*[\r\n][ \t]*/ /g
+  s/[ \t]*\\[ \t]*[\r\n]\+[ \t]*/ /g
 
   # repeat Until '/' character don't exists.
   t sumline
