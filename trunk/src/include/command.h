@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.9 2008-07-17 17:49:16 oops Exp $
+# $Id: command.h,v 1.10 2009-04-30 15:19:46 oops Exp $
 #
 
 # command line command
@@ -194,11 +194,11 @@ user_cmd () {
 		pre) 
 			brute_force_set
 			layer7_set
-			USERCHK=$(${c_sed} -n -f ${_includes}/user_pre.sed ${_confdir}/user.conf)
+			USERCHK=$(LANG="C" ${c_sed} -n -f ${_includes}/user_pre.sed ${_confdir}/user.conf)
 			IFS='%'
 			;;
 		post)
-			USERCHK=$(${c_sed} -n -f ${_includes}/user_post.sed ${_confdir}/user.conf)
+			USERCHK=$(LANG="C" ${c_sed} -n -f ${_includes}/user_post.sed ${_confdir}/user.conf)
 			IFS='@'
 			;;
 	esac

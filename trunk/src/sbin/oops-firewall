@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall,v 1.11 2009-01-02 18:10:57 oops Exp $
+# $Id: oops-firewall,v 1.12 2009-04-30 15:20:02 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -96,7 +96,7 @@ export extend_mangle
 for i in ${_configs}
 do
 	conf_context=
-	conf_context=$(${c_sed} -n -f ${_includes}/config.sed ${_confdir}/${i}.conf)
+	conf_context=$(LANG="C" ${c_sed} -n -f ${_includes}/config.sed ${_confdir}/${i}.conf)
 	eval ${conf_context}
 done
 
