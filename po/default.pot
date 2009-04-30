@@ -9,12 +9,12 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.21 2008-07-31 12:51:12 oops Exp $
+# $Id: default.pot,v 1.22 2009-04-30 18:40:13 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-firewall 6.2.5\n"
+"Project-Id-Version: oops-firewall 6.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-19 20:44+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
