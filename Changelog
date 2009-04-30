@@ -1,6 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.98 2009-04-30 18:39:48 oops Exp $
+$Id: Changelog,v 1.99 2009-04-30 19:24:05 oops Exp $
 
 
 * 6.2.6
@@ -9,6 +9,7 @@ $Id: Changelog,v 1.98 2009-04-30 18:39:48 oops Exp $
 	- added english document
 	- fixed LANG environment variable to C for sed command
 	- changed configuration comment for charset issue
+	- changed sh call to /bin/bash from /bin/sh
 
 
 * 6.2.5
