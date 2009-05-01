@@ -62,6 +62,19 @@ if [ $1 = 0 ]; then
   /sbin/chkconfig --level 35 %{name} on
 fi
 
+%pre
+if [ -f /etc/init.d/iptables ]; then
+	echo "oops-firewall finds /etc/init.d/iptables init script"
+	echo "ipatbles init script is conflicted by oops-firewall"
+	echo "oops-firewall will remove iptables on chkconfig list"
+	echo "If you want to revoke iptables init script, use follow commands"
+	echo
+	echo "chkconfig --add iptables"
+	echo "chkconfig --level 345 iptbables on"
+
+	/sbin/chkconfig --del iptables
+fi
+
 %preun
 if [ $1 = 0 ]; then
    /sbin/chkconfig --del %{name}
@@ -93,7 +106,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
-* Fri May  1 2009 JoungKyun.Kim <http://oops.org> 43:6.2.6-1
+* Fri May  2 2009 JoungKyun.Kim <http://oops.org> 43:6.2.6-1
 - update 6.2.6
 
 * Fri Jul 18 2008 JoungKyun.Kim <http://oops.org> 42:6.2.4-1

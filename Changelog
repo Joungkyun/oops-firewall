@@ -1,6 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.102 2009-05-01 19:32:54 oops Exp $
+$Id: Changelog,v 1.103 2009-05-01 19:46:43 oops Exp $
 
 
 * 6.2.6
@@ -9,6 +9,7 @@ $Id: Changelog,v 1.102 2009-05-01 19:32:54 oops Exp $
 	- add man page
 	- validate debian package policy sid
 	- changed debian package architecture from i386 to all
+	- check iptables init script on rpm spec file
 
 + 2009.05.01
 	- added english document
