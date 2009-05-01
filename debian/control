@@ -1,13 +1,13 @@
 Source: oops-firewall
-Section: net
+Section: admin
 Priority: optional
 Maintainer: JoungKyun Kim <admin@oops.org>
 Build-Depends: debhelper (>= 4.0.0), autotools-dev
-Standards-Version: 3.6.1
+Standards-Version: 3.6.2
 
 Package: oops-firewall
-Architecture: any
-Depends: ipcalc, gettext, bridge-utils
+Architecture: all
+Depends: iptables, ipcalc, gettext, bridge-utils
 Description: Simple and useful frontend of iptables
  It keeps your network system basically secure for external access
  with iptables package in KERNEL v2.4 or v2.6
