@@ -43,15 +43,15 @@ Documentation for oops firewall
 	--destdir=%{buildroot}
 
 %build
-make
+%{__make}
 
 %install
 if [ "%{buildroot}" != "/" -a -d "%{buildroot}" ]; then
-  rm -rf %{buildroot}
+  %{__rm} -rf %{buildroot}
 fi
-mkdir -p %{buildroot}
+%{__mkdir_p} %{buildroot}
 
-make DESTDIR=%{buildroot} install
+%{__make} DESTDIR=%{buildroot} install
 
 %{__mkdir_p} %{buildroot}%{_mandir}/man8
 %{__install} -m644 doc/%{name}.8 %{buildroot}%{_mandir}/man8/%{name}.8
