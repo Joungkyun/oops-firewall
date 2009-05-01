@@ -53,6 +53,9 @@ mkdir -p %{buildroot}
 
 make DESTDIR=%{buildroot} install
 
+%{__mkdir_p} %{buildroot}%{_mandir}/man8
+%{__install} -m644 doc/%{name}.8 %{buildroot}%{_mandir}/man8/%{name}.8
+
 %post
 /sbin/chkconfig --add %{name}
 if [ $1 = 0 ]; then
