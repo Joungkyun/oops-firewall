@@ -1,12 +1,14 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.101 2009-05-01 19:22:41 oops Exp $
+$Id: Changelog,v 1.102 2009-05-01 19:32:54 oops Exp $
 
 
 * 6.2.6
 ---------------------------------------------------------------------
 + 2009.05.02
 	- add man page
+	- validate debian package policy sid
+	- changed debian package architecture from i386 to all
 
 + 2009.05.01
 	- added english document
