@@ -99,6 +99,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/oops-firewall/tos.conf
 %config(noreplace) /etc/oops-firewall/user.conf
 %config(noreplace) /etc/oops-firewall/modules.list
+%{_mandir}/man8/%{name}.8*
 %dir /usr/include/oops-firewall
 
 %files doc
