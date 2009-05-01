@@ -1,3 +1,5 @@
+$Id: README.debian,v 1.15 2009-05-01 16:50:40 oops Exp $
+
 This file for making debian package with oops-firewall.
 
 If you debian user, and want make oops-firewall debina package,
