@@ -9,7 +9,7 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.29 2009-04-30 18:40:13 oops Exp $
+# $Id: ko.po,v 1.30 2009-05-02 16:24:46 oops Exp $
 #
 #, fuzzy
 msgid ""
@@ -360,10 +360,6 @@ msgstr " interface.conf 의 ${_alter} 를 사용하십시오.\\n"
 #: src/include/masq.h:29 src/include/masq.h:39
 msgid " is not set"
 msgstr " 이 설정되어 있지 않습니다."
-
-#: src/include/print.h:10
-msgid "#      By Jan 10 2008 JoungKyun.Kim <http://oops.org>"
-msgstr "#      2008.01.10 김정균 <http://oops.org>"
 
 #: src/include/print.h:9
 #, sh-format

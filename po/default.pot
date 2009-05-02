@@ -9,7 +9,7 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.22 2009-04-30 18:40:13 oops Exp $
+# $Id: default.pot,v 1.23 2009-05-02 16:24:46 oops Exp $
 #
 #, fuzzy
 msgid ""
@@ -359,10 +359,6 @@ msgstr ""
 
 #: src/include/masq.h:29 src/include/masq.h:39
 msgid " is not set"
-msgstr ""
-
-#: src/include/print.h:10
-msgid "#      By Jan 10 2008 JoungKyun.Kim <http://oops.org>"
 msgstr ""
 
 #: src/include/print.h:9
