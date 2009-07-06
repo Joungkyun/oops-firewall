@@ -1,4 +1,4 @@
-$Id: README.debian,v 1.15 2009-05-01 16:50:40 oops Exp $
+$Id: README.debian,v 1.16 2009-07-06 12:19:34 oops Exp $
 
 This file for making debian package with oops-firewall.
 
@@ -7,11 +7,11 @@ follows:
 
 1. untar oops-firewall tar ball.
 
-   tar xvfpj oops-firewall-6.2.6.tar.bz2
+   tar xvfpj oops-firewall-6.2.7.tar.bz2
 
 2. run dh_make set
 
-   cd oops-firewall-6.2.6
+   cd oops-firewall-6.2.7
    debian/rule binary
 
-3. create oops-firewall_6.2.6-1.deb file parrent directory in current directory
+3. create oops-firewall_6.2.7-1.deb file parrent directory in current directory
