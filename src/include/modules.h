@@ -1,6 +1,6 @@
 # IPTables Modules function
 #
-# $Id: modules.h,v 1.4 2008-01-09 18:08:45 oops Exp $
+# $Id: modules.h,v 1.5 2009-07-06 12:19:34 oops Exp $
 #
 
 ins_mod() {
@@ -18,8 +18,16 @@ ins_mod() {
 			chk=
 			load=
 
-			mod_name=${i%%:*}
-			mod_opts=${i##*:}
+			echo $i | grep "^xt_" >& /dev/null
+			modnam_chk=$?
+
+			if [ $modnam_chk -eq 0 ]; then
+				mod_name=${xt_%%:*}
+				mod_opts=${xt_##*:}
+			else
+				mod_name=${i%%:*}
+				mod_opts=${i##*:}
+			fi
 
 			[ "${mod_name}" = "${mod_opts}" ] && mod_opts=
 			[ -z "${mod_name}" ] && mod_name=$i
@@ -83,7 +91,7 @@ rm_mod() {
 	CHKMOD=
     
 	if [ -z "${1}" -o "${1}" = "1" ] ; then
-		modchk=$(${c_lsmod} | ${c_awk} '/^(ipt_|ip_|iptable)/ {print $1}' | \
+		modchk=$(${c_lsmod} | ${c_awk} '/^(ipt_|ip_|iptable_|xt_|nf_|x_tables)/ {print $1}' | \
 				${c_grep} -v 'ip_tables\|ip_conntrack')
 
 		if [ -z "${1}" ]; then
