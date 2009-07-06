@@ -1,6 +1,7 @@
 oops-firewall (6.2.7-1) devel; urgency=low
 
   * support 2.6 kernel module
+  * fixed missing operate add_bricmp_rule when bridge disabled
 
  -- JoungKyun Kim <http://oops.org>  Mon, 6 Jul 2009 21:18:00 +0900
 

@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.18 2008-07-17 18:40:55 oops Exp $
+# $Id: rule.h,v 1.19 2009-07-06 16:35:30 oops Exp $
 #
 
 add_named_port() {
@@ -477,6 +477,8 @@ add_icmp_host() {
 }
 
 add_bricmp_host() {
+	[ ${BRIDGE_USED} -eq 0 ] && return
+
 	for i in $*
 	do
 		if [ -n "$(echo ${i} | ${c_grep} PING)" ]; then
