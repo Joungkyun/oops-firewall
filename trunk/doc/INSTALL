@@ -1,6 +1,6 @@
 OOPS Firewall Installation Document
 
-$Id: INSTALL,v 1.19 2009-04-30 15:28:25 oops Exp $
+$Id: INSTALL,v 1.20 2009-07-06 12:19:34 oops Exp $
 
 
 First, sorry for my poor english :-)
@@ -57,7 +57,7 @@ read README.debian document.
 OOPS Firewall is recommanded that install as rpm package. For make RPM
 package, use follow command.
 
-shell> rpmbuild -tb oops-firewall-6.2.6.tar.bz2
+shell> rpmbuild -tb oops-firewall-6.2.7.tar.bz2
 
 After building, you can find new package on /usr/src/redhat/RPMS/noarch.
 
@@ -68,7 +68,7 @@ shell> rpm -qlv oops-firewall
 If oops-firewall is not installed, you can get file list of rpm package
 with follow command.
 
-shell> rpm -qlvp oops-firewall-6.2.6-1.noarch.rpm
+shell> rpm -qlvp oops-firewall-6.2.7-1.noarch.rpm
 
 
 
