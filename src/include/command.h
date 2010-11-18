@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.10 2009-04-30 15:19:46 oops Exp $
+# $Id: command.h,v 1.11 2010-11-18 18:39:23 oops Exp $
 #
 
 # command line command
@@ -212,7 +212,7 @@ user_cmd () {
 			fi
 			uvalue=$(echo ${uvalue})
 			o_echo "  * ${c_iptables} ${uvalue}"
-			[ $_testmode -eq 0 ] && ${c_iptables} ${uvalue}
+			[ $_testmode -eq 0 ] && ${c_iptables} ${uvalue} || true
 		done
 	else 
 		IFS=' '
