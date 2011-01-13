@@ -1,12 +1,13 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.106 2011-01-13 12:55:07 oops Exp $
+$Id: Changelog,v 1.107 2011-01-13 12:55:37 oops Exp $
 
 
 * 6.2.7
 ---------------------------------------------------------------------
 + 2011.01.13
 	- fixed debian ipcalc command
+	- valid debianized
 
 + 2010.11.19
 	- If have error on pre/post command, return true
