@@ -1,9 +1,15 @@
 # header include file
 #
-# $Id: oops-firewall.h,v 1.3 2007-03-29 07:55:12 oops Exp $
+# $Id: oops-firewall.h,v 1.4 2011-01-13 12:55:07 oops Exp $
 #
 
 BRIDGE_NAME="brg0"
+
+if [ -f "/etc/redhat-relase" ]; then
+	export distribution="redhat"
+elif [ -f "/etc/debian_version" ]; then
+	export distribution="debian"
+fi
 
 source ${_includes}/color.h
 source ${_includes}/print.h
