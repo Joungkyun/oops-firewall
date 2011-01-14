@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.8 2009-04-30 18:44:49 oops Exp $
+# $Id: Makefile.in,v 1.9 2011-01-14 04:30:13 oops Exp $
 
 VERSION		= @version@
 CC			= @cc@
@@ -66,5 +66,5 @@ clean:
 	make -C po clean
 	-${RM} -rf ./temp
 
-init: clean
+distclean: clean
 	-${RM} -f Makefile po/Makefile
