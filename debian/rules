@@ -44,25 +44,17 @@ build-stamp:  config.status
 
 clean:
 	dh_testdir
-	dh_testroot
+	dh_auto_clean
+	dh_clean
 	rm -f build-stamp 
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) distclean
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
-endif
-
-
-	dh_clean 
+	[ ! -f "Makefile" ] || $(MAKE) distclean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_prep
 	dh_installdirs
 
 	# Add here commands to install the package into debian/oops-firewall.
