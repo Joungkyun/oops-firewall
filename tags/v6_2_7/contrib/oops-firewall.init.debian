@@ -1,0 +1,175 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          oops-firewall
+# Required-Start:    $remote_fs $network $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Startup script for the OOPS Firewall
+# Description:       OOPS Firewall is firewall that used IPTABLES in kernel 2.4 or 2.6
+### END INIT INFO
+#
+# Author:   JoungKyun Kim <admin@oops.org>
+# $Id: oops-firewall.init.debian,v 1.6 2011-01-13 12:14:27 oops Exp $
+#
+
+ERR_FILE=/tmp/oops_firewall_err
+IPTABLES=@iptables@
+command=@bindir@/oops-firewall
+lsmod=@lsmod@
+rmmod=@rmmod@
+grep=@grep@
+awk=@awk@
+uname=@uname@
+cat=@cat@
+touch=@touch@
+rm=@rm@
+sed=@sed@
+
+DAEMON=$IPTABLES
+
+test -x $DAEMON || exit 0
+
+_includes="@includedir@"
+
+# Source function library.
+. /lib/lsb/init-functions
+
+SUCCESS=0
+FAILED=1
+
+. ${_includes}/oops-firewall.h
+
+TEXTDOMAIN=oops-firewall
+TEXTDOMAINDIR=@shareddir@/locale
+
+# check of kernel version
+kernelCheck
+KERNEL_UP=$?
+
+KERNLIB=$(${uname} -r)
+KERNLIBPATH="/lib/modules/${KERNLIB}/kernel/net/ipv4/netfilter"
+
+case "$1" in
+  start)
+    log_daemon_msg $"Starting OOPS Firewall: "
+    ${command} > /dev/null 2> ${ERR_FILE}
+
+    if [ "$(${cat} ${ERR_FILE} 2>/dev/null)" != "" ]; then
+      log_end_msg $FAILED
+      ${IPTABLES} -Z
+      ${IPTABLES} -P INPUT ACCEPT
+      ${IPTABLES} -F INPUT
+      ${IPTABLES} -P FORWARD ACCEPT
+      ${IPTABLES} -F FORWARD
+      ${IPTABLES} -P OUTPUT ACCEPT
+      ${IPTABLES} -F OUTPUT
+
+      ${IPTABLES} -t nat -Z
+      ${IPTABLES} -t nat -P PREROUTING ACCEPT
+      ${IPTABLES} -t nat -F PREROUTING
+      ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+      ${IPTABLES} -t nat -F POSTROUTING
+
+      ${IPTABLES} -t mangle -Z
+      ${IPTABLES} -t mangle -P PREROUTING ACCEPT
+      ${IPTABLES} -t mangle -F PREROUTING
+      ${IPTABLES} -t mangle -P OUTPUT ACCEPT
+      ${IPTABLES} -t mangle -F OUTPUT
+
+      if [ "${KERNEL_UP}" = 1 ]; then
+        ${IPTABLES} -t mangle -P POSTROUTING ACCEPT
+        ${IPTABLES} -t mangle -F POSTROUTING
+        ${IPTABLES} -t mangle -P INPUT ACCEPT
+        ${IPTABLES} -t mangle -F INPUT
+        ${IPTABLES} -t mangle -P FORWARD ACCEPT
+        ${IPTABLES} -t mangle -F FORWARD
+      fi
+      if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
+        echo 0 > /proc/sys/net/ipv4/ip_forward
+      fi
+      rm_mod 1
+    else
+      log_end_msg $SUCCESS
+      ${touch} /var/lock/oops-firewall
+    fi
+    rm -rf $ERR_FILE > /dev/null 2>&1
+    ;;
+  right-stop)
+    ${IPTABLES} -Z
+    ${IPTABLES} -P INPUT ACCEPT
+    ${IPTABLES} -F INPUT
+    ${IPTABLES} -P FORWARD ACCEPT
+    ${IPTABLES} -F FORWARD
+    ${IPTABLES} -P OUTPUT ACCEPT
+    ${IPTABLES} -F OUTPUT
+
+    ${IPTABLES} -t nat -Z
+    ${IPTABLES} -t nat -P PREROUTING ACCEPT
+    ${IPTABLES} -t nat -F PREROUTING
+    ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+    ${IPTABLES} -t nat -F POSTROUTING
+
+    ${IPTABLES} -t mangle -Z
+    ${IPTABLES} -t mangle -P PREROUTING ACCEPT
+    ${IPTABLES} -t mangle -F PREROUTING
+    ${IPTABLES} -t mangle -P OUTPUT ACCEPT
+    ${IPTABLES} -t mangle -F OUTPUT
+
+    if [ "${KERNEL_UP}" = 1 ]; then
+      ${IPTABLES} -t mangle -P POSTROUTING ACCEPT
+      ${IPTABLES} -t mangle -F POSTROUTING
+      ${IPTABLES} -t mangle -P INPUT ACCEPT
+      ${IPTABLES} -t mangle -F INPUT
+      ${IPTABLES} -t mangle -P FORWARD ACCEPT
+      ${IPTABLES} -t mangle -F FORWARD
+    fi
+
+    ${rm} -rf /var/lock/oops-firewall
+
+    rm_mod 1
+    log_daemon_msg $"Destory Firewall Tables: "
+    log_end_msg $SUCCESS
+    ;;
+  stop)
+    $0 right-stop
+    if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
+      echo 0 > /proc/sys/net/ipv4/ip_forward
+    fi
+    ${command} -z >& /dev/null
+    ;;
+  force-reload|restart)
+    $0 right-stop
+    $0 start
+    ;;
+  status)
+    echo
+    echo
+    echo -n "[1;31m"
+    echo -n $"[ Legualar Table ]"
+    echo "[7;0m"
+    echo "[1;31m-----------------------------------------------------------------------[7;0m"
+    echo
+    ${IPTABLES} -L -v -n
+    echo
+    echo
+    echo -n "[1;31m"
+    echo -n $"[ NAT Table ]"
+    echo "[7;0m"
+    echo "[1;31m-----------------------------------------------------------------------[7;0m"
+    echo
+    ${IPTABLES} -t nat -L -v -n
+    echo
+    echo
+    echo -n "[1;31m"
+    echo -n $"[ MANGLE Table ]"
+    echo "[7;0m"
+    echo "[1;31m-----------------------------------------------------------------------[7;0m"
+    echo
+    ${IPTABLES} -t mangle -L -v -n
+    ;;
+  *)
+    echo $"Usage: $0 {start|right-stop|stop|restart|status}"
+esac
+
+exit 0

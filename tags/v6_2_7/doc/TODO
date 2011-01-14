@@ -1,0 +1,6 @@
+$Id: TODO,v 1.2 2009-04-30 11:18:50 oops Exp $
+
+1. check ftp passive/active mode delay problem
+   - outgoing passive mode delay problem
+2. check inbound filter operation on Bridge mode
+   check completely outbound filtering on Bridge mode
