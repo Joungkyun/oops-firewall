@@ -1,6 +1,0 @@
-#!/bin/sh
-
-set -e
-if [ "$1" = "purge" ]; then
-	invoke-rc.d oops-firewall stop --quite > /dev/null
-fi
