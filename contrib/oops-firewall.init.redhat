@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 #
-# $Id: oops-firewall.init.redhat,v 1.4 2009-04-30 19:24:05 oops Exp $
+# $Id: oops-firewall.init.redhat,v 1.2 2007-03-28 12:46:46 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
@@ -126,7 +126,7 @@ case "$1" in
     if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
       echo 0 > /proc/sys/net/ipv4/ip_forward
     fi
-    ${command} -z >& /dev/null
+    clear_bridge
     ;;
   restart)
     $0 right-stop

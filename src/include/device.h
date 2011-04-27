@@ -1,6 +1,6 @@
 # Device function
 #
-# $Id: device.h,v 1.6 2011-01-13 12:55:07 oops Exp $
+# $Id: device.h,v 1.5 2007-03-29 18:29:23 oops Exp $
 #
 
 # 네트워크 디바이스 (eth/ppp/bridge) 목록을 얻어오는 함수
@@ -132,16 +132,9 @@ getDevicePrefix() {
 
 	[ -z "$getDevicePfDevIP" -o -z "$getDevicePfVarMask" ] && return
 
-	if [ "${distribution}" = "debian" ]; then
-		getDevicePfTmp=$(${c_ipcalc} -n -b \
-						${getDevicePfDevIP}/${getDevicePfVarMask} | \
-						${c_grep} 'Netmask:' | \
-						${c_awk} '{print $4}' 2> /dev/null)
-	else
-		getDevicePfTmp=$(${c_ipcalc} -p ${getDevicePfDevIP} \
-						${getDevicePfVarMask} 2> /dev/null | \
-						${c_awk} -F '=' '{print $2}')
-	fi
+	getDevicePfTmp=$(${c_ipcalc} -p ${getDevicePfDevIP} \
+								${getDevicePfVarMask} 2> /dev/null | \
+								${c_awk} -F '=' '{print $2}')
 
 	if [ -n "${getDevicePfVarName}" ]; then
 		getDevicePfTmpVar="${getDevicePfVarName}=\"${getDevicePfTmp}\""
@@ -154,17 +147,10 @@ getDeviceNetwork() {
 	getDeviceNwDevMask=$2
 	getDeviceNwVarName=$3
 
-	if [ "${distribution}" = "debian" ]; then
-		getDeviceNwTmp=$(${c_ipcalc} -n -b \
-					${getDeviceNwDevIP}/${getDeviceNwDevMask} | \
-					${c_grep} 'Network:' | \
-					${c_awk} '{print $2}' | ${c_sed} 's!/.*!!g')
-	else
-		getDeviceNwTmp=$(${c_ipcalc} -s -n \
+	getDeviceNwTmp=$(${c_ipcalc} -s -n \
 					${getDeviceNwDevIP} \
 					${getDeviceNwDevMask} | \
 					${c_awk} -F '=' '{print $2}')
-	fi
 
 	if [ -n "${getDeviceNwVarName}" ]; then
 		getDeviceNwTmpVar="${getDeviceNwVarName}=\"${getDeviceNwTmp}\""

@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.11 2010-11-18 18:39:23 oops Exp $
+# $Id: command.h,v 1.8 2007-05-19 19:37:42 oops Exp $
 #
 
 # command line command
@@ -194,11 +194,11 @@ user_cmd () {
 		pre) 
 			brute_force_set
 			layer7_set
-			USERCHK=$(LANG="C" ${c_sed} -n -f ${_includes}/user_pre.sed ${_confdir}/user.conf)
+			USERCHK=$(${c_sed} -n -f ${_includes}/user_pre.sed ${_confdir}/user.conf)
 			IFS='%'
 			;;
 		post)
-			USERCHK=$(LANG="C" ${c_sed} -n -f ${_includes}/user_post.sed ${_confdir}/user.conf)
+			USERCHK=$(${c_sed} -n -f ${_includes}/user_post.sed ${_confdir}/user.conf)
 			IFS='@'
 			;;
 	esac
@@ -212,7 +212,7 @@ user_cmd () {
 			fi
 			uvalue=$(echo ${uvalue})
 			o_echo "  * ${c_iptables} ${uvalue}"
-			[ $_testmode -eq 0 ] && ${c_iptables} ${uvalue} || true
+			[ $_testmode -eq 0 ] && ${c_iptables} ${uvalue}
 		done
 	else 
 		IFS=' '
@@ -229,53 +229,3 @@ user_cmd () {
 	fi
 }
 
-iprange_set() {
-	value=$1
-	varname=$2
-
-	if [ $_iprange -eq 0 ]; then
-		[ -n "${varname}" ] && eval "${varname}=\"${value}\""
-
-		#iprange_check $value
-		#chk=$?
-		#
-		#if [ $chk -eq 1 ]; exit 1
-		#   o_echo " !!!!!! IP set ${value}, but This kernel don't support iprange extension"
-		#   exit 1
-		#fi
-		return
-	fi
-
-	primary=${value%%-*}
-	secondary=${value##*-}
-
-	[ -n "${varname}" ] && unset $varname
-
-	if [ "${primary}" == "${secondary}" ]; then
-		[ -n "${varname}" ] && eval "${varname}=\"${value}\""
-		return
-	fi
-
-	dot=$(echo "${secondary}" | ${c_sed} 's/[^.]//g')
-
-	case "$dot" in
-		"...")
-			prefix=
-			;;
-		"..")
-			prefix=$(echo ${primary} | ${c_sed} 's/[0-9]\+\.[0-9]\+\.[0-9]\+$//g')
-			;;
-		".")
-			prefix=$(echo ${primary} | ${c_sed} 's/[0-9]\+\.[0-9]\+$//g')
-			;;
-		*)
-			prefix=$(echo ${primary} | ${c_sed} 's/[0-9]\+$//g')
-	esac
-
-	secondary="${prefix}${secondary}"
-
-	if [ -n "${varname}" ]; then
-		eval "${varname}=\"${primary}-${secondary}\""
-		export ${varname}
-	fi
-}

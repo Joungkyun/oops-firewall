@@ -1,0 +1,9 @@
+/etc/oops-firewall/application.conf
+/etc/oops-firewall/bridge.conf
+/etc/oops-firewall/filter.conf
+/etc/oops-firewall/forward.conf
+/etc/oops-firewall/interface.conf
+/etc/oops-firewall/masq.conf
+/etc/oops-firewall/modules.list
+/etc/oops-firewall/tos.conf
+/etc/oops-firewall/user.conf
