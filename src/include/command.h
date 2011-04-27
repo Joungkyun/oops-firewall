@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.11 2010-11-18 18:39:23 oops Exp $
+# $Id: command.h,v 1.9 2008-07-17 17:49:16 oops Exp $
 #
 
 # command line command
@@ -194,11 +194,11 @@ user_cmd () {
 		pre) 
 			brute_force_set
 			layer7_set
-			USERCHK=$(LANG="C" ${c_sed} -n -f ${_includes}/user_pre.sed ${_confdir}/user.conf)
+			USERCHK=$(${c_sed} -n -f ${_includes}/user_pre.sed ${_confdir}/user.conf)
 			IFS='%'
 			;;
 		post)
-			USERCHK=$(LANG="C" ${c_sed} -n -f ${_includes}/user_post.sed ${_confdir}/user.conf)
+			USERCHK=$(${c_sed} -n -f ${_includes}/user_post.sed ${_confdir}/user.conf)
 			IFS='@'
 			;;
 	esac
@@ -212,7 +212,7 @@ user_cmd () {
 			fi
 			uvalue=$(echo ${uvalue})
 			o_echo "  * ${c_iptables} ${uvalue}"
-			[ $_testmode -eq 0 ] && ${c_iptables} ${uvalue} || true
+			[ $_testmode -eq 0 ] && ${c_iptables} ${uvalue}
 		done
 	else 
 		IFS=' '

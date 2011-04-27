@@ -9,12 +9,12 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.24 2009-07-06 12:19:34 oops Exp $
+# $Id: default.pot,v 1.20 2008-06-19 11:51:30 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-firewall 6.2.7\n"
+"Project-Id-Version: oops-firewall 6.2.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-19 20:44+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -359,6 +359,10 @@ msgstr ""
 
 #: src/include/masq.h:29 src/include/masq.h:39
 msgid " is not set"
+msgstr ""
+
+#: src/include/print.h:10
+msgid "#      By Jan 10 2008 JoungKyun.Kim <http://oops.org>"
 msgstr ""
 
 #: src/include/print.h:9

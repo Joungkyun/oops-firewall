@@ -9,12 +9,12 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: ko.po,v 1.31 2009-07-06 12:19:34 oops Exp $
+# $Id: ko.po,v 1.27 2008-06-19 11:51:30 oops Exp $
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-fireall 6.2.7\n"
+"Project-Id-Version: oops-fireall 6.2.4\n"
 "Report-Msgid-Bugs-To: http://oops.org\n"
 "POT-Creation-Date: 2008-06-19 20:44+0900\n"
 "PO-Revision-Date: 2008-06-19 20:48+0900\n"
@@ -360,6 +360,10 @@ msgstr " interface.conf 의 ${_alter} 를 사용하십시오.\\n"
 #: src/include/masq.h:29 src/include/masq.h:39
 msgid " is not set"
 msgstr " 이 설정되어 있지 않습니다."
+
+#: src/include/print.h:10
+msgid "#      By Jan 10 2008 JoungKyun.Kim <http://oops.org>"
+msgstr "#      2008.01.10 김정균 <http://oops.org>"
 
 #: src/include/print.h:9
 #, sh-format
