@@ -1,11 +1,11 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.10 2008-03-05 05:03:34 oops Exp $
+# $Id: forward.h,v 1.3 2006-12-29 05:45:17 oops Exp $
 #
 
 add_forward_init() {
 	[ -n "${TCP_FORWARD_TO}" ] && __finit=0 || __finit=1
-	[ -n "${TCP_FORWARD_TO_S}" ] && __finit=0
+	[ -n  "${UDP_FORWARD_TO_S}" ] && __finit=0
 	[ -n "${UDP_FORWARD_TO}" ] && __finit=0
 	[ -n "${UDP_FORWARD_TO_S}" ] &&  __finit=0
 	[ -n "${ALL_FORWARD_TO}" ] && __finit=0
@@ -24,9 +24,9 @@ add_forward_init() {
 	#	INCOM_ADDR=${MASQ_IPADDR}
 	#fi
 
-	o_echo $"  * Deprecated Direction Check"
+	o_echo $"    Deprecated Direction Check"
 	if [ -n "${FORWARD_MASTER}" ]; then
-		o_echo -n "    ==> "
+		o_echo -n "    * "
 		print_color $"FORWARD_MASTER is Deprecated." red
 		o_echo
 	fi
@@ -49,13 +49,6 @@ add_forward_rule() {
 			o_echo "  * iptables -t nat -A PREROUTING -d ${dest}  -j DNAT --to ${target}"
 			[ "${_testmode}" = 0 ] && \
 				${c_iptables} -t nat -A PREROUTING -d ${dest} -j DNAT --to ${target}
-
-			# For Bridge mode
-			if [ "${BRIDGE_USED}" -ne 0 ]; then
-				o_echo "  * iptables -A FORWARD -s ${dest} -d ${target} -j ACCEPT"
-				[ "${_testmode}" = 0 ] && \
-					${c_iptables} -A FORWARD -s ${dest} -d ${target} -j ACCEPT
-			fi
 		}
 	done
 
@@ -72,27 +65,14 @@ add_forward_rule() {
 
 		for v in $_fv
 		do
-			_chk=0
 			echo ${v} | {
 				if [ $_fs -eq 0 ]; then
 					IFS=':' read lports raddr rports
 					laddr=${FIREWALL_WAN}
 					ladd_dev=1
-					[ -z "${lports}" ] && _chk=1
-					[ -z "${raddr}" ] && _chk=1
-					[ -z "${rports}" ] && _chk=1
 				else
 					IFS=':' read laddr lports raddr rports
 					ladd_dev=0
-					[ -z "${laddr}" ] && _chk=1
-					[ -z "${lports}" ] && _chk=1
-					[ -z "${raddr}" ] && _chk=1
-					[ -z "${rports}" ] && _chk=1
-				fi
-
-				if [ $_chk -eq 1 ]; then
-					echo "  * ${i} => Wrong Configuration Value : ${v}"
-					continue
 				fi
 
 				for _laddr in ${laddr}
@@ -103,13 +83,6 @@ add_forward_rule() {
 					[ "${_testmode}" -eq 0 ] && \
 						${c_iptables} -t nat -A PREROUTING -p ${proto} ${f_target} ${_laddr} \
 									--dport ${lports} -j DNAT --to ${raddr}:${rports}
-
-					# For Bridge mode
-					if [ "${BRIDGE_USED}" -ne 0 ]; then
-						o_echo "  * iptables -A FORWARD -d ${raddr} -p ${proto} --dport ${rports} -j ACCEPT"
-						[ "${_testmode}" -eq 0 ] && \
-							${c_iptables} -A FORWARD -d ${raddr} -p ${proto} --dport ${rports} -j ACCEPT
-					fi
 				done
 			}
 		done
