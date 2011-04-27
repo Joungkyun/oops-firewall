@@ -1,0 +1,46 @@
+OOPS FIREWALL 에서 문자열 매치를 사용하기 위한 설정
+
+작성 김정균
+일시 2002.02.27
+
+이 문서는 OOPS FIREWALL 에서 문자열 매치를 시켜 패킷을 거부하는 룰을 사용하기 위
+한 준비이다. 이 방법을 사용하기 위해서는 iptables 와 커널의 조정이 필요하다.  일
+단 우선적으로는 가장 간단한 방법을 소개한다.
+
+일단
+
+ftp://mirror.oops.org/pub/Linux/Redhat/UPDATES/6.x/RPMS/iptables-1.2.4-1kr.i686.rpm
+ftp://mirror.oops.org/pub/Linux/Redhat/UPDATES/7.x/RPMS/iptables-1.2.4-1kr.i686.rpm
+
+을 받도록 한다. 2개의 링크중 자신의 배포본 버젼에 따라 받으면 된다. 6.x 는 glibc
+2.1 기반이고 7.x 는 glibc 2.2 기반이다. 자신의 glibc버젼을 확인하여 받으면 된다.
+RH 5.x 의 경우나 또는 자신의 CPU 가 Pentium Classic(MMX 포함) 이하급이 라면
+
+ftp://mirror.oops.org/pub/Linux/Redhat/UPDATES/6.x/SRPMS/iptables-1.2.4-1kr.src.rpm
+
+을 받은 다음 rpm --rebuild iptables-1.2.4-1kr.src.rpm 명령을 실행하여 i386 용 패
+키지를 만들어야 한다. 이 경우에는 리빌드를 하고나면 /usr/src/redhat/RPMS/i386 에
+생성이 된다.
+
+일단 이렇게 받거나 생성한 패키지를 설치를 하도록 한다. 그러면 일단 iptbales 에서
+ipt_string 을 지원하게 된다. 다음은 커널의 조정을 할차례이다. 위의 패키지를 설치
+한 후에 6.x 이하 사용자들은 /usr/doc/iptables-1.2.4 디렉토리로 7.x 사용자들은
+/usr/share/doc/iptables-1.2.4 로 이동을 하여 README.STRING 문서를 참고하여
+ipt_string 모듈을 만들도록 한다.  해당 모듈이 만들어 지면 filter.conf 에 해당 모
+듈의 경로를 지정해 주면 된다.
+
+또는 자신의 커널이 2.4.9 이상 버젼이라면
+ftp://mirror.oops.org/pub/Linux/Kernel/v2.4/ipt_string/glibcXX/
+에서 이미 만들어진 ipt_string-KERNEL_NO.o 모듈을 받을 수가 있다. glibcXX 는 자신
+의 glibc 버젼과 같은 디렉토리를 말한다.
+
+# 주의
+
+3.1.0 에서 새로 추가되어진 STRING_MASQ_MATCH는 아주 신중하게 사용해야 한다. 특히
+pop3 의 경우에는 메일을 받아 들이다가  메일중 하나가 string match 에 걸리게 되면
+그 이후의 메일들을 받아오지 못하는 현상이  발생할 수 있으므로 주의해서 사용을 해
+야 한다.
+
+위의 FTP 에서 iptables 를 받을 경우 iptable-1.2.5-2kr 부터는 커널 2.4.18 이상 버
+젼에서만 사용이 가능하다. 커널 2.4.18 부터는 mangle hooker 가 2 개에서 5 개로 늘
+어나는 변화가 있었기 때문에 1.2.5-2kr 은 이에 대한 패치를 해 놓은 버젼이다.
