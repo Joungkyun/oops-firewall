@@ -1,0 +1,55 @@
+System Requires
+
+  Based on REDHAT 6.x ( only test )
+  Kernel 2.4.x
+  iptables package
+
+Building
+
+  1. U simply excute install.sh.
+  2. After excute install.sh, file of oops-firewall package
+     is located in 
+     /etc/oops-firewall/filter.conf
+     /etc/oops-firewall/masq.conf
+     /etc/oops-firewall/forward.conf
+     /etc/oops-firewall/string.conf
+     /etc/oops-firewall/tos.conf
+     /etc/oops-firewall/user.conf
+     /usr/sbin/oops-firewall
+  3. edit /etc/oops-firewall/{filter,masq,forward,string,tos,user}.conf
+  4. run /usr/sbin/oops-firewall
+
+  IF U want stop oops-firewall, rut iptables command as follow..
+
+  $ /sbin/iptables -Z
+  $ /sbin/iptables -P INPUT ACCEPT
+  $ /sbin/iptables -F INPUT
+  $ /sbin/iptables -P FORWARD ACCEPT
+  $ /sbin/iptables -F FORWARD
+  $ /sbin/iptables -P OUTPUT ACCEPT
+  $ /sbin/iptables -F OUTPUT
+  $ /sbin/iptables -t nat -Z
+  $ /sbin/iptables -t nat -P PREROUTING ACCEPT
+  $ /sbin/iptables -t nat -F PREROUTING
+  $ /sbin/iptables -t nat -P POSTROUTING ACCEPT
+  $ /sbin/iptables -t nat -F POSTROUTING
+  $ /sbin/iptables -t mangle -Z
+  $ /sbin/iptables -t mangle -P PREROUTING ACCEPT
+  $ /sbin/iptables -t mangle -F PREROUTING
+  $ /sbin/iptables -t mangle -P OUTPUT ACCEPT
+  $ /sbin/iptables -t mangle -F OUTPUT
+
+  if ur linux box is running over 2.4.18 of kernel, added follo command
+
+  $ /sbin/iptables -t mangle -P POSTROUTING ACCEPT
+  $ /sbin/iptables -t mangle -F POSTROUTING
+  $ /sbin/iptables -t mangle -P INPUT ACCEPT
+  $ /sbin/iptables -t mangle -F INPUT
+  $ /sbin/iptables -t mangle -P FORWARD ACCEPT
+  $ /sbin/iptables -t mangle -F FORWARD
+
+Uninstall
+
+  U simply excute uninstall.sh
+
+Happy Hacking !:-)
