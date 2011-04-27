@@ -1,3 +1,0 @@
-# watch control file for uscan
-# Site            Directory               Pattern                      Version  Script
-mirror.oops.org   /pub/oops/oops-firewall oops-firewall-(.*)\.tar\.bz2 debian   uupdate
