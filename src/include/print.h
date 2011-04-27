@@ -1,12 +1,13 @@
 # Print function
 #
-# $Id: print.h,v 1.8 2009-05-02 16:24:46 oops Exp $
+# $Id: print.h,v 1.4 2008-01-09 17:53:55 oops Exp $
 #
 
 printBanner() {
 	[ "${1}" = "clear" ] && clear || echo
 	echo  "############################################################################"
 	echo $"# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
+	echo $"#      By Jan 10 2008 JoungKyun.Kim <http://oops.org>"
 	echo  "############################################################################"
 	echo
 }
@@ -19,7 +20,6 @@ usage() {
 	echo $"         -c config_directory    set configuration directory"
 	echo $"         -t                     run test mode"
 	echo $"         -v                     verbose mode"
-	echo $"         -n                     don't print ansi mode"
 	echo $"         -V                     print current version"
 	echo $"         -h                     help (this) message"
 	echo
@@ -66,13 +66,9 @@ print_result() {
 	__cstart="1;${__mcol}m"
 
 	if [ $_verbose -eq 1 ]; then
-		if [ $_noansi -eq 0 ]; then
-			echo -ne "\\033[${_gcol}G"
-			echo -n ": "
-			echo -ne "[${__cstart}${__result}[${__cend}\n"
-		else
-			printf "%20s: %s\n" " " "${__result}"
-		fi
+		echo -ne "\\033[${_gcol}G"
+		echo -n ": "
+		echo -ne "[${__cstart}${__result}[${__cend}\n"
 	fi
 }
 
@@ -92,11 +88,7 @@ print_color() {
 	__mcol=$?
 	__cstart="1;${__mcol}m"
 
-	if [ $_noansi -eq 0 ]; then
-		echo -ne "[${__cstart}${__msg}[${__cend}"
-	else
-		echo -n ${__msg}
-	fi
+	echo -ne "[${__cstart}${__msg}[${__cend}"
 }
 
 o_echo() {
