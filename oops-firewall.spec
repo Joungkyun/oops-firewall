@@ -1,9 +1,9 @@
 %define _unpackaged_files_terminate_build 0
 Summary: Individaul Firewall with IPTABLES
 Name: oops-firewall
-Version: 6.2.7
+Version: 6.2.6
 Release: 1
-Epoch: 44
+Epoch: 43
 License: GPL
 Group: Applications/Security
 URL: http://oops.org/?t=lecture&sb=firewall&n=1
@@ -43,15 +43,15 @@ Documentation for oops firewall
 	--destdir=%{buildroot}
 
 %build
-%{__make}
+make
 
 %install
 if [ "%{buildroot}" != "/" -a -d "%{buildroot}" ]; then
-  %{__rm} -rf %{buildroot}
+  rm -rf %{buildroot}
 fi
-%{__mkdir_p} %{buildroot}
+mkdir -p %{buildroot}
 
-%{__make} DESTDIR=%{buildroot} install
+make DESTDIR=%{buildroot} install
 
 %{__mkdir_p} %{buildroot}%{_mandir}/man8
 %{__install} -m644 doc/%{name}.8 %{buildroot}%{_mandir}/man8/%{name}.8
@@ -99,7 +99,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/oops-firewall/tos.conf
 %config(noreplace) /etc/oops-firewall/user.conf
 %config(noreplace) /etc/oops-firewall/modules.list
-%{_mandir}/man8/%{name}.8*
 %dir /usr/include/oops-firewall
 
 %files doc
@@ -107,9 +106,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
-* Fri Jan 14 2011 JoungKyun.Kim <http://oops.org> 44:6.2.7-1
-- update 6.2.7
-
 * Fri May  2 2009 JoungKyun.Kim <http://oops.org> 43:6.2.6-1
 - update 6.2.6
 

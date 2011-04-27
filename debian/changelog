@@ -1,13 +1,3 @@
-oops-firewall (6.2.7-1) stable; urgency=low
-
-  * valid debianized
-  * support 2.6 kernel module
-  * If have error on pre/post command, return true
-  * fixed missing operate add_bricmp_rule when bridge disabled
-  * fixed wrong controle ipcalc on debian
-
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Fri, 14 Jan 2011 13:31:22 +0900
-
 oops-firewall (6.2.6-1) stable; urgency=low
 
   * added english document

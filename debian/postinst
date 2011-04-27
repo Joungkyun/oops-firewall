@@ -2,6 +2,6 @@
 
 if [ "$1" = "configure" ]; then
 	if [ -z "$2" ]; then
-		update-rc.d oops-firewall defaults 99 10 > /dev/null
+		update-rc.d oops-firewall multiuser 99 10 > /dev/null
 	fi
 fi
