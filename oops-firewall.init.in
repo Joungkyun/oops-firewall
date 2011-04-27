@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 #
-# $Id: oops-firewall.init.redhat,v 1.4 2009-04-30 19:24:05 oops Exp $
+# $Id: oops-firewall.init.in,v 1.10 2004-08-18 11:43:25 oops Exp $
 #
 # Startup script for the OOPS FireWall
 #
@@ -10,26 +10,24 @@
 # config: /etc/oops-firewall
 
 ERR_FILE=/tmp/oops_firewall_err
-IPTABLES=@iptables@
-command=@bindir@/oops-firewall
-lsmod=@lsmod@
-rmmod=@rmmod@
-grep=@grep@
-awk=@awk@
-uname=@uname@
-cat=@cat@
-touch=@touch@
-rm=@rm@
-sed=@sed@
-
-_includes="@includedir@"
+IPTABLES=@IPTABLES@
+command=@BINDIR@/oops-firewall
+lsmod=@LSMOD@
+rmmod=@RMMOD@
+grep=@GREP@
+awk=@AWK@
+uname=@UNAME@
+cat=@CAT@
+touch=@TOUCH@
+rm=@RM@
+sed=@SED@
 
 # Source function library.
-. @initdir@/functions
-. ${_includes}/oops-firewall.h
+. @INITDIR@/functions
+. @INCLUDEDIR@/oops-firewall.h
 
 TEXTDOMAIN=oops-firewall
-TEXTDOMAINDIR=@shareddir@/locale
+TEXTDOMAINDIR=@SHAREDDIR@/locale
 
 # check of kernel version
 kernelCheck
@@ -84,7 +82,7 @@ case "$1" in
     rm -rf $ERR_FILE > /dev/null 2>&1
     echo
     ;;
-  right-stop)
+  stop)
     ${IPTABLES} -Z
     ${IPTABLES} -P INPUT ACCEPT
     ${IPTABLES} -F INPUT
@@ -114,6 +112,9 @@ case "$1" in
       ${IPTABLES} -t mangle -F FORWARD
     fi
 
+    if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
+      echo 0 > /proc/sys/net/ipv4/ip_forward
+    fi
     ${rm} -rf /var/lock/subsys/oops-firewall
 
     rm_mod 1
@@ -121,15 +122,8 @@ case "$1" in
     echo_success
     echo
     ;;
-  stop)
-    $0 right-stop
-    if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
-      echo 0 > /proc/sys/net/ipv4/ip_forward
-    fi
-    ${command} -z >& /dev/null
-    ;;
   restart)
-    $0 right-stop
+    $0 stop
     $0 start
     ;;
   status)
@@ -159,7 +153,7 @@ case "$1" in
     ${IPTABLES} -t mangle -L -v -n
     ;;
   *)
-    echo $"Usage: $0 {start|right-stop|stop|restart|status}"
+    echo $"Usage: $0 {start|stop|restart|status}"
 esac
 
 exit 0
