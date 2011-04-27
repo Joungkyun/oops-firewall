@@ -1,0 +1,10 @@
+This is the source of oops firewall v4.2.x
+
+See the Changelog file for a detailed listing of all changes.  See the INSTALL
+file for information on building and installing oops firewall.
+
+This program is used iptables package and kernel 2.4.x or 2.6.x
+
+Even if you get any problem, I don't have any sense of responsibility.
+All Problems are your destiny :-)
+

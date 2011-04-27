@@ -1,55 +1,37 @@
-# $Id: Makefile.in,v 1.9 2011-01-14 04:30:13 oops Exp $
-
-VERSION		= @version@
-CC			= @cc@
+VERSION		= @VERSION@
+CC		= @CC@
 PROG		= oops-firewall
-DESTDIR		= @destdir@
+DESTDIR		= @DESTDIR@
 CFLAGS		=
 
-prefix		= @prefix@
-bindir		= @bindir@
-shareddir	= @shareddir@
-includedir	= @includedir@
-confdir		= @confdir@
-initdir		= @initdir@
+prefix		= @PREFIX@
+bindir		= @BINDIR@
+shareddir	= @SHAREDDIR@
+includedir	= @INCLUDEDIR@
+confdir		= @CONFDIR@
+initdir		= @INITDIR@
 
-INSTALL		= @install@
-RM			= @rm@
-MKDIR		= @mkdir@ -p
-LS			= @ls@
-SED			= @sed@
+INSTALL		= @INSTALL@
+RM		= @RM@
+MKDIR		= @MKDIR@ -p
 
 all:
 	make -C po
 
-install: install-header install-conf install-po install-doc
+install: install-conf install-po install-doc
 	$(MKDIR) $(DESTDIR)$(bindir)
 	$(MKDIR) $(DESTDIR)$(initdir)
-	$(INSTALL) -m 755 ./temp/sbin/$(PROG) $(DESTDIR)$(bindir)/$(PROG)
-	@echo "installed $(DESTDIR)$(bindir)/$(PROG)"
-	$(INSTALL) -m 755 ./temp/contrib/$(PROG).init $(DESTDIR)$(initdir)/$(PROG)
-	@echo "installed $(DESTDIR)$(initdir)/$(PROG)"
-	$(INSTALL) -m 644 ./temp/include/config.sed $(DESTDIR)$(includedir)/config.sed
-	@echo "installed $(DESTDIR)$(includedir)/config.sed"
-	$(INSTALL) -m 644 ./temp/include/user_pre.sed $(DESTDIR)$(includedir)/user_pre.sed
-	@echo "installed $(DESTDIR)$(includedir)/user_pre.sed"
-	$(INSTALL) -m 644 ./temp/include/user_post.sed $(DESTDIR)$(includedir)/user_post.sed
-	@echo "installed $(DESTDIR)$(includedir)/user_post.sed"
-	$(INSTALL) -m 644 ./temp/conf/modules.list $(DESTDIR)$(confdir)/modules.list
-	@echo "installed $(DESTDIR)$(confdir)/modules.list"
-
-install-header:
 	$(MKDIR) $(DESTDIR)$(includedir)
-	for i in `$(LS) ./temp/include/*.h | sed 's!.*/!!g'` ; do \
-		$(INSTALL) -m 644 ./temp/include/$$i $(DESTDIR)$(includedir)/$$i; \
-		echo "installed $(DESTDIR)$(includedir)/$$i" ; \
-	done
+	$(INSTALL) -m 755 $(PROG) $(DESTDIR)$(bindir)/$(PROG)
+	$(INSTALL) -m 755 $(PROG).init $(DESTDIR)$(initdir)/$(PROG)
+	$(INSTALL) -m 644 $(PROG).h $(DESTDIR)$(includedir)/$(PROG).h
+	$(INSTALL) -m 644 config.sed $(DESTDIR)$(includedir)/config.sed
 
 install-conf:
 	$(MKDIR) $(DESTDIR)$(confdir)
-	for i in bridge.conf application.conf filter.conf forward.conf interface.conf masq.conf tos.conf user.conf ; do \
-		[ ! -f "$(DESTDIR)$(confdir)/$$i" ] && $(INSTALL) -m 644 ./temp/conf/$$i $(DESTDIR)$(confdir)/$$i ; \
-		echo "installed $(DESTDIR)$(confdir)/$$i" ; \
+	for i in filter.conf forward.conf masq.conf string.conf tos.conf user.conf ; do \
+		[ ! -f "$(DESTDIR)$(confdir)/$$i" ] && $(INSTALL) -m 644 $$i $(DESTDIR)$(confdir)/$$i ; \
+		echo "install $(DESTDIR)$(confdir)/$$i" ; \
 	done
 
 install-po:
@@ -57,14 +39,16 @@ install-po:
 
 install-doc:
 	$(MKDIR) $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)
-	[ -f "COPYING" ] && $(INSTALL) -m 644 COPYING $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/ ; \
+	$(INSTALL) -m 644 COPYING $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 	$(INSTALL) -m 644 CREDIT $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 	$(INSTALL) -m 644 Changelog $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
-	$(INSTALL) -m 644 doc/README $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 README $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 README.DIALPAD $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 README.SORIBADA $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	$(INSTALL) -m 644 README.STRING $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 
 clean:
-	make -C po clean
-	-${RM} -rf ./temp
+	-${RM} -f oops-firewall oops-firewall.init
 
-distclean: clean
+init: clean
 	-${RM} -f Makefile po/Makefile
