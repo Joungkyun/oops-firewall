@@ -1,505 +1,335 @@
-# oops-firewall templete file
-# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# JoungKyun.Kim <http://oops.org>, 2000
-#
-# made by
-#    xgettext -d default --from-code=euc-kr -L Shell -s \
-#       configure src/include/*.h src/sbin/oops-firewall contrib/oops-firewall.init*
-# if you merge new version, msgmerge -U old.po new.po
-# xgettext 0.13 support shell script
-#
-# $Id: ko.po,v 1.31 2009-07-06 12:19:34 oops Exp $
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-fireall 6.2.7\n"
-"Report-Msgid-Bugs-To: http://oops.org\n"
-"POT-Creation-Date: 2008-06-19 20:44+0900\n"
-"PO-Revision-Date: 2008-06-19 20:48+0900\n"
-"Last-Translator: JoungKyun.Kim <http://oops.org>\n"
-"Language-Team: AnNyung Packaging Team <http://annyung.oops.org>\n"
+"Project-Id-Version: 4.0.0\n"
+"PO-Revision-Date: 2003-08-01 19:02+0900\n"
+"Last-Translator: JoungKyun Kim <http://www.oops.org>\n"
+"Language-Team: OOPS Development Organization <http://devel.oops.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=EUC-KR\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: src/include/print.h:24
-msgid "         -V                     print current version"
-msgstr "         -V                     ÇöÀç ¹öÀü Ãâ·Â"
-
-#: src/include/print.h:20
-msgid "         -c config_directory    set configuration directory"
-msgstr "         -c config_directory    ¼³Á¤ ÆÄÀÏ µð·ºÅä¸® ÁöÁ¤"
-
-#: src/include/print.h:25
-msgid "         -h                     help (this) message"
-msgstr "         -h                     µµ¿ò¸»"
-
-#: src/include/print.h:23
-msgid "         -n                     don't print ansi mode"
-msgstr "         -n                     ¾È½Ã ¸ðµå Ãâ·Â ÇÏÁö ¾ÊÀ½"
-
-#: src/include/print.h:21
-msgid "         -t                     run test mode"
-msgstr "         -t                     Å×½ºÆ® ¸ðµå·Î ½ÇÇà"
-
-#: src/include/print.h:22
-msgid "         -v                     verbose mode"
-msgstr "         -v                     »ó¼¼ ¸ðµå"
-
-#: src/include/command.h:116 src/include/command.h:128
-#: src/include/command.h:138
-#, sh-format
-msgid "     ${value} => ${l_chain} can't use with ${l_table}"
-msgstr "     ${value} => ${l_chain} ´Â ${l_table} °ú °°ÀÌ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."
-
-#: src/include/command.h:95
-#, sh-format
-msgid "     ${value} => ${l_table} is unknown table"
-msgstr "     ${value} => ${l_table} Å×ÀÌºíÀº ÁöÁ¤ÇÒ ¼ö ¾ø½À´Ï´Ù."
-
-#: src/include/command.h:105
-#, sh-format
-msgid "     ${value} => CHAIN value must need"
-msgstr "     ${value} => CHAIN °ªÀº ¹Ýµå½Ã ÇÊ¿äÇÕ´Ï´Ù."
-
-#: src/include/command.h:146
-#, sh-format
-msgid "     ${value} => PROTO must be setting"
-msgstr "     ${value} => PROTO °ªÀº ¹Ýµå½Ã ÇÊ¿ä ÇÕ´Ï´Ù."
-
-#: src/include/command.h:167
-#, sh-format
-msgid "     ${value} => action MARK is needed mark value"
-msgstr "     ${value} => actoin MARK ´Â mark °ªÀÌ ¿ä±¸µË´Ï´Ù."
-
-#: src/include/command.h:158
-#, sh-format
-msgid "     ${value} => action value is used with DROP/MARK"
-msgstr "     ${value} => ACTION °ªÀº DROP/MAKR µÑÁß¿¡ ÇÏ³ª·Î ÁöÁ¤ÇØ¾ß ÇÕ´Ï´Ù."
-
-#: src/include/rule.h:422
-#, sh-format
-msgid "    ==> for ${i_ct} service"
-msgstr "    ==> ${i_ct} ¼­ºñ½º ¼³Á¤"
-
-#: src/include/rule.h:449
-#, sh-format
-msgid "    ==> for Bridge ${i_ct} service"
-msgstr "    ==> Bridge ${i_ct} ¼­ºñ½º ¼³Á¤"
-
-#: src/include/init.h:44 src/include/init.h:143
-msgid "    Accept All FORWARD Chain"
-msgstr "    ¸ðµç FORWARD »ç½½ Çã°¡"
-
-#: src/include/init.h:20 src/include/init.h:129
-msgid "    Accept All INPUT Chain"
-msgstr "    ¸ðµç INPUT »ç½½ Çã°¡"
-
-#: src/include/init.h:32 src/include/init.h:113
-msgid "    Accept All OUTPUT Chain"
-msgstr "    ¸ðµç OUTPUT »ç½½À» Çã°¡"
-
-#: src/include/init.h:77 src/include/init.h:157
-msgid "    Accept All POSTROUTING Chain"
-msgstr "    ¸ðµç POSTROUTING »ç½½ Çã°¡"
-
-#: src/include/init.h:65 src/include/init.h:99
-msgid "    Accept All PREROUTING Chain"
-msgstr "    FORWARD ±ÔÄ¢ Á¦°Å"
-
-#: src/sbin/oops-firewall:125
-msgid "    IP ADDRESS"
-msgstr "    IP ÁÖ¼Ò"
-
-#: src/include/bridge.h:46
-msgid "    If you want use this function, isntall bridge-utils package"
-msgstr "    ÀÌ ±â´ÉÀ» »ç¿ëÇÏ·Á¸é, ¸ÕÀú bridge-utils ÆÐÅ°Áö¸¦ ¼³Ä¡ ÇÏ½Ê½Ã¿À."
-
-#: src/include/modules.h:72 src/include/modules.h:76
-msgid "    Load ${1} module"
-msgstr "    ${1} ¸ðµâ µî·Ï"
-
-#: src/include/modules.h:46 src/include/modules.h:55
-#, sh-format
-msgid "    Load ${mod_name} module"
-msgstr "    ${mod_name} ¸ðµâ µî·Ï"
-
-#: src/sbin/oops-firewall:129
-msgid "    NETWORK"
-msgstr "    ³×Æ®¿öÅ©"
-
-#: src/sbin/oops-firewall:131
-msgid "    NETWORK PREPIX"
-msgstr "    ³×Æ®¿öÅ© ÇÁ¸®ÇÈ½º"
-
-#: src/include/modules.h:107
-#, sh-format
-msgid "    Remove ${_mod_name} module"
-msgstr "    ${_mod_name} ¸ðµâ Á¦°Å"
-
-#: src/include/modules.h:99
-#, sh-format
-msgid "    Remove ${i} module"
-msgstr "    ${i} ¸ðµâ Á¦°Å"
-
-#: src/include/init.h:150
-msgid "    Remove rule of FORWARD"
-msgstr "    FORWARD ±ÔÄ¢ Á¦°Å"
-
-#: src/include/init.h:38
-msgid "    Remove rule of FORWARD Chain"
-msgstr "    FORWARD »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
-
-#: src/include/init.h:136
-msgid "    Remove rule of INPUT"
-msgstr "    INPUT ±ÔÄ¢À» Á¦°Å"
-
-#: src/include/init.h:26
-msgid "    Remove rule of INPUT Chain"
-msgstr "    INPUT »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
-
-#: src/include/init.h:120
-msgid "    Remove rule of OUTPUT"
-msgstr "    OUTPUT ±ÔÄ¢À» Á¦°Å"
-
-#: src/include/init.h:50
-msgid "    Remove rule of OUTPUT Chain"
-msgstr "    OUTPUT »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
-
-#: src/include/init.h:83 src/include/init.h:164
-msgid "    Remove rule of POSTROUTING"
-msgstr "    POSTROUTING ±ÔÄ¢ Á¦°Å"
-
-#: src/include/init.h:71 src/include/init.h:106
-msgid "    Remove rule of PREROUTING"
-msgstr "    PREROUTING ±ÔÄ¢ Á¦°Å"
-
-#: src/include/init.h:14
-msgid "    Reset Chain Counter "
-msgstr "    »ç½½ Ä«¿îÅÍ ÃÊ±âÈ­"
-
-#: src/include/init.h:92
-msgid "    Reset MANGLE Tabel Counter"
-msgstr "    MANGLE Å×ÀÌºí Ä«¿îÅÍ ÃÊ±âÈ­"
-
-#: src/include/init.h:59
-msgid "    Reset NAT Tabel Counter"
-msgstr "    NAT Å×ÀÌºí Ä«¿îÅÍ ÃÊ±âÈ­"
-
-#: src/sbin/oops-firewall:127
-msgid "    SUBNET MASK"
-msgstr "    ¼­ºê³Ý ¸¶½ºÅ©"
-
-#: src/include/modules.h:31
-#, sh-format
-msgid "    Unload ${mod_name} module"
-msgstr "    ${mod_name} ¸ðµâ Á¦°Å"
-
-#: src/include/bridge.h:47
-msgid "    and, set 1 on BRIDGE_SET default.h and, configure path of"
-msgstr "    ±×¸®°í default.h ÀÇ BRIDGE_SET ÀÇ °«À» 1·Î ¼³Á¤ÇÏ½Ê½Ã¿À."
-
-#: src/include/bridge.h:48
-msgid "    c_brctl environment on command.h"
-msgstr "    ´ÙÀ½, command.h ÀÇ c_brctl º¯¼ö¿¡ brctl ÀÇ °æ·Î¸¦ ¼³Á¤ ÇÏ½Ê½Ã¿À."
-
-#: src/include/rule.h:255
-#, sh-format
-msgid "  * ${a_ment} service"
-msgstr "  * ${a_ment} ¼­ºñ½º"
-
-#: src/sbin/oops-firewall:124
-#, sh-format
-msgid "  * ${devName}${devNum} Information"
-msgstr "  * ${devName}${devNum} Á¤º¸"
-
-#: src/include/init.h:187
-msgid "  * Allow to use TCP SYNCOOKIES"
-msgstr "  * TCP SYNCOOKIES ÆÄ¶ó¹ÌÅÍ »ç¿ë"
-
-#: src/include/bridge.h:36
-#, sh-format
-msgid "  * BRIDGE Local Interface name \"$BRIDGE_LOCDEV\" is not found"
-msgstr "  * BRIDGE ·ÎÄÃ ÀÎÅÍÆäÀÌ½º \"$BRIDGE_LOCDEV\"¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù."
-
-#: src/include/bridge.h:32 src/include/bridge.h:37
-msgid "  * BRIDGE MODE go off!"
-msgstr "  * BRIDGE ¸ðµå°¡ ºñÈ°¼ºÈ­ µË´Ï´Ù!"
-
-#: src/include/bridge.h:31
-#, sh-format
-msgid "  * BRIDGE WAN Interface name \"$BRIDGE_WANDEV\" is not found"
-msgstr "  * BRIDGE WAN ÀÎÅÍÆäÀÌ½º ÀÌ¸§ \"$BRIDGE_WANDEV\" À» Ã£À» ¼ö ¾ø½À´Ï´Ù."
-
-#: src/include/bridge.h:53
-msgid "  * BRIDGE mode don't set"
-msgstr "  * BRIDGE ¸ðµå°¡ ¼ÂÆÃµÇÁö ¾Ê¾Ò½À´Ï´Ù."
-
-#: src/include/bridge.h:45
-msgid "  * BRIDGE not support on build time"
-msgstr "  * ºôµå½Ã¿¡ BRIDGE ¸¦ Áö¿øÇÏÁö ¾Êµµ·Ï ¼³Á¤ µÇ¾ú½À´Ï´Ù."
-
-#: src/include/rule.h:340
-#, sh-format
-msgid "  * Bridge ${a_ment} service"
-msgstr "  * Bridge ${a_ment} ¼­ºñ½º"
-
-#: src/sbin/oops-firewall:264
-msgid "  * Bridge Name Service Configuration"
-msgstr "  * Bridge DNS ¼­ºñ½º ¼³Á¤"
-
-#: src/include/command.h:34
-msgid "  * Brute Force Attack Filter"
-msgstr "  * Brute Force °ø°Ý ÇÊÅÍ"
-
-#: src/include/init.h:203
-#, sh-format
-msgid "  * CHK IP SPOOFING ${dev}"
-msgstr "  * ${dev} IP ½ºÇªÇÎ Ã¼Å©"
-
-#: src/include/init.h:214
-msgid "  * Deny Invalid MSG"
-msgstr "  * À¯È¿ÇÏÁö ¾ÊÀº ¸Þ¼¼Áö °ÅÀý"
-
-#: src/include/init.h:238
-msgid "  * Deny Ping at BroadCast"
-msgstr "  * BroadCast ·ÎÀÇ Ping À» °ÅºÎ"
-
-#: src/include/forward.h:27 src/include/masq.h:12
-msgid "  * Deprecated Direction Check"
-msgstr "  * ¸¸·áµÈ Áö½ÃÀÚ °Ë»ç"
-
-#: src/include/init.h:294
-msgid "  * Drop All TCP packet"
-msgstr "  * ¸ðµç TCP ÆÐÅ¶À» Drop"
-
-#: src/include/init.h:312
-msgid "  * Drop All UDP packet"
-msgstr "  * ¸ðµç UDP ÆÐÅ¶À» Drop"
-
-#: src/sbin/oops-firewall:288
-msgid "  * ICMP service Configuration"
-msgstr "  * ICMP ¼­ºñ½º ¼³Á¤"
-
-#: src/include/command.h:80
-msgid "  * LAYER7 Filter"
-msgstr "  * LAYER7 ÇÊÅÍ"
-
-#: src/include/modules.h:11
-msgid "  * Load Netfilter Module"
-msgstr "  * ³ÝÇÊÅÍ ¸ðµâ µî·Ï"
-
-#: src/include/bridge.h:123 src/include/bridge.h:127
-msgid "  * MASQ mode changed off mode!"
-msgstr "  * MASQ ¸ðµå°¡ ºñÈ°¼ºÈ­ µË´Ï´Ù!"
-
-#: src/sbin/oops-firewall:260
-msgid "  * Name Service Configuration"
-msgstr "  * DNS ¼­ºñ½º ¼³Á¤"
-
-#: src/include/modules.h:91
-msgid "  * Netfilter Module Shutdown"
-msgstr "  * ³ÝÇÊÅÍ ¸ðµâ Á¾·á"
-
-#: src/include/init.h:344
-msgid "  * Prevented internal ping and traceroute request"
-msgstr "  * ³»ºÎ·Î µé¾î¿À´Â ping °ú traceroute ¿äÃ»À» °ÅºÎ"
-
-#: src/include/init.h:276
-msgid "  * Reject All Syn Packet"
-msgstr "  * ¸ðµç Syn ÆÐÅ¶À» °ÅºÎ"
-
-#: src/include/init.h:9
+#: oops-firewall.in:172 
 msgid "  * Reset Basic Table"
 msgstr "  * ±âº» Å×ÀÌºí ÃÊ±âÈ­"
 
-#: src/include/init.h:87
-msgid "  * Reset Mangle Table"
-msgstr "  * Mangle Å×ÀÌºí ÃÊ±âÈ­"
+#: oops-firewall.in:435 
+msgid "  * MASQ STRING MATCH Not Config"
+msgstr "  * ¸Å½ºÄõ·¹ÀÌµå STRING MATCH ¼³Á¤ ¾ÈµÊ"
 
-#: src/include/init.h:54
-msgid "  * Reset NAT Table"
-msgstr "  * NAT Å×ÀÌºí ÃÊ±âÈ­"
+#: oops-firewall.h:116 
+msgid "  * Netfilter Module Shutdown"
+msgstr "  * ³ÝÇÊÅÍ ¸ðµâ Á¾·á"
 
-#: src/sbin/oops-firewall:339
-msgid "  * TOS Not Config"
-msgstr "  * TOS ¼³Á¤ÀÌ ¾ÈµÇ¾î ÀÖÀ½"
+#: oops-firewall.in:481 
+msgid "9. Allow External Service"
+msgstr "9. ¿ÜºÎ·Î ³ª°¡´Â ¼­ºñ½º Çã°¡"
 
-#: src/include/rule.h:482
-#, sh-format
-msgid "  * Tos configuration in ${i} chain"
-msgstr "  * ${i} Ã¼ÀÎ Tos ¼³Á¤"
+#: oops-firewall.in:332 
+msgid "  * Logged Spoofing check"
+msgstr "  * ½ºÇªÇÎ ½Ãµµ¸¦ ·Î±ëÇÏµµ·Ï Ã¼Å©"
 
-#: src/include/command.h:224
+#: oops-firewall.in:561 
+msgid "10. Allow Internal Service (FOR SERVER AND DAEMON)"
+msgstr "10. ³»ºÎ·Î µé¾î¿À´Â ¼­ºñ½º Çã°¡ (¼­¹ö ¶Ç´Â µ¥¸ó)"
+
+#: oops-firewall.in:187 oops-firewall.in:244 
+msgid "  Accept All OUTPUT Chain"
+msgstr "  ¸ðµç OUTPUT »ç½½À» Çã°¡"
+
+#: oops-firewall.in:920 
+msgid "* OOPS FIREWALL v.${VER} by JoungKyun Kim"
+msgstr "* OOPS FIREWALL v.${VER} by ±èÁ¤±Õ"
+
+#: oops-firewall.h:36 
 msgid "  * USER POST COMMAND (@) Not Config"
 msgstr "  * ½ÇÇà ÈÄ À¯Àú ¸í·É(@)ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾ÊÀ½"
 
-#: src/include/command.h:221
-msgid "  * USER PRE COMMAND (%) Not Config"
-msgstr "  * ½ÇÇà Àü À¯Àú ¸í·É(%) ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾ÊÀ½"
+#: oops-firewall.in:199 
+msgid "  Remove rule of OUTPUT Chain"
+msgstr "  OUTPUT »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
 
-#: src/include/command.h:227
+#: oops-firewall.in:485 oops-firewall.in:568 
+msgid "  * TCP service"
+msgstr "  * TCP ¼­ºñ½º"
+
+#: oops-firewall.in:206 
+msgid "  Reset NAT Tabel Counter"
+msgstr "  NAT Å×ÀÌºí Ä«¿îÅÍ ÃÊ±âÈ­"
+
+#: oops-firewall.in:271 
+msgid "  Remove rule of FORWARD"
+msgstr ""
+
+#: oops-firewall.in:203 
+msgid "  * Reset NAT Table"
+msgstr "  * NAT Å×ÀÌºí ÃÊ±âÈ­"
+
+#: oops-firewall.h:39 
 msgid "  * Unknown parameter"
 msgstr "  * ¾Ë¼ö ¾ø´Â ÆÄ¶ó¹ÌÅÍ"
 
-#: src/include/bridge.h:126
-msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device"
-msgstr "  * MASQ Å¬¶óÀÌ¾ðÆ® µð¹ÙÀÌ½º °ªÀÌ BRIDGE ·ÎÄÃ µð¹ÙÀÌ½º °ª°ú µ¿ÀÏ ÇÕ´Ï´Ù."
+#: oops-firewall.in:195 oops-firewall.in:266 
+msgid "  Accept All FORWARD Chain"
+msgstr "  ¸ðµç FORWARD »ç½½ Çã°¡"
 
-#: src/include/bridge.h:122
-msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device"
-msgstr "  * MASQ Å¬¶óÀÌ¾ðÆ® µð¹ÙÀÌ½ºÀÇ °ªÀÌ BRIDGE WAN µð¹ÙÀÌ½º °ª°ú µ¿ÀÏ ÇÕ´Ï´Ù."
+#: oops-firewall.in:183 
+msgid "  Remove rule of INPUT Chain"
+msgstr "  INPUT »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
 
-#: src/include/masq.h:20
-#, sh-format
-msgid " Use ${_alter} in interface.conf\\n"
-msgstr " interface.conf ÀÇ ${_alter} ¸¦ »ç¿ëÇÏ½Ê½Ã¿À.\\n"
+#: oops-firewall.in:294 
+msgid "  * Deny IP Forward"
+msgstr "  * IP Forward °ÅºÎ"
 
-#: src/include/masq.h:29 src/include/masq.h:39
-msgid " is not set"
-msgstr " ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù."
+#: oops-firewall.in:555 
+msgid "  * Name Service Config"
+msgstr "  * DNS ¼­ºñ½º ¼³Á¤"
 
-#: src/include/print.h:9
-#, sh-format
-msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
-msgstr "# OOPS Firewall - ¼³Á¤ÀÌ °£´ÜÇÑ iptables ÇÁ·ÐÆ®¿£µå v${_ver}"
+#: oops-firewall.in:416 
+msgid "  * STRING MATCH Not Config"
+msgstr "  * STRING MATCH ¼³Á¤ÀÌ ¾ÈµÇ¾î ÀÖÀ½"
 
-#: src/sbin/oops-firewall:232
-#, sh-format
-msgid "${NB}. Allow All Service"
-msgstr "${NB}. ¸ðµç ¼­ºñ½º Çã°¡"
+#: oops-firewall.h:124 
+msgid "  Remove ${i} module"
+msgstr "  ${i} ¸ðµâ Á¦°Å"
 
-#: src/sbin/oops-firewall:275
-#, sh-format
-msgid "${NB}. Allow Incoming Service Configuration"
-msgstr "${NB}. ³»ºÎ·Î µé¾î¿À´Â ¼­ºñ½º Çã°¡"
+#: oops-firewall.h:162 oops-firewall.h:165 
+msgid "  Load ${i} module"
+msgstr "  ${i} ¸ðµâ ¿Ã¸²"
 
-#: src/sbin/oops-firewall:254
-#, sh-format
-msgid "${NB}. Allow Outgoing Service Configuration"
-msgstr "${NB}. ¿ÜºÎ·Î ³ª°¡´Â ¼­ºñ½º Çã°¡"
+#: oops-firewall.in:69 
+msgid "  * Check Result"
+msgstr "  * Ã¼Å© °á°ú"
 
-#: src/sbin/oops-firewall:209
-#, sh-format
-msgid "${NB}. Basic Kernel Parameter Configuration"
-msgstr "${NB}. ±âº» Ä¿³Î ÆÄ¶ó¹ÌÅÍ ¼³Á¤"
+#: oops-firewall.init.in:138 
+msgid "[1;31m[ NAT Table ][7;0m"
+msgstr "[1;31m[ NAT Å×ÀÌºí ][7;0m"
 
-#: src/sbin/oops-firewall:51
-#, sh-format
-msgid "${NB}. Check user type"
-msgstr "${NB}. ½ÇÇà À¯Àú Ã¼Å©"
+#: oops-firewall.in:924 
+msgid "USAGE : $0 [-v]"
+msgstr "»ç¿ë¹ý : $0 [-v]"
 
-#: src/sbin/oops-firewall:350
-#, sh-format
-msgid "${NB}. Deny rule set configuration"
-msgstr "${NB}. °ÅºÎ ±ÔÄ¢ ¼³Á¤"
+#: oops-firewall.in:379 
+msgid "6. EXECUTE USER PRE COMMAND"
+msgstr "6. ½ÇÇàÀü »ç¿ëÀÚ ¸í·É"
 
-#: src/sbin/oops-firewall:221
-#, sh-format
-msgid "${NB}. Drop Invalid Package"
-msgstr "${NB}. ÀÌ»ó ÆÐÅ¶ Á¦°Å"
+#: oops-firewall.in:286 
+msgid "4. Basic Kernel Parameter Configuration"
+msgstr "4. ±âº» Ä¿³Î ÆÄ¶ó¹ÌÅÍ ¼³Á¤"
 
-#: src/sbin/oops-firewall:323
-#, sh-format
-msgid "${NB}. Execute user defined post Command"
-msgstr "${NB}. ÈÄÃ³¸® »ç¿ëÀÚ ¼³Á¤ ±ÔÄ¢ Ãß°¡"
+#: oops-firewall.in:863 
+msgid "14. TOS Configuration"
+msgstr "14. TOS ¼³Á¤"
 
-#: src/sbin/oops-firewall:243
-#, sh-format
-msgid "${NB}. Execute user defined pre command"
-msgstr "${NB}. ÀüÃ³¸® »ç¿ëÀÚ ¼³Á¤ ±ÔÄ¢ Ãß°¡"
+#: oops-firewall.in:131 
+msgid "  * ETH1 Information"
+msgstr "  * ETH1 Á¤º¸"
 
-#: src/sbin/oops-firewall:311
-#, sh-format
-msgid "${NB}. Forwarding Configuration"
-msgstr "${NB}. Æ÷¿öµù ¼³Á¤"
+#: oops-firewall.in:906 
+msgid "  * TOS Not Config"
+msgstr "  * TOS ¼³Á¤ÀÌ ¾ÈµÇ¾î ÀÖÀ½"
 
-#: src/sbin/oops-firewall:94
-#, sh-format
-msgid "${NB}. IP address Check"
-msgstr "${NB}. IP ÁÖ¼Ò Ã¼Å©"
+#: oops-firewall.in:261 
+msgid "  Remove rule of INPUT"
+msgstr "  INPUT ±ÔÄ¢À» Á¦°Å"
 
-#: src/sbin/oops-firewall:197
-#, sh-format
-msgid "${NB}. Init Bridge Mode"
-msgstr "${NB}. Bridge ¸ðµå ÃÊ±âÈ­"
+#: oops-firewall.in:57 
+msgid "# OOPS Firewall - Network Firewall Program v ${VER}"
+msgstr "# OOPS Firewall - ³×Æ®¿öÅ© ¹æÈ­º® ÇÁ·Î±×·¥ v ${VER}"
 
-#: src/sbin/oops-firewall:156
-#, sh-format
-msgid "${NB}. Interface Information"
-msgstr "${NB}. ÀÎÅÍÆäÀÌ½º Á¤º¸"
+#: oops-firewall.in:922 
+msgid "* See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
+msgstr "* http://www.oops.org/?t=lecture&sb=firewall&n=2 ¸¦ ÂüÁ¶"
 
-#: src/sbin/oops-firewall:69
-#, sh-format
-msgid "${NB}. Kernel version check"
-msgstr "${NB}. Ä¿³Î ¹öÀü °Ë»ç"
+#: oops-firewall.in:226 
+msgid "  * Reset Mangle Table"
+msgstr "  * Mangle Å×ÀÌºí ÃÊ±âÈ­"
 
-#: src/sbin/oops-firewall:299
-#, sh-format
-msgid "${NB}. Masqurade Configuration"
-msgstr "${NB}. ¸Å½ºÄõ·¹ÀÌµå ¼³Á¤"
+#: oops-firewall.in:389 
+msgid "7. Check String in Packet"
+msgstr "7. ÆÐÅ¶ÀÇ ¹®ÀÚ¿­ Ã¼Å©"
 
-#: src/sbin/oops-firewall:182
-#, sh-format
-msgid "${NB}. Reset Netfilter"
-msgstr "${NB}. ³ÝÇÊÅÍ ÃÊ±âÈ­"
+#: oops-firewall.in:126 oops-firewall.in:136 
+msgid "  NETWORK"
+msgstr "  ³×Æ®¿öÅ©"
 
-#: src/sbin/oops-firewall:334
-#, sh-format
-msgid "${NB}. TOS Configuration"
-msgstr "${NB}. TOS ¼³Á¤"
+#: oops-firewall.in:355 
+msgid "5. DROP Invalid packet"
+msgstr "5. ÀÌ»ó ÆÐÅ¶ Á¦°Å"
 
-#: src/include/masq.h:19
-#, sh-format
-msgid "${i} is Deprecated."
-msgstr "${i} Àº/´Â ¸¸·áµÇ¾ú½À´Ï´Ù."
+#: oops-firewall.in:345 
+msgid "  * Deny Ping at BroadCast"
+msgstr "  * BroadCast ·ÎÀÇ Ping À» °ÅºÎ"
 
-#: src/include/modules.h:56 src/include/modules.h:77
-msgid "Already Loading"
-msgstr "Á¸ÀçÇÔ"
+#: oops-firewall.in:191 
+msgid "  Remove rule of FORWARD Chain"
+msgstr "  FORWARD »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
 
-#: contrib/oops-firewall.init.debian:130 contrib/oops-firewall.init.redhat:120
+#: oops-firewall.h:131 
+msgid "  Remove ${1} module"
+msgstr "  ${i} ¸ðµâ Á¦°Å"
+
+#: oops-firewall.in:58 
+msgid "# by Jul 31 2003 JoungKyun Kim <http://www.oops.org>"
+msgstr "# 2003.07.31 ±èÁ¤±Õ <http://www.oops.org>"
+
+#: oops-firewall.in:686 
+msgid "11. Masqurade Configuration"
+msgstr "11. ¸Å½ºÄõ·¹ÀÌµå ¼³Á¤"
+
+#: oops-firewall.in:670 
+msgid "  * ICMP service"
+msgstr "  * ICMP ¼­ºñ½º"
+
+#: oops-firewall.in:823 
+msgid "13. Config Deny Ruleset"
+msgstr "13. °ÅºÎ ·ê¼Â ¼³Á¤"
+
+#: oops-firewall.in:222 oops-firewall.in:281 
+msgid "  Remove rule of POSTROUTING"
+msgstr "  POSTROUTING ±ÔÄ¢ Á¦°Å"
+
+#: oops-firewall.in:766 
+msgid "12. Forwarding Configuration"
+msgstr "12. Æ÷¿öµù ¼³Á¤"
+
+#: oops-firewall.h:141 
+msgid "  * Load Netfilter Module"
+msgstr "  * ³ÝÇÊÅÍ ¸ðµâ µî·Ï"
+
+#: oops-firewall.in:218 oops-firewall.in:276 
+msgid "  Accept All POSTROUTING Chain"
+msgstr "  ¸ðµç POSTROUTING »ç½½ Çã°¡"
+
+#: oops-firewall.in:122 oops-firewall.in:132 
+msgid "  IP ADDRESS"
+msgstr "  IP ÁÖ¼Ò"
+
+#: oops-firewall.in:747 
+msgid "Supported only eth0 and eth1. Shutdown firewall"
+msgstr "eth0 °ú eth1 ¸¸ Áö¿øÇÕ´Ï´Ù. ¹æÈ­º®À» Á¾·áÇÕ´Ï´Ù."
+
+#: oops-firewall.init.in:121 
 msgid "Destory Firewall Tables: "
 msgstr "OOPS Firewall Á¾·á: "
 
-#: src/sbin/oops-firewall:74
-msgid "Enable to use over kernel 2.4.0"
-msgstr "Ä¿³Î 2.4.0 ¹öÀü ºÎÅÍ »ç¿ëÀÌ °¡´ÉÇÕ´Ï´Ù."
+#: oops-firewall.in:229 
+msgid "  Reset MANGLE Tabel Counter"
+msgstr "  MANGLE Å×ÀÌºí Ä«¿îÅÍ ÃÊ±âÈ­"
 
-#: src/include/forward.h:30
-msgid "FORWARD_MASTER is Deprecated."
-msgstr "FORWARD_MASTER ´Â »ç¿ëµÇÁö ¾Ê½À´Ï´Ù."
+#: oops-firewall.in:921 
+msgid "* Copyright by GPL Since 2000-$last"
+msgstr ""
 
-#: src/include/print.h:19
-msgid "Options:"
-msgstr "¿É¼Ç:"
+#: oops-firewall.in:67 
+msgid "1. Check user type"
+msgstr "1. ½ÇÇà À¯Àú Ã¼Å©"
 
-#: contrib/oops-firewall.init.debian:53 contrib/oops-firewall.init.redhat:43
-msgid "Starting OOPS Firewall: "
-msgstr "OOPS Firewall ½ÃÀÛ: "
+#: oops-firewall.in:121 
+msgid "  * ETH0 Information"
+msgstr "  * ETH0 Á¤º¸"
 
-#: src/sbin/oops-firewall:56
+#: oops-firewall.in:913 
+msgid "16. EXECUTE USER POST COMMAND"
+msgstr "16. ½ÇÇà ÈÄ À¯Àú ¸í·É"
+
+#: oops-firewall.in:640 
+msgid "  * UDP service"
+msgstr "  * UDP ¼­ºñ½º"
+
+#: oops-firewall.in:175 
+msgid "  Reset Chain Counter "
+msgstr "  »ç½½ Ä«¿îÅÍ ÃÊ±âÈ­"
+
+#: oops-firewall.in:891 
+msgid "  = TOS CONFIG IN ${tostb} TABLE"
+msgstr "  = ${tostb} Å×ÀÌºíÀÇ TOS ¼³Á¤"
+
+#: oops-firewall.in:179 oops-firewall.in:256 
+msgid "  Accept All INPUT Chain"
+msgstr "  ¸ðµç INPUT »ç½½ Çã°¡"
+
+#: oops-firewall.in:249 
+msgid "  Remove rule of OUTPUT"
+msgstr "  OUTPUT ±ÔÄ¢À» Á¦°Å"
+
+#: oops-firewall.in:163 
+msgid "3. RESET NETWORK FOR PACKET FILTERING SERVICE"
+msgstr "3. ÆÐÅ¶ ÇÊÅÍ¸µ ¼­ºñ½º¸¦ À§ÇÑ ³×Æ®¿öÅ© ÃÊ±âÈ­"
+
+#: oops-firewall.in:109 
+msgid "2. IP address Check"
+msgstr "2. IP ÁÖ¼Ò Ã¼Å©"
+
+#: oops-firewall.init.in:144 
+msgid "[1;31m[ MANGLE Table ][7;0m"
+msgstr "[1;31m[ MANGLE Å×ÀÌºí ][7;0m"
+
+#: oops-firewall.in:550 
+msgid "  Not Existed Configuration"
+msgstr "  ¼³Á¤ÀÌ Á¸ÀçÇÏÁö ¾ÊÀ½"
+
+#: oops-firewall.h:182 oops-firewall.h:185 
+msgid "  Load ${1} module"
+msgstr "  ${1} ¸ðµâ µî·Ï"
+
+#: oops-firewall.in:72 
 msgid "U are not super user!"
 msgstr "¼öÆÛ À¯Àú ±ÇÇÑÀ¸·Î ½ÇÇàÀ» ÇØ¾ß ÇÕ´Ï´Ù."
 
-#: contrib/oops-firewall.init.debian:172 contrib/oops-firewall.init.redhat:162
-msgid "Usage: $0 {start|right-stop|stop|restart|status}"
-msgstr "»ç¿ë¹ý: $0 {start|right-stop|stop|restart|status}"
+#: oops-firewall.init.in:41 
+msgid "Starting OOPS Firewall: "
+msgstr "OOPS Firewall ½ÃÀÛ: "
 
-#: src/include/print.h:18
-msgid "Usage: oops-firewall -[option]"
-msgstr "»ç¿ë¹ý: oops-firewall -[¿É¼Ç]"
+#: oops-firewall.in:214 oops-firewall.in:239 
+msgid "  Remove rule of PREROUTING"
+msgstr "  PREROUTING ±ÔÄ¢ Á¦°Å"
 
-#: contrib/oops-firewall.init.debian:149 contrib/oops-firewall.init.redhat:139
-msgid "[ Legualar Table ]"
-msgstr "[ ±âº» Å×ÀÌºí ]"
+#: oops-firewall.in:315 
+msgid "  * CHK IP SPOOFING ${dev}"
+msgstr "  * ${dev} IP ½ºÇªÇÎ Ã¼Å©"
 
-#: contrib/oops-firewall.init.debian:165 contrib/oops-firewall.init.redhat:155
-msgid "[ MANGLE Table ]"
-msgstr "[ MANGLE Å×ÀÌºí ]"
+#: oops-firewall.in:302 
+msgid "  * Allow to use TCP SYNCOOKIES"
+msgstr "  * TCP SYNCOOKIES ÆÄ¶ó¹ÌÅÍ »ç¿ë"
 
-#: contrib/oops-firewall.init.debian:157 contrib/oops-firewall.init.redhat:147
-msgid "[ NAT Table ]"
-msgstr "[ NAT Å×ÀÌºí ]"
+#: oops-firewall.in:925 
+msgid "   -v print version"
+msgstr "    -v ¹öÀü Ãâ·Â"
+
+#: oops-firewall.init.in:132 
+msgid "[1;31m[ Legualar Table ][7;0m"
+msgstr "[1;31m[ ±âº» Å×ÀÌºí ][7;0m"
+
+#: oops-firewall.h:33 
+#, c-format 
+msgid "  * USER PRE COMMAND (%) Not Config"
+msgstr "  * ½ÇÇà Àü À¯Àú ¸í·É(%) ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾ÊÀ½"
+
+#: oops-firewall.h:166 
+msgid "Already Loading"
+msgstr "Á¸ÀçÇÔ"
+
+#: oops-firewall.init.in:150 
+msgid "Usage: $0 {start|stop|restart|status}"
+msgstr "»ç¿ë¹ý: $0 {start|stop|restart|status}"
+
+#: oops-firewall.in:324 
+msgid "  * Deny Invalid MSG"
+msgstr "  * À¯È¿ÇÏÁö ¾ÊÀº ¸Þ¼¼Áö °ÅÀý"
+
+#: oops-firewall.in:438 
+msgid "  * STRING MATCH Not Use"
+msgstr "  * STRING MATCH »ç¿ë ¾ÊÇÔ"
+
+#: oops-firewall.in:124 oops-firewall.in:134 
+msgid "  SUBNET MASK"
+msgstr "  ¼­ºê³Ý ¸¶½ºÅ©"
+
+#: oops-firewall.in:210 oops-firewall.in:234 
+msgid "  Accept All PREROUTING Chain"
+msgstr "  FORWARD ±ÔÄ¢ Á¦°Å"
+
+#: oops-firewall.in:446 
+msgid "8. Allow All Service"
+msgstr "8. ¸ðµç ¼­ºñ½º Çã°¡"
+

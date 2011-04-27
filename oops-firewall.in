@@ -1,0 +1,929 @@
+#!/bin/sh
+#
+# $Id: oops-firewall.in,v 1.3 2004-08-04 15:03:41 oops Exp $
+#
+# OOPS Firewall 네트워크 서버 방화벽 설정 4.0.1
+# 작성 : 김정균 http://www.oops.org
+# 날짜 : 2003.07.31
+# 
+# -N 새로운 체인 만들기
+# -X 비어있는 체인을 제거하기
+# -P 미리 만들어진 체인의 정책을 바꾸기
+# -L 어떤 체인의 규칙들을 나열하기
+# -F 체인으로부터 규칙들을 지우기
+# -Z 체인내의 모든 규칙들의 패킷과 바이트의 카운드를 0 으로 만들기
+# 
+# -A 체인에 새로운 규칙을 추가하기
+# -I 체인의 어떤 지점에 규칙을 삽입하기
+# -R 체인의 어떤 지점의 규칙을 교환하기
+# -D 체인의 어떤 지점의 규칙을 제거하기
+# -D 체인에서 일치하는 첫번째 규칙을 제거하기
+# 
+# -s 출처
+# -d 목적지
+# -p 프로토콜
+# -i 인터페이스 ( input, foward 에서만 )
+# -o 인터페이스 ( foward, output 에서만 )
+# -f 분절
+# -j ~로 점프
+# --syn ipchains 의 -y option
+# -m
+# --dport 목적지의 포트 정의 (범위 지정은 22:50 과 같이)
+# --sport 출추의 포트 정의
+#
+TEXTDOMAIN=oops-firewall
+TEXTDOMAINDIR=@SHAREDDIR@/locale
+
+VER="@VERSION@"
+GCOL=40
+
+# 사용 명령어
+depmod=@DEPMOD@
+lsmod=@LSMOD@
+rmmod=@RMMOD@
+insmod=@INSMOD@
+modprobe=@MODPROBE@
+sed=@SED@
+grep=@GREP@
+awk=@AWK@
+uname=@UNAME@
+
+${depmod} -a > /dev/null 2>&1
+
+. @INCLUDEDIR@/oops-firewall.h
+
+if [ "$1" = "" ]; then
+
+  clear
+  echo "############################################################################"
+  echo $"# OOPS Firewall - Network Firewall Program v ${VER}"
+  echo $"# by Jul 31 2003 JoungKyun Kim <http://www.oops.org>"
+  echo "############################################################################"
+  echo
+
+  ##############################################################################
+  # 권한 체크
+  ##############################################################################
+
+  echo
+  echo $"1. Check user type"
+  echo
+  echo -n $"  * Check Result"
+
+  if [ "$UID" != "0" ]; then
+    print_result 1 $"U are not super user!"
+    exit 1
+  else
+    print_result 0
+  fi
+
+  # 커널이 2.4.18 을 기준으로 어떻게 되는지 체크
+  # 2.4.18 부터는 mangle hooker 가 2 개에서 5개로 증가
+  KERCHK=$(${uname} -r | ${sed} -e 's/2.4.\([0-9]\{1,3\}\).*/\1/g')
+  if [ "${KERCHK}" -gt 17 ]; then
+    KERNEL_UP=1
+  fi
+
+  ##############################################################################
+  # Default 변수 설정
+  ##############################################################################
+
+  # 설정 파일의 위치 디렉토리
+  CONFS=/etc/oops-firewall
+
+  # 방화벽에 사용되는 프로그램의 경로 지정
+  IPTABLES=@IPTABLES@
+  SIFCONFIG=@IFCONFIG@
+  SROUTE=@ROUTE@
+  TMPFILE=/tmp/oops-firewall-tmp
+  UPORT=1024:65535
+
+  # NETWORK 상태
+  nN=NEW
+  nE=ESTABLISHED
+  nR=RELATED
+  nI=INVALID
+
+  # 로그 형식
+  LOGFORMAT="-m limit --limit 1/h --limit-burst 3 -j LOG"
+
+  echo
+  echo $"2. IP address Check"
+  echo
+
+  # 자신의 NETWORK 설정
+  ETH0_IPADDR=`${SIFCONFIG} eth0 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $2}' | ${sed} -e 's/.*://'`
+  ETH0_SUBNET=`${SIFCONFIG} eth0 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $4}' | ${sed} -e 's/.*://'`
+  ETH0_NET=`${SROUTE} -n | ${grep} -w U | ${grep} eth0 | ${awk} '{print $1}'`
+
+  ETH1_IPADDR=`${SIFCONFIG} eth1 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $2}' | ${sed} -e 's/.*://'`
+  ETH1_SUBNET=`${SIFCONFIG} eth1 2> /dev/null | ${grep} 'inet addr' | ${awk} '{print $4}' | ${sed} -e 's/.*://'`
+  ETH1_NET=`${SROUTE} -n | ${grep} -w U | ${grep} eth1 | ${awk} '{print $1}'`
+
+  echo $"  * ETH0 Information"
+  echo -n $"  IP ADDRESS"
+  print_result 0 "${ETH0_IPADDR}" "yellow"
+  echo -n $"  SUBNET MASK"
+  print_result 0 "${ETH0_SUBNET}" "yellow"
+  echo -n $"  NETWORK"
+  print_result 0 "${ETH0_NET}" "yellow"
+  echo
+
+  if [ ! -z "${ETH1_IPADDR}" ]; then
+    echo $"  * ETH1 Information"
+    echo -n $"  IP ADDRESS"
+    print_result 0 "${ETH1_IPADDR}" "yellow"
+    echo -n $"  SUBNET MASK"
+    print_result 0 "${ETH1_SUBNET}" "yellow"
+    echo -n $"  NETWORK"
+    print_result 0 "${ETH1_NET}" "yellow"
+    echo
+  fi
+
+  # 이더넷이 1개만 있을때 eth0 이 안잡히고 eth1 로 잡혔있는 경우 처리
+  if [ -z "${ETH0_IPADDR}" ] && [ ! -z "${ETH1_IPADDR}" ] ; then
+    ETH0_IPADDR=${ETH1_IPADDR}
+    ETH0_SUBNET=${ETH1_SUBNET}
+    ETH0_NET=${ETH1_NET}
+    # reset information of ETH1
+    ETH1_IPADDR=
+    ETH1_SUBNET=
+    ETH1_NET=
+  fi
+
+  # 설정 파일을 불러들임
+  . ${CONFS}/filter.conf
+  . ${CONFS}/masq.conf
+  . ${CONFS}/forward.conf
+  . ${CONFS}/string.conf
+  . ${CONFS}/tos.conf
+
+  ##############################################################################
+  # GLOBAL 설정
+  ##############################################################################
+
+  echo $"3. RESET NETWORK FOR PACKET FILTERING SERVICE"
+  echo
+
+  ins_mod
+  echo
+
+  CHKCHAIN=0
+
+  # 서비스를 시작하기전 초기화
+  echo $"  * Reset Basic Table"
+  ${IPTABLES} -Z
+  CHKCHAIN=$?
+  echo -n $"  Reset Chain Counter "
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -P INPUT ACCEPT
+  CHKCHAIN=$?
+  echo -n $"  Accept All INPUT Chain"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -F INPUT
+  CHKCHAIN=$?
+  echo -n $"  Remove rule of INPUT Chain"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -P OUTPUT ACCEPT
+  CHKCHAIN=$?
+  echo -n $"  Accept All OUTPUT Chain"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -F FORWARD
+  CHKCHAIN=$?
+  echo -n $"  Remove rule of FORWARD Chain"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -P FORWARD ACCEPT
+  CHKCHAIN=$?
+  echo -n $"  Accept All FORWARD Chain"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -F OUTPUT
+  CHKCHAIN=$?
+  echo -n $"  Remove rule of OUTPUT Chain"
+  print_result ${CHKCHAIN}
+
+  echo
+  echo $"  * Reset NAT Table"
+  ${IPTABLES} -t nat -Z
+  CHKCHAIN=$?
+  echo -n $"  Reset NAT Tabel Counter"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -t nat -P PREROUTING ACCEPT
+  CHKCHAIN=$?
+  echo -n $"  Accept All PREROUTING Chain"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -t nat -F PREROUTING
+  CHKCHAIN=$?
+  echo -n $"  Remove rule of PREROUTING"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+  CHKCHAIN=$?
+  echo -n $"  Accept All POSTROUTING Chain"
+  print_result ${CHKCHAIN}
+  ${IPTABLES} -t nat -F POSTROUTING
+  CHKCHAIN=$?
+  echo -n $"  Remove rule of POSTROUTING"
+  print_result ${CHKCHAIN}
+
+  echo
+  echo $"  * Reset Mangle Table"
+  ${IPTABLES} -t mangle -Z
+  CHKCHAIN=$?
+  echo -n $"  Reset MANGLE Tabel Counter"
+  print_result ${CHKCHAIN}
+
+  ${IPTABLES} -t mangle -P PREROUTING ACCEPT
+  CHKCHAIN=$?
+  echo -n $"  Accept All PREROUTING Chain"
+  print_result ${CHKCHAIN}
+
+  ${IPTABLES} -t mangle -F PREROUTING
+  CHKCHAIN=$?
+  echo -n $"  Remove rule of PREROUTING"
+  print_result ${CHKCHAIN}
+
+  ${IPTABLES} -t mangle -P OUTPUT ACCEPT
+  CHKCHAIN=$?
+  echo -n $"  Accept All OUTPUT Chain"
+  print_result ${CHKCHAIN}
+
+  ${IPTABLES} -t mangle -F OUTPUT
+  CHKCHAIN=$?
+  echo -n $"  Remove rule of OUTPUT"
+  print_result ${CHKCHAIN}
+
+  # 커널 2.4.18 이상에서 작동
+  if [ "${KERNEL_UP}" = "1" ]; then
+    ${IPTABLES} -t mangle -P INPUT ACCEPT
+    CHKCHAIN=$?
+    echo -n $"  Accept All INPUT Chain"
+    print_result ${CHKCHAIN}
+
+    ${IPTABLES} -t mangle -F INPUT
+    CHKCHAIN=$?
+    echo -n $"  Remove rule of INPUT"
+    print_result ${CHKCHAIN}
+
+    ${IPTABLES} -t mangle -P FORWARD ACCEPT
+    CHKCHAIN=$?
+    echo -n $"  Accept All FORWARD Chain"
+    print_result ${CHKCHAIN}
+
+    ${IPTABLES} -t mangle -F FORWARD
+    CHKCHAIN=$?
+    echo -n $"  Remove rule of FORWARD"
+    print_result ${CHKCHAIN}
+
+    ${IPTABLES} -t mangle -P POSTROUTING ACCEPT
+    CHKCHAIN=$?
+    echo -n $"  Accept All POSTROUTING Chain"
+    print_result ${CHKCHAIN}
+
+    ${IPTABLES} -t mangle -F POSTROUTING
+    CHKCHAIN=$?
+    echo -n $"  Remove rule of POSTROUTING"
+    print_result ${CHKCHAIN}
+  fi
+
+  echo
+  echo $"4. Basic Kernel Parameter Configuration"
+  echo
+
+  KPCHK=0
+
+  if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
+    echo 0 > /proc/sys/net/ipv4/ip_forward
+    KPCHK=$?
+    echo -n $"  * Deny IP Forward"
+    print_result ${KPCHK}
+  fi
+
+  # TCP Syncookies 를 사용할수 있게 하기 위해
+  if [ -f "/proc/sys/net/ipv4/tcp_syncookies" ]; then
+    echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+    KPCHK=$?
+    echo -n $"  * Allow to use TCP SYNCOOKIES"
+    print_result ${KPCHK}
+  fi
+
+
+  # RFC1812에 따른 IP spoof 방지를 위한 설정(커널 2.2 이상 버전)
+  # 아래에서 ip 스푸핑 해당 항목 참고
+  for pfile in /proc/sys/net/ipv4/conf/*/rp_filter
+  do
+    if [ -f "${pfile}" ]; then
+      dev=$(echo ${pfile} | ${sed} -e 's!/proc/sys/net/ipv4/conf/\([^/]\+\)/rp_filter!\1!g')
+      echo 1 > $pfile
+      KPCHK=$?
+      echo -n $"  * CHK IP SPOOFING ${dev}"
+      print_result ${KPCHK}
+    fi
+  done
+
+  # 정의되지 않은 에러 메시지를 막음
+  if [ -f "/proc/sys/net/ipv4/icmp_ignore_bogus_error_responses" ]; then
+    echo 1 > /proc/sys/net/ipv4/icmp_ignore_bogus_error_responses
+    KPCHK=$?
+    echo -n $"  * Deny Invalid MSG"
+    print_result ${KPCHK}
+  fi
+
+  # ip 주소를 스푸핑한다고 예상되는 경우 로그에 기록하기
+  if [ -f "/proc/sys/net/ipv4/conf/all/log_martians" ]; then
+    echo 1 > /proc/sys/net/ipv4/conf/all/log_martians
+    KPCHK=$?
+    echo -n $"  * Logged Spoofing check"
+    print_result ${KPCHK}
+  fi
+
+
+  # 브로드캐스트, 멀티캐스트 주소에 ICMP 메시지 보내는것 막기
+  # "smurf" 공격 방지용
+  # 아래에서 해당 조항 참고
+  # 커널 2.2 이상에 해당
+
+  if [ -f "/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts" ]; then
+    echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+    KPCHK=$?
+    echo -n $"  * Deny Ping at BroadCast"
+    print_result ${KPCHK}
+  fi
+
+
+  ##############################################################################
+  # INVALID packet 들을 모두 거절
+  ##############################################################################
+
+  echo
+  echo $"5. DROP Invalid packet"
+  echo
+  if [ "${USE_LOG}" = "1" ]; then
+    echo "  * iptables -A INPUT -m state --state ${nI} \\"
+    echo "             ${LOGFORMAT} \\"
+    echo "             --log-prefix 'ANY Packet Refuse'"
+    ${IPTABLES} -A INPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'ANY Packet Refuse'
+
+    echo "  * iptables -A OUTPUT -m state --state ${nI} \\"
+    echo "             ${LOGFORMAT} \\"
+    echo "             --log-prefix 'OUTPUT ANY Packet Refuse'"
+    ${IPTABLES} -A OUTPUT -m state --state ${nI} ${LOGFORMAT} --log-prefix 'OUTPUT ANY Packet Refuse'
+  fi
+  echo "  * iptables -A INPUT -m state --state ${nI} -j DROP"
+  ${IPTABLES} -A INPUT -m state --state ${nI} -j DROP
+
+  echo "  * iptables -A OUTPUT -m state --state ${nI} -j DROP"
+  ${IPTABLES} -A OUTPUT -m state --state ${nI} -j DROP
+
+
+  ##############################################################################
+  # 사용자 실행 ("!" 명령어 실행)
+  ##############################################################################
+  echo
+  echo $"6. EXECUTE USER PRE COMMAND"
+  echo
+  user_cmd "pre"
+
+
+  ##############################################################################
+  # 문자열 체크 거부 설정
+  ##############################################################################
+
+  echo
+  echo $"7. Check String in Packet"
+  echo
+
+  if [ "${USE_STRING_MATCH}" = "1" ]; then
+
+    # match string rule 을 사용하기 위해 먼저 ipt_string module 을 띄운다.
+    if [ "${STRING_MODULE}" != "" ] && [ -f "${STRING_MODULE}" ]; then
+      ${rmmod} $(/sbin/lsmod | ${grep} ipt_string | ${awk} '{print $1}') > /dev/null 2>&1
+      ${insmod} ${STRING_MODULE}
+    fi
+
+    # 서버로 들어오는 문자열 체크
+    if [ "${STRING_MATCH}" != "" ]; then
+      for values in ${STRING_MATCH}
+      do
+        values=$(echo ${values} | ${sed} -e 's/+/ /g')
+        echo ${values} | {
+          IFS=':' read flag port string tagport
+          [ "${tagport}" = "" ] && tagport=dport
+          echo "  * iptables -A INPUT -p tcp --tcp-flags ${flag} --${tagport} ${port} \\"
+          echo "             -m string --string \"${string}\" \\"
+          echo "             -j REJECT --reject-with tcp-reset"
+          ${IPTABLES} -A INPUT -p tcp --tcp-flags ${flag} --${tagport} ${port} -m string \
+                      --string "${string}" -j REJECT --reject-with tcp-reset
+        }
+      done
+    else
+      echo $"  * STRING MATCH Not Config"
+    fi
+
+    # MASQ 하의 클라이언트들로 오가는 패킷의 문자열 체크
+    if [ "${STRING_MASQ_MATCH}" != "" ]; then
+      for values in ${STRING_MASQ_MATCH}
+      do
+        value=$(echo ${values} | ${sed} -e 's/+/ /g')
+        echo ${value} | {
+          IFS=':' read flag port string tagport
+          [ "${tagport}" = "" ] && tagport=dport
+          echo "  * iptables -A FORWARD -p tcp --tcp-flags ${flag} --${tagport} ${port} \\"
+          echo "             -m string --string \"${string}\" \\"
+          echo "             -j REJECT --reject-with tcp-reset"
+          ${IPTABLES} -A FORWARD -p tcp --tcp-flags ${flag} --${tagport} ${port} -m string \
+                      --string "${string}" -j REJECT --reject-with tcp-reset
+        }
+      done
+    else
+      echo $"  * MASQ STRING MATCH Not Config"
+    fi
+  else
+    echo $"  * STRING MATCH Not Use"
+  fi
+
+  ##############################################################################
+  # 모든 서비스를 허가
+  ##############################################################################
+
+  echo
+  echo $"8. Allow All Service"
+  echo
+
+  echo "  * iptables -A INPUT -i lo -j ACCEPT"
+  ${IPTABLES} -A INPUT -i lo -j ACCEPT
+
+  if [ "${ALLOWSELF}" = "1" ]; then
+    echo "  * iptables -A INPUT -s ${ETH0_NET}/${ETH0_SUBNET} -j ACCEPT"
+    ${IPTABLES} -A INPUT -s ${ETH0_NET}/${ETH0_SUBNET} -j ACCEPT
+    if [ "${ETH1_NET}" != "" ]; then
+      echo "  * iptables -A INPUT -s ${ETH1_NET}/${ETH1_SUBNET} -j ACCEPT"
+      ${IPTABLES} -A INPUT -s ${ETH1_NET}/${ETH1_SUBNET} -j ACCEPT
+    fi
+  else
+    echo "  * iptables -A INPUT -s ${ETH0_IPADDR} -j ACCEPT"
+    ${IPTABLES} -A INPUT -s ${ETH0_IPADDR} -j ACCEPT
+    if [ "${ETH1_IPADDR}" != "" ]; then
+      echo "  * iptables -A INPUT -s ${ETH1_IPADDR} -j ACCEPT"
+      ${IPTABLES} -A INPUT -s ${ETH1_IPADDR} -j ACCEPT
+    fi
+  fi
+
+  if [ "${ALLOWALL}" != "" ] ; then
+    for values in ${ALLOWALL}
+    do
+      echo "  * iptables -A INPUT -s ${values} -j ACCEPT"
+      ${IPTABLES} -A INPUT -s ${values} -j ACCEPT
+    done
+  fi
+
+  ##############################################################################
+  # 외부 서비스를 이용하기 위한 설정
+  ##############################################################################
+
+  echo
+  echo $"9. Allow External Service"
+  echo
+
+  # TCP 정책
+  echo $"  * TCP service"
+  if [ "${OUT_TCP_ALLOWPORT}" != "" ]; then
+    for values in ${OUT_TCP_ALLOWPORT}
+    do  
+      echo ${values} | {
+        IFS=':' read oport tconnect
+
+        startport=
+        endport=
+        ftp_chk=
+
+        portrange=$(echo ${oport} | ${grep} "-")
+
+        if [ -n "${portrange}" ] ; then
+          portrange=$(echo "${oport}" | ${sed} -e 's/-/ /g')
+          oport=$(echo "${oport}" | ${sed} -e 's/-/:/g')
+
+          startport=$(echo ${portrange} | ${awk} '{print $1'})
+          endport=$(echo ${portrange} | ${awk} '{print $2'})
+
+          if [ ${startport} -lt 21 ] && [ ${endport} -gt 21 ]; then
+            ftp_chk=1
+          fi
+        else
+          [ "${values}" = "21" ] && ftp_chk=1
+        fi
+
+        [ "${tconnect}" = "" ] && tconnect=${nE}
+
+        # ftp service 를 위한 20 번 포트 개방
+        if [ "${ftp_chk}" = "1" ]; then
+          echo "  iptables -A INPUT -p tcp --sport 20 -m state --state ${nE},${nR} -j ACCEPT"
+          ${IPTABLES} -A INPUT -p tcp --sport 20 -m state --state ${nE},${nR} -j ACCEPT
+          echo "  iptables -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} \\"
+          echo "           -m state --state ${nE} -j ACCEPT"
+          ${IPTABLES} -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE} -j ACCEPT
+        fi
+
+        echo "  iptables -A INPUT -p tcp --sport ${oport} -m state --state ${tconnect} -j ACCEPT"
+        ${IPTABLES} -A INPUT -p tcp --sport ${oport} -m state --state ${tconnect} -j ACCEPT
+      }
+    done
+  fi
+
+  # 사용 변수 초기화
+  ftp_chk=
+  chk_data_port=
+
+  # UDP 정책
+  echo
+  echo "  * UDP service"
+  if [ "${OUT_UDP_ALLOWPORT}" != "" ]; then
+    for values in ${OUT_UDP_ALLOWPORT}
+    do  
+      echo ${values} | {
+        IFS=':' read oport tconnect
+        [ "${tconnect}" = "" ] && tconnect=${nE}
+
+        oport=$(echo "${oport}" | ${sed} -e 's/-/:/g')
+
+        echo "  iptables -A INPUT -p udp --sport ${oport} -j ACCEPT"
+        ${IPTABLES} -A INPUT -p udp --sport ${oport} -j ACCEPT
+      }
+    done
+  else
+    echo $"  Not Existed Configuration"
+  fi
+
+  # name service 를 위한 설정
+  echo
+  echo $"  * Name Service Config"
+  echo "  iptables -A INPUT -p udp --sport 53 -j ACCEPT"
+  ${IPTABLES} -A INPUT -p udp --sport 53 -j ACCEPT
+
+
+  echo
+  echo $"10. Allow Internal Service (FOR SERVER AND DAEMON)"
+
+  ##############################################################################
+  # TCP 설정
+  ##############################################################################
+
+  echo 
+  echo $"  * TCP service"
+
+  # 모든 곳으로의 포트를 open
+  if [ "${TCP_ALLOWPORT}" != "" ]; then
+    for values in ${TCP_ALLOWPORT}
+    do
+      startport=
+      endport=
+      ftp_chk=
+
+      # 범위 지시자가 들어올 경우 체크
+      portrange=$(echo "${values}" | ${grep} "-")
+
+      if [ -n "${portrange}" ] ; then
+        portrange=$(echo "${values}" | ${sed} -e 's/-/ /g')
+        values=$(echo "${values}" | ${sed} -e 's/-/:/g')
+
+        startport=$(echo ${portrange} | ${awk} '{print $1'})
+        endport=$(echo ${portrange} | ${awk} '{print $2'})
+
+        if [ ${startport} -lt 21 ] && [ ${endport} -gt 21 ]; then
+          ftp_chk=1
+          chk_data_port=1
+        fi
+      else
+        [ "${values}" = "20" ] && chk_data_port=1
+        [ "${values}" = "21" ] && ftp_chk=1
+      fi
+
+      # ftp service 를 위한 20 번 포트 개방
+      if [ "${ftp_chk}" = "1" ]; then
+        if [ "${chk_data_port}" != "1" ]; then
+          echo "  iptables -A INPUT -p tcp --dport 20 -m state --state ${nE} -j ACCEPT"
+          ${IPTABLES} -A INPUT -p tcp --dport 20 -m state --state ${nE} -j ACCEPT
+        fi
+        echo "  iptables -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} \\"
+        echo "           -m state --state ${nE},${nR} -j ACCEPT"
+        ${IPTABLES} -A INPUT -p tcp --sport ${UPORT} --dport ${UPORT} -m state --state ${nE},${nR} -j ACCEPT
+      fi
+
+      echo "  iptables -A INPUT -p tcp --dport ${values} -m state --state NEW,ESTABLISHED -j ACCEPT"
+      ${IPTABLES} -A INPUT -p tcp --dport ${values} -m state --state NEW,ESTABLISHED  -j ACCEPT
+    done
+  fi
+
+  # 사용 변수 초기화
+  startport=
+  endport=
+  ftp_chk=
+  chk_data_port=
+
+  # 특정 호스트로의 포트를 open
+  if [ "${TCP_HOSTPERPORT}" != "" ]; then
+    for values in ${TCP_HOSTPERPORT}
+    do
+      echo ${values} | {
+        IFS=':' read hosts ports
+
+        ports=$(echo "${ports}" | ${sed} -e 's/-/:/g')
+
+        echo "  iptables -A INPUT -s ${hosts} -p tcp --dport ${ports} \\"
+        echo "           -m state --state NEW,ESTABLISHED -j ACCEPT"
+        ${IPTABLES} -A INPUT -s ${hosts} -p tcp --dport ${ports} -m state --state NEW,ESTABLISHED -j ACCEPT
+      }
+    done
+  fi
+
+  ##############################################################################
+  # UDP 설정
+  ##############################################################################
+
+  echo 
+  echo $"  * UDP service"
+  # 모든 곳으로의 포트를 open
+  if [ "${UDP_ALLOWPORT}" != "" ]; then
+    for values in ${UDP_ALLOWPORT}
+    do
+      values=$(echo ${values} | ${sed} -e 's/-/:/g')
+      echo "  iptables -A INPUT -p udp --dport ${values} -j ACCEPT"
+      ${IPTABLES} -A INPUT -p udp --dport ${values} -j ACCEPT
+    done
+  fi  
+  
+  # 특정 호스트로의 포트를 open
+
+  if [ "${UDP_HOSTPERPORT}" != "" ]; then
+    for values in ${UDP_HOSTPERPORT}
+    do
+      echo ${values} | {
+        IFS=':' read hosts ports
+        ports=$(echo "${ports}" | ${sed} -e 's/-/:/g')
+        echo "  iptables -A INPUT -s ${hosts} -p udp --dport ${ports} -j ACCEPT"
+        ${IPTABLES} -A INPUT -s ${hosts} -p udp --dport ${ports} -j ACCEPT
+      }
+    done
+  fi
+
+  ##############################################################################
+  # ICMP 설정
+  ##############################################################################
+
+  echo 
+  echo $"  * ICMP service"
+  # 특정 호스트에 ping 을 열어줄때
+  if [ "${ICMP_HOSTPERPING}" != "" ]; then
+    for values in ${ICMP_HOSTPERPING}
+    do
+      echo "  iptables -A INPUT -s ${values} -p icmp --icmp-type echo-request -j ACCEPT"
+      ${IPTABLES} -A INPUT -s ${values} -p icmp --icmp-type echo-request -j ACCEPT
+    done
+  fi
+
+
+  ##############################################################################
+  # Masqurade Rule
+  ##############################################################################
+
+  echo
+  echo $"11. Masqurade Configuration"
+  echo
+
+  # MSSQ 시나 접속 지연 현상을 향상 시키기 위한 옵션
+  echo "  * ${IPTABLES} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu"
+  ${IPTABLES} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+
+  # 주의사항
+  # masq client 에서 외부의 dns 를 설정하기 위해서는 위의 TCP_ALLPROT 와
+  # UDT_ALLPORT 에 53번을 지정해 줘야 함
+
+  if [ "${MASQ_USED}" = "yes" ]; then
+    echo
+    ins_mod ip_nat_ftp
+    echo
+
+    if [ "${MASQ_DEVICE}" = "eth0" ] || [ "${MASQ_DEVICE}" = "eth1" ]; then
+      if [ "${MASQ_DEVICE}" = "eth0" ]; then
+        MASQ_IPADDR="${ETH0_IPADDR}"
+        PRIV_DEVICE="eth1"
+        PRIV_IPADDR="${ETH1_IPADDR}"
+      elif [ "${MASQ_DEVICE}" = "eth1" ]; then
+        MASQ_IPADDR="${ETH1_IPADDR}"
+        PRIV_DEVICE="eth0"
+        PRIV_IPADDR="${ETH0_IPADDR}"
+      fi
+      # packet forwarding 을 가능하게 함
+      if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
+        echo 1 > /proc/sys/net/ipv4/ip_forward
+      fi
+
+      # 외부로 나가는 출발점을 지정하도록 함. 값은 적용사설ip:출발지주소 의 형태를
+      # 취하며 적용사설ip의 값이 0 일경우에는 everywhere 로 적용함.
+      if [ -n "${MASQ_MATCH_START}" ]; then
+        for values in ${MASQ_MATCH_START}
+        do
+          echo ${values} | {
+            IFS=':' read pc output
+            if [ "${pc}" = "0" ]; then
+              MASQ_WHOLE_ADJ=1
+              echo "  * iptables -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${output}"
+              ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${output}
+            else
+              echo "  * iptables -t nat -A POSTROUTING -s ${pc} -o ${MASQ_DEVICE} -j SNAT --to ${output}"
+              ${IPTABLES} -t nat -A POSTROUTING -s ${pc} -o ${MASQ_DEVICE} -j SNAT --to ${output}
+            fi
+          }
+        done
+      fi
+
+      # 출발지 주소 지정에서 사설 IP가 everywhere 이 적용 안될 경우 everywhere 을
+      # masq device 로 지정
+      if [ "${MASQ_WHOLE_ADJ}" != "1" ]; then
+        echo "  * iptables -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}"
+        ${IPTABLES} -t nat -A POSTROUTING -o ${MASQ_DEVICE} -j SNAT --to ${MASQ_IPADDR}
+      fi
+
+      # Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정
+      echo "  * iptables -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}"
+      ${IPTABLES} -t nat -A POSTROUTING -o ${PRIV_DEVICE} -j SNAT --to ${PRIV_IPADDR}
+    else
+      echo $"Supported only eth0 and eth1. Shutdown firewall"
+      ${IPTABLES} -Z
+      ${IPTABLES} -P INPUT ACCEPT
+      ${IPTABLES} -F INPUT
+      ${IPTABLES} -t nat -P POSTROUTING ACCEPT
+      ${IPTABLES} -t nat -F POSTROUTING
+      if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
+        echo 0 > /proc/sys/net/ipv4/ip_forward
+      fi
+      exit 1
+    fi
+  fi
+
+
+  ##############################################################################
+  # Forwarding Rule
+  ##############################################################################
+
+  echo
+  echo $"12. Forwarding Configuration"
+  echo
+
+  if [ ! -z "${TCP_FORWARD_TO}" ] || [ ! -z "${UDP_FORWARD_TO}" ] || [ ! -z "${ALL_FORWARD_TO}" ]; then
+    FORWARD_USED=yes
+  fi
+
+  # masq device 가 존재할 경우 즉 ethernet device 가 여러개일 경우
+  # masq device 로 지정된 device 의 주소를 외부로 나갈 주소로 지정
+  #
+  if [ "${MASQ_USED}" = "no" ] || [ "${MASQ_DEVICE}" = "" ]; then
+    INCOM_ADDR=${ETH0_IPADDR}
+  else
+    INCOM_ADDR=${MASQ_IPADDR}
+  fi
+
+  if [ "${TCP_FORWARD_TO}" != "" ]; then
+    for values in ${TCP_FORWARD_TO}
+    do
+      echo ${values} | {
+        IFS=':' read lports raddr rports
+        echo "  * iptables -t nat -A PREROUTING -p tcp -d ${INCOM_ADDR} \\"
+        echo "                   --dport ${lports} -j DNAT --to ${raddr}:${rports}"
+        ${IPTABLES} -t nat -A PREROUTING -p tcp -d ${INCOM_ADDR} --dport ${lports} -j DNAT --to ${raddr}:${rports}
+      }
+    done
+  fi
+
+  if [ "${UDP_FORWARD_TO}" != "" ]; then
+    for values in ${UDP_FORWARD_TO}
+    do
+      echo ${values} | {
+        IFS=':' read lports raddr rports
+        echo "  * iptables -t nat -A PREROUTING -p udp -d ${INCOM_ADDR} \\"
+        echo "                   --dport ${lports} -j DNAT --to ${raddr}:${rports}"
+        ${IPTABLES} -t nat -A PREROUTING -p udp -d ${INCOM_ADDR} --dport ${lports} -j DNAT --to ${raddr}:${rports}
+      }
+    done
+  fi
+
+  # 메인 IP가 아닐경우 모든 query 를 원하는 target 으로 포워딩
+  if [ "${ALL_FORWARD_TO}" != "" ] && [ "${ALL_FORWARD_TO}" != "${INCOM_ADDR}" ];then
+    for values in ${ALL_FORWARD_TO}
+    do
+      echo ${values} | {
+        IFS=':' read dest target
+        echo "  * iptables -t nat -A PREROUTING -d ${dest}  -j DNAT --to ${target}"
+        ${IPTABLES} -t nat -A PREROUTING -d ${dest} -j DNAT --to ${target}
+      }
+    done
+  fi
+
+  ##############################################################################
+  # DENY 정책
+  ##############################################################################
+
+  echo
+  echo $"13. Config Deny Ruleset"
+  echo
+
+  # 모든 서비스를 거부
+  echo "  * Reject All Syn Packet"
+  if [ "${USE_LOG}" = "1" ]; then
+    echo "  iptables -A INPUT -p tcp --syn ${LOGFORMAT} --log-prefix 'SYN Refuse'"
+    ${IPTABLES} -A INPUT -p tcp --syn ${LOGFORMAT} --log-prefix 'SYN Refuse'
+  fi
+  echo "  iptables -A INPUT -p tcp --syn -j REJECT"
+  ${IPTABLES} -A INPUT -p tcp --syn -j REJECT
+
+  echo "  * Drop All TCP packet"
+  if [ "${USE_LOG}" = "1" ]; then
+    echo "  iptables -A INPUT -p tcp --dport 1:65535 ${LOGFORMAT} --log-prefix 'TCP Refuse'"
+    ${IPTABLES} -A INPUT -p tcp --dport 1:65535 ${LOGFORMAT} --log-prefix 'TCP Refuse'
+  fi
+  echo "  iptables -A INPUT -p tcp --dport 1:65535 -j DROP"
+  ${IPTABLES} -A INPUT -p tcp --dport 1:65535 -j DROP
+
+  echo "  * Drop All UDP packet"
+  if [ "${USE_LOG}" = "1" ]; then
+    echo "  iptables -A INPUT -p udp --dport 1:65535 ${LOGFORMAT} --log-prefix 'UDP Refuse'"
+    ${IPTABLES} -A INPUT -p udp --dport 1:65535 ${LOGFORMAT} --log-prefix 'UDP Refuse'
+  fi
+  echo "  iptables -A INPUT -p udp --dport 1:65535 -j DROP"
+  ${IPTABLES} -A INPUT -p udp --dport 1:65535 -j DROP
+
+  echo "  * Prevented internal ping request"
+  # PING 을 막음
+  if [ "${USE_LOG}" = "1" ]; then
+    echo "  iptables -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING Refuse'"
+    ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request ${LOGFORMAT} --log-prefix 'PING Refuse'
+  fi
+  echo "  iptables -A INPUT -p icmp --icmp-type echo-request -j REJECT"
+  ${IPTABLES} -A INPUT -p icmp --icmp-type echo-request -j REJECT
+
+  # TOS 설정
+  #
+  echo
+  echo $"14. TOS Configuration"
+
+  if [ ! -z "${USE_TOS}" ]; then
+    # TOS 를 설정할 테이블을 정의
+    if [ "${KERNEL_UP}" = "1" ]; then
+      TOS_TABLE="INPUT OUTPUT"
+    else
+      TOS_TABLE="OUTPUT"
+    fi
+
+    if [ "${MASQ_USED}" = "yes" ] && [ "${KERNEL_UP}" = "1" ]; then
+      TOS_TABLE="${TOS_TABLE} POSTROUTING"
+    fi
+
+    if [ "${FORWARD_USED}" = "yes" ];then
+      TOS_TABLE="${TOS_TABLE} PREROUTING"
+    fi
+
+    if [ "${FORWARD_USED}" = "yes" ] || [ "${FORWARD_USED}" = "yes" ]; then
+      if [ "${KERNEL_UP}" = "1" ]; then
+        TOS_TABLE="${TOS_TABLE} FORWARD"
+      fi
+    fi
+
+    # TOS 설정
+    for tostb in ${TOS_TABLE}
+    do
+      echo
+      echo $"  = TOS CONFIG IN ${tostb} TABLE"
+      for values in ${USE_TOS}
+      do
+        echo ${values} | {
+          IFS=':' read port tosv
+          [ "${tport}" = "" ] && tport=dport
+          echo "  * iptables -t mangle -A ${tostb} -p tcp --dport ${port} -j TOS --set-tos ${tosv}"
+          ${IPTABLES} -t mangle -A ${tostb} -p tcp --dport ${port} -j TOS --set-tos ${tosv}
+          echo "  * iptables -t mangle -A ${tostb} -p tcp --sport ${port} -j TOS --set-tos ${tosv}"
+          ${IPTABLES} -t mangle -A ${tostb} -p tcp --sport ${port} -j TOS --set-tos ${tosv}
+        }
+      done
+    done
+  else
+    echo
+    echo $"  * TOS Not Config"
+  fi
+
+  ##############################################################################
+  # 사용자 실행 ("!" 명령어 실행)
+  ##############################################################################
+  echo
+  echo $"16. EXECUTE USER POST COMMAND"
+  echo
+  user_cmd "post"
+  echo
+
+elif [ "$1" = "-v" ];then
+  last=$(date +%Y)
+  echo $"* OOPS FIREWALL v.${VER} by JoungKyun Kim"
+  echo $"* Copyright by GPL Since 2000-$last"
+  echo $"* See Also http://www.oops.org/?t=lecture&sb=firewall&n=2"
+else
+  echo $"USAGE : $0 [-v]"
+  echo $"   -v print version"
+fi
+exit 0
