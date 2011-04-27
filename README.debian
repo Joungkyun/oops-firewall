@@ -1,5 +1,3 @@
-$Id: README.debian,v 1.17 2011-01-14 04:54:35 oops Exp $
-
 This file for making debian package with oops-firewall.
 
 If you debian user, and want make oops-firewall debina package,
@@ -7,14 +5,11 @@ follows:
 
 1. untar oops-firewall tar ball.
 
-   shell> tar xvfpj oops-firewall-6.2.7.tar.bz2
+   tar xvfpj oops-firewall-6.1.1.tar.bz2
 
-2. execute debbuild-sh script
+2. run dh_make set
 
-   shell> cd oops-firewall-6.2.7
-   shell> ./debbuild-sh or bash debbuild-sh
+   cd oops-firewall-6.1.1
+   debian/rule binary
 
-   If case /bin/sh is soft link that redirect /bin/dash, you must use
-   bash instead of sh or dash.
-
-3. create oops-firewall_6.2.7-1_all.deb file parrent directory in current directory
+3. create oops-firewall_6.1.1-1.deb file parrent directory in current directory

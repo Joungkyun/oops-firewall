@@ -1,43 +1,43 @@
 # Masq rule function
 #
-# $Id: masq.h,v 1.7 2008-01-09 17:53:55 oops Exp $
+# $Id: masq.h,v 1.2 2006-12-29 05:45:17 oops Exp $
 #
 
 add_masq_init() {
 	[ "${MASQ_USED}" = "0" ] && return 1
 
+	o_echo
 	ins_mod ip_nat_ftp
 	o_echo
 
-	o_echo $"  * Deprecated Direction Check"
+	o_echo $"    Deprecated Direction Check"
 	for i in MASQ_DEVICE MASQ_CLIENT_DEVICE
 	do
 		eval "masq_chk_direction=\$${i}"
 		[ "${i}" = "MASQ_DEVICE" ] && _alter="MASQUERADE_WAN" || _alter="MASQUERADE_LOC"
 		if [ -n "${masq_chk_direction}" ]; then
-			o_echo -n "    ==> "
+			o_echo -n "    * "
 			print_color $"${i} is Deprecated." red
-			o_echo -ne $" Use ${_alter} in interface.conf\n"
-			return 1
+			o_echo -ne " Use ${_alter} in interface.conf\n"
 		fi
 	done
 	o_echo
 
 	if [ -z "${MASQUERADE_WAN}" ]; then
-		o_echo -n "  * "
-		print_color "MASQUERADE_WAN"
-		o_echo $" is not set"
-		return 1
+		WordToUpper ${MASQ_DEVICE} MASQ_DEVICE_UPPER
+		eval "MASQ_IPADDR=\"\$${MASQ_DEVICE_UPPER}_IPADDR\""
+		export MASQUERADE_WAN=${MASQ_DEVICE}
 	else
 		WordToUpper ${MASQUERADE_WAN} MASQ_DEVICE_UPPER
 		eval "MASQ_IPADDR=\"\$${MASQ_DEVICE_UPPER}_IPADDR\""
 	fi
   
 	if [ -z "${MASQUERADE_LOC}" ]; then
-		o_echo -n "  * "
-		print_color "MASQUERADE_LOC"
-		o_echo $" is not set"
-		return 1
+		if [ -z "${MASQ_CLIENT_DEVICE}" ]; then
+			export MASQUERADE_LOC=eth1
+		else
+			export MASQUERADE_LOC=${MASQ_CLIENT_DEVICE}
+		fi
 	fi
   
 	# enabled packet forwarding
@@ -96,26 +96,6 @@ add_masq_rule() {
 		o_echo "             -j SNAT --to ${MASQ_IPADDR}"
 		[ "${_testmode}" = 0 ] && \
 			${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -j SNAT --to ${MASQ_IPADDR}
-
-		# Bridge 사용시에는 Forwarding table 에서 MASQ 처리가 되도록 룰을 적용
-		if [ "${BRIDGE_USED}" -ne 0 ]; then
-			WordToUpper "${MASQUERADE_LOC}" MASQ_TMP_DEV
-			eval "MASQ_INTERNAL=\${${MASQ_TMP_DEV}_NET}/\${${MASQ_TMP_DEV}_PREFIX}"
-
-			o_echo "  * MASQ configration on Bridge Service"
-
-			o_echo "    iptables -A FORWARD -s ${MASQ_INTERNAL} -p tcp --dport 1:65535 \\"
-			o_echo "                        -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT"
-			[ "${_testmode}" = 0 ] && \
-			${c_iptables} -A FORWARD -s ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
-									-m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-
-			o_echo "    iptables -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \\"
-			o_echo "                        -m state --state ESTABLISHED,RELATED -j ACCEPT"
-			[ "${_testmode}" = 0 ] && \
-				${c_iptables} -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
-										-m state --state ESTABLISHED,RELATED -j ACCEPT
-		fi
 	fi
 
 	# Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정
