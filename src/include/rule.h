@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.19 2009-07-06 16:35:30 oops Exp $
+# $Id: rule.h,v 1.4 2007-01-09 12:40:24 oops Exp $
 #
 
 add_named_port() {
@@ -11,11 +11,11 @@ add_named_port() {
 		[ ${_testmode} -eq 0 ] && \
 			${c_iptables} -A INPUT   -p udp --sport 53 -j ACCEPT
 	else
-		o_echo "    iptables -A FORWARD -s ${BRG0_NETPX} -p udp --dport 53 -j ACCEPT"
-		o_echo "    iptables -A FORWARD -d ${BRG0_NETPX} -p udp --sport 53 -j ACCEPT"
+		o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -p udp --dport 53 -j ACCEPT"
+		o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -p udp --sport 53 -j ACCEPT"
 		[ ${_testmode} -eq 0 ] && {
-			${c_iptables} -A FORWARD -s ${BRG0_NETPX} -p udp --dport 53 -j ACCEPT
-			${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p udp --sport 53 -j ACCEPT
+			${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -p udp --dport 53 -j ACCEPT
+			${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -p udp --sport 53 -j ACCEPT
 		}
 	fi
 }
@@ -73,8 +73,8 @@ add_ftp_rule() {
 		if [ "${f_table}" = "FORWARD" ]; then
 			f_pname1="--dport"
 			f_pname2="--sport"
-			f_tr1=" -s ${BRG0_NETPX}"
-			f_tr2=" -d ${BRG0_NETPX}"
+			f_tr1=" -o ${BRIDGE_NAME}"
+			f_tr2=" -i ${BRIDGE_NAME}"
 		fi
 
 		# open tcp port 20 for ftp active mode
@@ -137,14 +137,9 @@ add_all_rule() {
 			eval ${var_NT}
 
 			if [ -n "${varNT}" -a -n "${varSN}" ]; then
-				for intf in INPUT OUTPUT
-				do
-					[ "${intf}" = "INPUT" ] && pintf="INPUT " || pintf="OUTPUT"
-					[ "${intf}" = "INPUT" ] && redir="-s" || redir="-d"
-					o_echo "  * iptables -A ${pintf} ${redir} ${varNT}/${varSN} -j ACCEPT"
-					[ "${_testmode}" = 0 ] && \
-						${c_iptables} -A ${intf} ${redir} ${varNT}/${varSN} -j ACCEPT
-				done
+				o_echo "  * iptables -A INPUT  -s ${varNT}/${varSN} -j ACCEPT"
+				[ "${_testmode}" = 0 ] && \
+					${c_iptables} -A INPUT -s ${varNT}/${varSN} -j ACCEPT
 			fi
 		else
 			# 자신의 IP 만 열기
@@ -152,63 +147,30 @@ add_all_rule() {
 			eval ${var_IP}
 
 			if [ -n "${varIP}" ]; then
-				for intf in INPUT OUTPUT
-				do
-					[ "${intf}" = "INPUT" ] && pintf="INPUT " || pintf="OUTPUT"
-					[ "${intf}" = "INPUT" ] && redir="-s" || redir="-d"
-					o_echo "  * iptables -A ${pintf} ${redir} ${varIP} -j ACCEPT"
-					[ "${_testmode}" = 0 ] && \
-						${c_iptables} -A ${intf} ${redir} ${varIP} -j ACCEPT
-				done
+				o_echo "  * iptables -A INPUT  -s ${varIP} -j ACCEPT"
+				[ "${_testmode}" = 0 ] && \
+					${c_iptables} -A INPUT -s ${varIP} -j ACCEPT
 			fi
 		fi
 	done
 
 	if [ "${ALLOWALL}" != "" ] ; then
-		for _values in ${ALLOWALL}
+		for values in ${ALLOWALL}
 		do
-			iprange_set ${_values} values
-			iprange_check ${values}
-			rangechk=$?
-
-			for intf in INPUT OUTPUT
-			do
-				[ "${intf}" = "INPUT" ] && pintf="INPUT " || pintf="OUTPUT"
-				if [ ${rangechk} -eq 1 ]; then
-					r_mode="-p all -m iprange"
-					[ "${intf}" = "INPUT" ] && redir="${r_mode} --src-range" || redir="${r_mode} --dst-range"
-				else
-					[ "${intf}" = "INPUT" ] && redir="-s" || redir="-d"
-				fi
-				o_echo "  * iptables -A ${pintf} ${redir} ${values} -j ACCEPT"
-				[ "${_testmode}" = 0 ] && \
-					${c_iptables} -A ${intf} ${redir} ${values} -j ACCEPT
-			done
+			o_echo "  * iptables -A INPUT  -s ${values} -j ACCEPT"
+			[ "${_testmode}" = 0 ] && \
+				${c_iptables} -A INPUT -s ${values} -j ACCEPT
 		done
 	fi
 
 	if [ ${BRIDGE_USED} -eq 1 -a -n "${BR_ALLOWALL}" ]; then
-		for _values in ${BR_ALLOWALL}
+		for values in ${BR_ALLOWALL}
 		do
-			iprange_set ${_values} values
-			iprange_check ${values}
-			rangechk=$?
-
-			if [ ${rangechk} -eq 1 ]; then
-				r_mode="-p all -m iprange "
-				o_echo "  * iptables -A FORWARD -d ${BRG0_NETPX} ${r_mode} --src-range ${values} -j ACCEPT"
-				o_echo "  * iptables -A FORWARD -s ${BRG0_NETPX} ${r_mode} --dst-range ${values} -j ACCEPT"
-				if [ "${_testmode}" = 0 ]; then
-					${c_iptables} -A FORWARD -d ${BRG0_NETPX} ${r_mode} --src-range ${values} -j ACCEPT
-					${c_iptables} -A FORWARD -s ${BRG0_NETPX} ${r_mode} --dst-range ${values} -j ACCEPT
-				fi
-			else
-				o_echo "  * iptables -A FORWARD -d ${BRG0_NETPX} -s ${values} -j ACCEPT"
-				o_echo "  * iptables -A FORWARD -s ${BRG0_NETPX} -d ${values} -j ACCEPT"
-				if [ "${_testmode}" = 0 ]; then
-					${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${values} -j ACCEPT
-					${c_iptables} -A FORWARD -s ${BRG0_NETPX} -d ${values} -j ACCEPT
-				fi
+			o_echo "  * iptables -A FORWARD -i ${BRIDGE_NAME} -s ${values} -j ACCEPT"
+			o_echo "  * iptables -A FORWARD -o ${BRIDGE_NAME} -d ${values} -j ACCEPT"
+			if [ "${_testmode}" = 0 ]; then
+				${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -s ${values} -j ACCEPT
+				${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -d ${values} -j ACCEPT
 			fi
 		done
 	fi
@@ -267,9 +229,8 @@ add_port_rule() {
 
 			echo ${v} | {
 				if [ ${a_host} -eq 1 ]; then
-					IFS=':' read _hosts oport
-					iprange_set ${_hosts} c_hosts
-					hosts=" -s ${c_hosts}"
+					IFS=':' read hosts oport
+					hosts=" -s ${hosts}"
 				else
 					IFS=':' read oport tconnect
 				fi
@@ -280,25 +241,13 @@ add_port_rule() {
 
 					t_connect="-m state --state ${tconnect}"
 					add_ftp_rule ${oport} ${a_type} "${hosts}"
-				else
-					t_connect=""
 				fi
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
-				if [ ${a_host} -eq 1 ]; then
-					iprange_check ${c_hosts}
-					rangechk=$?
-
-					if [ ${rangechk} -eq 1 ]; then
-						[ "${a_pname}" = "--dport" ] && h_target="--src-range" || h_target="--dst-target"
-						o_echo "    iptables -A ${ap_table} -p ${a_proto} -m iprange ${h_target} ${c_hosts} ${a_pname} ${oport} ${t_connect} -j ACCEPT"
-						[ ${_testmode} -eq 0 ] && \
-							${c_iptables} -A ${a_table} -p ${a_proto} -m iprange ${h_target} ${c_hosts} ${a_pname} ${oport} ${t_connect} -j ACCEPT
-					else
-						o_echo "    iptables -A ${ap_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT"
-						[ ${_testmode} -eq 0 ] && \
-							${c_iptables} -A ${a_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT
-					fi
+				if [ ${a_host} -eq 1 -a "${a_proto}" = "tcp" ]; then
+					o_echo "    iptables -A ${ap_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT"
+					[ ${_testmode} -eq 0 ] && \
+						${c_iptables} -A ${a_table}${hosts} -p ${a_proto} ${a_pname} ${oport} ${t_connect} -j ACCEPT
 				else
 					for a_int in ${a_List}
 					do
@@ -340,17 +289,11 @@ add_brport_rule() {
 		fi
 
 		[ -n "$(echo ${i} | $c_grep HOSTPERPORT)" ] && a_host=1 || a_host=0
-		[ $a_host -eq 1 ] && a_ment="${a_ment} per HOST"
 
-		a_redir1="-s ${BRG0_NETPX}"
-		a_redir2="-d ${BRG0_NETPX}"
-		if [ "${a_type}" = "incoming" ]; then
-			a_pname1="--sport"
-			a_pname2="--dport"
-		else
-			a_pname1="--dport"
-			a_pname2="--sport"
-		fi
+		a_redir1="-o ${BRIDGE_NAME}"
+		a_redir2="-i ${BRIDGE_NAME}"
+		a_pname1="--dport"
+		a_pname2="--sport"
 
 		eval "_values=\$${i}"
 
@@ -358,26 +301,15 @@ add_brport_rule() {
 
 		for v in $_values
 		do
-			# outgoing DNS 질의는 기본으로 제공하기 때문에 skip
+			# outgoing DNS 질으는 기본으로 제공하기 때문에 skip
 			if [ "${a_type}" = "outgoing" -a "${a_proto}" = "udp" -a "${v}" = "53" ]; then
 				continue;
 			fi
 
 			echo ${v} | {
 				if [ ${a_host} -eq 1 ]; then
-					IFS=':' read _hosts oport
-
-					iprange_set ${_hosts} hosts
-					iprange_check ${hosts}
-					rangechk=$?
-
-					if [ ${rangechk} -eq 1 ]; then
-						hosts1=" --dst-range ${hosts}"
-						hosts2=" --src-range ${hosts}"
-					else
-						hosts1=" -d ${hosts}"
-						hosts2=" -s ${hosts}"
-					fi
+					IFS=':' read hosts oport
+					hosts=" -s ${hosts}"
 				else
 					IFS=':' read oport tconnect
 				fi
@@ -395,35 +327,22 @@ add_brport_rule() {
 					t_connect1="-m state --state ${tconnect1}"
 					t_connect2="-m state --state ${tconnect2}"
 					add_ftp_rule ${oport} BR_${a_type} "${hosts}"
-				else
-					t_connect1=""
-					t_connect2=""
 				fi
 
 				oport=$(echo "${oport}" | ${c_sed} -e 's/-/:/g')
-				if [ ${a_host} -eq 1 ]; then
-					if [ ${rangechk} -eq 1 ]; then
-						o_echo "    iptables -A FORWARD -p ${a_proto} -m iprange ${hosts1} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
-						o_echo "    iptables -A FORWARD -p ${a_proto} -m iprange ${hosts2} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
-						[ ${_testmode} -eq 0 ] && {
-							${c_iptables} -A FORWARD -p ${a_proto} -m iprange ${hosts1} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
-							${c_iptables} -A FORWARD -p ${a_proto} -m iprange ${hosts2} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
-						}
-					else
-						o_echo "    iptables -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
-						o_echo "    iptables -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
-						[ ${_testmode} -eq 0 ] && {
-							${c_iptables} -A FORWARD${hosts1} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
-							${c_iptables} -A FORWARD${hosts2} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
-						}
-					fi
+				if [ ${a_host} -eq 1 -a "${a_proto}" = "tcp" ]; then
+					o_echo "    iptables -A FORWARD${hosts} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
+					o_echo "    iptables -A FORWARD${hosts} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
+					[ ${_testmode} -eq 0 ] && \
+						${c_iptables} -A FORWARD${hosts} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
+						${c_iptables} -A FORWARD${hosts} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
 				else
 					o_echo "    iptables -A FORWARD ${a_redir1} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT"
 					o_echo "    iptables -A FORWARD ${a_redir2} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT"
-					[ ${_testmode} -eq 0 ] && {
+					if [ ${_testmode} -eq 0 ]; then
 						${c_iptables} -A FORWARD ${a_redir1} -p ${a_proto} ${a_pname1} ${oport} ${t_connect1} -j ACCEPT
 						${c_iptables} -A FORWARD ${a_redir2} -p ${a_proto} ${a_pname2} ${oport} ${t_connect2} -j ACCEPT
-					}
+					fi
 				fi
 			}
 		done
@@ -450,43 +369,30 @@ add_icmp_host() {
 		eval "i_ivalue=\$${i}"
 
 		o_echo $"    ==> for ${i_ct} service"
-		for _v in ${i_ivalue}
+		for v in ${i_ivalue}
 		do
-			iprange_set ${_v} v
-			iprange_check ${v}
-			rangechk=$?
-
-			if [ ${rangechk} -eq 1 ]; then
-				o_echo "      iptables -A ${i_pchain} -p icmp --icmp-type ${i_ctype} -m iprange --src-range ${v} -j ACCEPT"
-				${c_iptables} -A ${i_chain} -p icmp --icmp-type ${i_ctype} -m iprange --src-range ${v} -j ACCEPT
-				[ "$i_ct" = "traceroute" ] && {
-					o_echo "      iptables -A ${i_pchain} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT"
-					${c_iptables} -A ${i_chain} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT
-				}
-			else
-				o_echo "      iptables -A ${i_pchain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
-				${c_iptables} -A ${i_chain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
-				[ "$i_ct" = "traceroute" ] && {
-					o_echo "      iptables -A ${i_pchain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
-					${c_iptables} -A ${i_chain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
-				}
-			fi
+			o_echo "    iptables -A ${i_pchain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
+			${c_iptables} -A ${i_chain} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
+			[ "$i_ct" = "traceroute" ] && {
+				o_echo "    iptables -A ${i_pchain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
+				${c_iptables} -A ${i_chain} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
+			}
 		done
 		o_echo
 	done
 }
 
 add_bricmp_host() {
-	[ ${BRIDGE_USED} -eq 0 ] && return
-
 	for i in $*
 	do
 		if [ -n "$(echo ${i} | ${c_grep} PING)" ]; then
 			i_ct="ping"
-			i_ctype="echo-request"
+			i_ctyoe="echo-request"
+			i_redir="-i"
 		else
 			i_ct="traceroute"
-			i_ctype="time-exceeded"
+			i_ctyoe="echo-request"
+			i_redir="-o"
 		fi
 
 		eval "i_ivalue=\$${i}"
@@ -494,28 +400,14 @@ add_bricmp_host() {
 		o_echo $"    ==> for Bridge ${i_ct} service"
 		for v in ${i_ivalue}
 		do
-			iprange_check ${v}
-			rangechk=$?
-
-			if [ ${rangechk} -eq 1 ]; then
-				o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type ${i_ctype} -m iprange --src-range ${v} -j ACCEPT"
-				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type ${i_ctype} -m iprange --src-range ${v} -j ACCEPT
-				[ "$i_ct" = "traceroute" ] && {
-					o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT"
-					o_echo "      iptables -A FORWARD -s ${BRG0_NETPX} -p udp -m iprange --dst-range ${v} --sport 32767:33167 -j ACCEPT"
-					${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p udp -m iprange --src-range ${v} --dport 33434:33525 -j ACCEPT
-					${c_iptables} -A FORWARD -s ${BRG0_NETPX} -p udp -m iprange --dst-range ${v} --sport 32767:33167 -j ACCEPT
-				}
-			else
-				o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
-				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
-				[ "$i_ct" = "traceroute" ] && {
-					o_echo "      iptables -A FORWARD -d ${BRG0_NETPX} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
-					o_echo "      iptables -A FORWARD -s ${BRG0_NETPX} -d ${v} -p udp --sport 32767:33167 -j ACCEPT"
-					${c_iptables} -A FORWARD -d ${BRG0_NETPX} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
-					${c_iptables} -A FORWARD -s ${BRG0_NETPX} -d ${v} -p udp --sport 32767:33167 -j ACCEPT
-				}
-			fi
+			o_echo "    iptables -A FORWARD -i OOPS_BRG -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT"
+			${c_iptables} -A FORWARD ${i_redir} OOPS_BRG -s ${v} -p icmp --icmp-type ${i_ctype} -j ACCEPT
+			[ "$i_ct" = "traceroute" ] && {
+				o_echo "    iptables -A FORWARD -i ${BRIDGE_NAME} -s ${v} -p udp --dport 33434:33525 -j ACCEPT"
+				o_echo "    iptables -A FORWARD -o ${BRIDGE_NAME} -d ${v} -p udp --sport 32767:33167 -j ACCEPT"
+				${c_iptables} -A FORWARD -i ${BRIDGE_NAME} -s ${v} -p udp --dport 33434:33525 -j ACCEPT
+				${c_iptables} -A FORWARD -o ${BRIDGE_NAME} -d ${v} -p udp --sport 32767:33167 -j ACCEPT
+			}
 		done
 		o_echo
 	done
@@ -538,14 +430,14 @@ add_tos_rule() {
 	for i in ${TOS_TABLE}
 	do
 		o_echo
-		o_echo $"  * Tos configuration in ${i} chain"
+		o_echo $"  = Tos configuration in ${i} chain"
 		for v in ${USE_TOS}
 		do
 			echo ${v} | {
 				IFS=':' read port tosv
 				port=$(echo "${port}" | ${c_sed} 's/-/:/g')
-				o_echo "    iptables -t mangle -A ${i} -p tcp --dport ${port} -j TOS --set-tos ${tosv}"
-				o_echo "    iptables -t mangle -A ${i} -p tcp --sport ${port} -j TOS --set-tos ${tosv}"
+				o_echo "    * iptables -t mangle -A ${i} -p tcp --dport ${port} -j TOS --set-tos ${tosv}"
+				o_echo "    * iptables -t mangle -A ${i} -p tcp --sport ${port} -j TOS --set-tos ${tosv}"
 				if [ "${_testmode}" = 0 ]; then
 					${c_iptables} -t mangle -A ${i} -p tcp --dport ${port} -j TOS --set-tos ${tosv}
 					${c_iptables} -t mangle -A ${i} -p tcp --sport ${port} -j TOS --set-tos ${tosv}
