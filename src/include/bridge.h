@@ -1,6 +1,6 @@
 # Bridge rule function
 #
-# $Id: bridge.h,v 1.9 2009-01-02 18:10:57 oops Exp $
+# $Id: bridge.h,v 1.2 2007-01-07 16:36:17 oops Exp $
 #
 
 bridge_wan_info() {
@@ -17,12 +17,10 @@ bridge_wan_info() {
 			$c_sed -e 's/addr:/BRIDGE_WANIP="/g' -e 's/Mask:/BRIDGE_WANMASK="/g'`
 
 		getDeviceNetwork "${BRIDGE_WANIP}" "${BRIDGE_WANMASK}" BRIDGE_WANNET
-		getDevicePrefix "${BRIDGE_WANIP}" "${BRIDGE_WANMASK}" BRIDGE_PREFIX
-		BRIDGE_SUBNET="${BRIDGE_WANNET}/${BRIDGE_PREFIX}"
-		[ -z "${BRG0_NETPX}" -o "${BRG0_NETPX}" = "/" ] && BRG0_NETPX="${BRIDGE_SUBNET}"
+		BRIDGE_SUBNET="${BRIDGE_WANNET}/${BRIDGE_WANMASK}"
 	fi
 
-	export BRIDGE_WANIP BRIDGE_WANMASK BRIDGE_WANNET BRIDGE_SUBNET BRG0_NETPX
+	export BRIDGE_WANIP BRIDGE_WANMASK BRIDGE_WANNET BRIDGE_SUBNET
 }
 
 bridge_dev_check() {
@@ -98,9 +96,7 @@ init_bridge() {
 				$c_ifconfig $BRIDGE_NAME $BRIDGE_WANIP netmask $BRIDGE_WANMASK up
 
 		# Set gateway
-		_gw_chk=$($c_route -n | $c_grep UG | $c_awk '{print $2}')
-
-		[ -n "$BRIDGE_WANGW" -a "$BRIDGE_WANGW" != "$_gw_chk" ] && \
+		[ -n "$BRIDGE_WANGW" ] && \
 			o_echo "  * $c_route add default gw $BRIDGE_WANGW" && \
 			[ $_testmode -eq 0 ] && \
 				$c_route add default gw $BRIDGE_WANGW
@@ -115,26 +111,22 @@ init_bridge() {
 		${c_iptables} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
 	if [ $MASQ_USED -eq 1 ]; then
-		[ -z "${MASQUERADE_WAN}" ] && MASQUERADE_WAN="$BRIDGE_WANDEV"
-		[ -z "${MASQUERADE_LOC}" ] && MASQUERADE_LOC="eth1"
+		MASQ_DEVICE="$BRIDGE_WANDEV"
+		[ -z "${MASQ_CLIENT_DEVICE}" ] && MASQ_CLIENT_DEVICE="eth1"
 
-		[ "$MASQUERADE_LOC" = "$BRIDGE_WANDEV" ] && \
+		[ "$MASQ_CLIENT_DEVICE" = "$BRIDGE_WANDEV" ] && \
 			o_echo $"  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device" && \
 			o_echo $"  * MASQ mode changed off mode!" && \
 			export MASQ_USED=0
-		[ "$MASQUERADE_LOC" = "$BRIDGE_LOCDEV" ] && \
+		[ "$MASQ_CLIENT_DEVICE" = "$BRIDGE_LOCDEV" ] && \
 			o_echo $"  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device" && \
 			o_echo $"  * MASQ mode changed off mode!" && \
 			export MASQ_USED=0
-
-		makeDeviceEnv $BRIDGE_NAME
 	fi
 }
 
 clear_bridge() {
-	[ -z "$BRIDGE_CONTROL" -o "$BRIDGE_CONTROL" = 0 ] && return
-
-	$c_brctl show 2> /dev/null | $c_grep "$BRIDGE_NAME" >& /dev/null
+	$c_brctl show | $c_grep OOPS_BRG >& /dev/null
 	cleardev=$?
 	$c_ifconfig $BRIDGE_NAME >& /dev/null
 	clearifc=$?
