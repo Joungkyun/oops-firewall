@@ -1,16 +1,9 @@
 # kernel module list for using oops-firewall
-# $Id: modules.list,v 1.3 2007-03-30 08:56:52 oops Exp $
+# $Id: modules.list,v 1.2 2005-12-03 19:50:06 oops Exp $
 #
 
 # Default kernel module lists
 # Don't touch follow configurations.
-# If you want to add module options, use follows
-#
-# ip_conntrack_ftp:unload
-# ip_conntrack_ftp:ports=21,2121
-#
-# Config option used with module_name:module_option format.
-# module_option "unload" is removed this module.
 ip_conntrack
 ip_tables
 ip_conntrack_ftp

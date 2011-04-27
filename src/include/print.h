@@ -1,12 +1,13 @@
 # Print function
 #
-# $Id: print.h,v 1.8 2009-05-02 16:24:46 oops Exp $
+# $Id: print.h,v 1.1.2.2 2008-07-17 19:19:26 oops Exp $
 #
 
 printBanner() {
 	[ "${1}" = "clear" ] && clear || echo
 	echo  "############################################################################"
 	echo $"# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
+	echo $"#      By Jul 18 2008 JoungKyun.Kim <http://oops.org>"
 	echo  "############################################################################"
 	echo
 }
@@ -18,8 +19,8 @@ usage() {
 	echo $"Options:"
 	echo $"         -c config_directory    set configuration directory"
 	echo $"         -t                     run test mode"
-	echo $"         -v                     verbose mode"
 	echo $"         -n                     don't print ansi mode"
+	echo $"         -v                     verbose mode"
 	echo $"         -V                     print current version"
 	echo $"         -h                     help (this) message"
 	echo
@@ -30,11 +31,6 @@ usage() {
 printVersion() {
 	echo -ne "OOPS Firewall v${_ver}\n\n"
 	exit 0
-}
-
-next_numbering() {
-	NB=$[$NB + 1]
-	export NB
 }
 
 # $1  => RESULT
@@ -76,40 +72,15 @@ print_result() {
 	fi
 }
 
-# $1  => USER COMMENT
-# $2  => START COLOR
-print_color() {
-	__cend="7;0m"
-	__msg=$1
-	__color=$2
-
-	[ $_verbose -ne 1 ] && return
-
-	[ -z "${__msg}" ] && return
-	[ -z "${__color}" ] && __color="green"
-
-	conv_color $__color
-	__mcol=$?
-	__cstart="1;${__mcol}m"
-
-	if [ $_noansi -eq 0 ]; then
-		echo -ne "[${__cstart}${__msg}[${__cend}"
-	else
-		echo -n ${__msg}
-	fi
-}
-
 o_echo() {
-	[ $_verbose -ne 1 ] && return 0
-
-	_opt=
-	if [ "$1" = "-ne" -o "$1" = "-n" -o "$1" = "-e" ]; then
-		_opt=$1
-		shift
+	if [ $_verbose -eq 1 ]; then
+		_opt=
+		if [ "$1" = "-ne" -o "$1" = "-n" -o "$1" = "-e" ]; then
+			_opt=$1
+			shift
+		fi
+		echo $_opt "$*"
 	fi
-	echo $_opt "$*"
-
-	return 0
 }
 
 WordToUpper() {
@@ -244,7 +215,9 @@ parseValue() {
 		esac
 	fi
 
-	[ -n "${pN}" ] && eval "${pN}=${rV}"
+	if [ -n "${pN}" ]; then
+		eval "${pN}=${rV}"
+	fi
 
   return $rV
 }
