@@ -1,6 +1,6 @@
 # Forward rule function
 #
-# $Id: forward.h,v 1.10 2008-03-05 05:03:34 oops Exp $
+# $Id: forward.h,v 1.8 2007-03-29 17:53:30 oops Exp $
 #
 
 add_forward_init() {
@@ -49,13 +49,6 @@ add_forward_rule() {
 			o_echo "  * iptables -t nat -A PREROUTING -d ${dest}  -j DNAT --to ${target}"
 			[ "${_testmode}" = 0 ] && \
 				${c_iptables} -t nat -A PREROUTING -d ${dest} -j DNAT --to ${target}
-
-			# For Bridge mode
-			if [ "${BRIDGE_USED}" -ne 0 ]; then
-				o_echo "  * iptables -A FORWARD -s ${dest} -d ${target} -j ACCEPT"
-				[ "${_testmode}" = 0 ] && \
-					${c_iptables} -A FORWARD -s ${dest} -d ${target} -j ACCEPT
-			fi
 		}
 	done
 
@@ -103,13 +96,6 @@ add_forward_rule() {
 					[ "${_testmode}" -eq 0 ] && \
 						${c_iptables} -t nat -A PREROUTING -p ${proto} ${f_target} ${_laddr} \
 									--dport ${lports} -j DNAT --to ${raddr}:${rports}
-
-					# For Bridge mode
-					if [ "${BRIDGE_USED}" -ne 0 ]; then
-						o_echo "  * iptables -A FORWARD -d ${raddr} -p ${proto} --dport ${rports} -j ACCEPT"
-						[ "${_testmode}" -eq 0 ] && \
-							${c_iptables} -A FORWARD -d ${raddr} -p ${proto} --dport ${rports} -j ACCEPT
-					fi
 				done
 			}
 		done
