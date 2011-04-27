@@ -1,35 +1,35 @@
-# $Id: config.sed,v 1.4 2009-04-30 13:33:37 oops Exp $
-
-# removed comment
-s/#.*\|"//g
+# $Id: config.sed,v 1.2 2005-12-26 18:05:22 oops Exp $
 
 :sumline
-# Case that the last character of ther line is '/'
+# 줄 마지막이 \ (줄넘김 문자) 일 경우 처리
 /\\[ \t]*$/ {
-  # input next line to patern space.
+  # 다음 줄을 패턴 스페이스에 넣는다.
   N
 
-  # remove '/' character and newline
-  s/[ \t]*\\[ \t]*[\r\n]\+[ \t]*/ /g
+  # 줄넘김 문자와 두 라인간의 개행 문자를 삭제하여 한줄로 붙인다.
+  s/[ \t]*\\[ \t]*\n[ \t]*/ /g
 
-  # repeat Until '/' character don't exists.
+  # 반복한다.
   t sumline
 }
 
-# remove line of direction format
+# 주석 제거
+s/#.*\|"//g
+
+# 설정값이 아닌 것들 삭제
 /^[^=]\+$/d
 
-# remove blank line
+# 공백 라인 삭제
 /^$/d
 
-# remove first white space each lines.
+# 각 라인의 처음 공백을 제거
 s/^[ \t]\+//g
 
-# remove white space before or after equal mark
+# equal mark 사이의 공백 제거
 s/[ \t]*=[ \t]*/="/g
 
-# close quote of variable's value
+# 각 라인 마지막을 처리
 s/$/";/g
 
-# print
+# 출력
 p

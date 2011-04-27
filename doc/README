@@ -1,78 +1,38 @@
-OOPS Firewall README
+OOPS Firewall
 
-$Id: README,v 1.5 2007-12-17 16:57:41 oops Exp $
+$Id: README,v 1.1 2005-12-03 19:25:08 oops Exp $
 
+This is the source of oops firewall v5.0.x
 
-이 문서는 OOPS Firewall 6.x 트리에 관련된 문서이다.
+oops firewall is frontend utility of iptables.
 
+See the Changelog file for a detailed listing of all changes.  See the INSTALL
+file for information on building and installing oops firewall.
 
-OOPS Firewall 은 리눅스 커널 2.4 이상에서 사용이 되는 iptables를 이용한
-방화벽 구성, Bridge 방화벽, Masquerade 시스템, 포트 포워딩 등을 쉽고 간
-편하게 사용하기 위한 iptables frontend 이다.
+This program is used iptables package and kernel 2.4.x or 2.6.x
 
-안녕 리눅스의 기본 방화벽 시스템이며, 커널 2.4이상의 Redhat 호환 배포본
-을 위하여 설계가 되어 있다.
-
-OOPS Firewall 6.x 트리의 특징은 다음과 같다.
-
-
-1. inboud/outbound 처리의 향상
-2. network device 의 확장 (ppp, bond, bridge 지원)
-3. Bridge 방화벽 지원
-4. Masquerade 방화벽 지원
-5. 포트 포워딩 지원
-6. 여러개의 (최대 9개까지의) 동일 device 지원
+Even if you get any problem, I don't have any sense of responsibility.
+All Problems are your destiny :-)
 
 
-현재의 설계상으로는 WAN 연결은 제한이 없으며, Bridge mode 는 1개의 WAN 과
-1개의 LOCAL 이 지원이 되고 MASQ 역시 1 개의 WAN 과 1 개의 LOCAL 이 지원된
-다.
+** oops-firewall directive order
 
-최대로 구성할 수 있는 경우는, 다음과 같다.
-
-
-                      FIREWALL
-
-               ┌───────────┐
-               │                ┌──┴─┐
-               │                │  ETH3  ├─ Bridge Zone
-         ┌──┴──┐          └──┬─┘   (Public Network)
-  WAN  ─┤ ETH0/1/2 │  BRIDGE        │
-         └──┬──┘          ┌──┴─┐
-               │eth0            │  ETH4  ├─ Masq Zone
-               │                └──┬─┘   (Private Network)
-               └───────────┘
-
-     % BRIDGE 는 BRIDGE interface 이며, ETH0 과 ETH3 을 관리함.
-
-
-     FIREWALL_WAN = eth0 eth1 eth2
-     MASQUERADE_WAN = eth1
-     MASQUERADE_LOC = eth4
-     BRIDGE_WANDEV = eth0
-     BRIDGE_LOCDEV = eth3
+ 1. ALLOWSELF             (filter.conf)
+ 2. ALLOWALL              (filter.conf)
+ 3. pre user define rule  (user.conf % directive)
+ 4. OUT_TCP_ALLOWPORT     (filter.conf)
+ 5. OUT_UDP_ALLOWPORT     (filter.conf)
+ 6. TCP_ALLOWPORT         (filter.conf)
+ 7. TCP_HOSTPERPORT       (filter.conf)
+ 8. UDP_ALLOWPORT         (filter.conf)
+ 9. UDP_HOSTPERPORT       (filter.conf)
+10. masquerading rule     (masq.conf)
+11. TCP_FORWARD_TO        (forward.conf)
+12. TCP_FORWARD_TO_S      (forward.conf)
+13. UDP_FORWARD_TO        (forward.conf)
+14. UDP_FORWARD_TO_S      (forward.conf)
+15. ALL_FORWARD_TO        (forward.conf)
+16. post user define rule (user.conf @ directive)
+17. USE_TOS               (tos.conf)
 
 
-와 같이 구성을 할 수 있다. FIREWALL_WAN 의 경우, 여려 인터페이스가 존재할
-경우 공백문자를 구분자로 나열하면 된다. 주의할것은 BRIDGE Local 구간의 인
-터페이스와 MASQ Local 구간의 인터페이스는 동일하게 사용할 수 없다.
-
-만약, Bridge WAN device 와 MASQ WAN device 가 동일할 경우, 즉 다음의 그림
-과 같은 구조라면..
-
-                      FIREWALL
-
-               ┌───────────┐
-               │                ┌──┴─┐
-               │                │  ETH1  ├─ Bridge Zone
-         ┌──┴──┐          └──┬─┘   (Public Network)
-  WAN  ─┤   ETH0   │  BRIDGE        │
-         └──┬──┘          ┌──┴─┐
-               │                │  ETH2  ├─ Masq Zone
-               │                └──┬─┘   (Private Network)
-               └───────────┘
-
-MASQUERADE_WAN 은 주의해야 할 점이 있다. oops-firewall 은 bridge interface
-를 직접 다루기 때문에, Bridge 를 설정하는 순간, MASQUERADE_WAN 으로 사용할
-eth0 이 brg0 으로 변경된 후에 MASQ 를 처리하게 된다. 그러므로 이 경우 MASQ
-의 WAN device 를 brg0 으로 지정을 해 주어야 한다.
