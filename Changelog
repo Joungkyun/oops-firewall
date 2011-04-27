@@ -1,39 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.108 2011-01-14 04:54:35 oops Exp $
-
-
-* 6.2.7
----------------------------------------------------------------------
-+ 2011.01.13
-	- fixed debian ipcalc command
-	- valid debianized
-	- add debian package build script
-
-+ 2010.11.19
-	- If have error on pre/post command, return true
-
-+ 2009.07.07
-	- fixed missing operate add_bricmp_rule when bridge disabled
-
-+ 2009.07.06
-	- support 2.6 kernel module
-
-
-* 6.2.6
----------------------------------------------------------------------
-+ 2009.05.02
-	- add man page
-	- validate debian package policy sid
-	- changed debian package architecture from i386 to all
-	- check iptables init script on rpm spec file
-
-+ 2009.05.01
-	- added english document
-	- fixed LANG environment variable to C for sed command
-	- changed configuration comment for charset issue
-	- changed sh call to /bin/bash from /bin/sh
-	- removed needless checking process when configure
+$Id: Changelog,v 1.96 2009-01-02 18:10:57 oops Exp $
 
 
 * 6.2.5
