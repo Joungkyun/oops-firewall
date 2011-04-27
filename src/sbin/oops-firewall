@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 #
-# $Id: oops-firewall,v 1.14 2009-05-01 16:48:42 oops Exp $
+# $Id: oops-firewall,v 1.1 2005-12-03 19:41:01 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -13,31 +13,23 @@ _confdir="@confdir@"
 _includes="@includedir@"
 export _confdir _includes
 
-NB=0
-
 # include function list
 source ${_includes}/oops-firewall.h
 
 # init modules
 ${c_depmod} -a &> /dev/null
 
-iprange_mod_check
-_iprange=$?
-
 # parse option
-opts=$(${c_getopt} ac:hntvzV $*)
+opts=$(${c_getopt} c:htvV $*)
 [ $? -ne 0 ] && usage
 set -- ${opts}
 
 for i
 do
 	case "$i" in
-		-a) _bridgeclear=1; shift;;
 		-t) _testmode=1; shift;;
 		-v) _verbose=1; shift;;
-		-n) _noansi=1; shift;;
 		-c) _confdir=$2; shift; shift;;
-		-z) _stopbrg=1; shift;;
 		-V) printVersion;;
 		--) shift; break;;
 	esac
@@ -50,9 +42,8 @@ done
 #
 # check user type
 #
-next_numbering
 o_echo
-o_echo -n $"${NB}. Check user type"
+o_echo -n $"1. Check user type"
 
 isroot
 
@@ -68,9 +59,8 @@ fi
 # Kernel version check
 #
 
-next_numbering
 o_echo
-o_echo -n $"${NB}. Kernel version check"
+o_echo -n $"2. Kernel version check"
 kernelCheck
 
 case "$?" in
@@ -89,38 +79,13 @@ case "$?" in
 esac
 export extend_mangle
 
-# if exists mine.conf, add in configuration list
-[ -f "${_confdir}/mine.conf" ] && _configs="${_configs} mine"
-
-# read configurations
-for i in ${_configs}
-do
-	conf_context=$(LANG="C" ${c_sed} -n -f ${_includes}/config.sed ${_confdir}/${i}.conf)
-	eval ${conf_context}
-done
-
-# check directive with true/false values (true: 1, false: 0)
-for cVAR in ALLOWSELF USE_LOG MASQ_USED BRIDGE_USED BRIDGE_CONTROL BRUTE_FORCE_LOG
-do
-	eval "cVARTMP=\$${cVAR}"
-	parseValue "$cVARTMP" "$cVAR"
-done
-
-if [ "$_stopbrg" = "1" ]; then
-	clear_bridge
-	exit 0
-fi
-
 #
 # IP Address check
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. IP address Check"
+o_echo $"3. IP address Check"
 o_echo
-
-[ $_bridgeclear -eq 1 ] && clear_bridge self
 
 # get device list
 getDeviceList devlist
@@ -134,60 +99,53 @@ done
 # print device information
 for dv in ${devlist}
 do
-	chkIP=
-	chkSN=
-	chkNT=
+    chkIP=
+    chkSN=
+    chkNT=
 
-	parseDevice "${dv}" devName devNum
-	eval "chkIP=\${${devName}${devNum}_IPADDR}"
+    parseDevice "${dv}" devName devNum
+    eval "chkIP=\${${devName}${devNum}_IPADDR}"
 
-	if [ -n "${chkIP}" ]; then
+    if [ -n "${chkIP}" ]; then
 
-		eval "chkSN=\${${devName}${devNum}_SUBNET}"
-		eval "chkNT=\${${devName}${devNum}_NET}"
-		eval "chkPX=\${${devName}${devNum}_PREFIX}"
+      eval "chkSN=\${${devName}${devNum}_SUBNET}"
+      eval "chkNT=\${${devName}${devNum}_NET}"
 
-		o_echo $"  * ${devName}${devNum} Information"
-		o_echo -n $"    IP ADDRESS"
-		print_result 0 "${chkIP}" "yellow"
-		o_echo -n $"    SUBNET MASK"
-		print_result 0 "${chkSN}" "yellow"
-		o_echo -n $"    NETWORK"
-		print_result 0 "${chkNT}" "yellow"
-		o_echo -n $"    NETWORK PREPIX"
-		print_result 0 "${chkPX}" "yellow"
-		o_echo
+      o_echo $"  * ${devName}${devNum} Information"
+      o_echo -n $"    IP ADDRESS"
+      print_result 0 "${chkIP}" "yellow"
+      o_echo -n $"    SUBNET MASK"
+      print_result 0 "${chkSN}" "yellow"
+      o_echo -n $"    NETWORK"
+      print_result 0 "${chkNT}" "yellow"
+      o_echo
     fi
 done
 
-next_numbering
-o_echo $"${NB}. Interface Information"
-o_echo
+# if exists mine.conf, add in configuration list
+[ -f "${_confdir}/mine.conf" ] && _configs="${_configs} mine"
 
-# interface name check
-firewall_wan_check
-bridge_wan_check
-
-for interface in FIREWALL_WAN MASQUERADE_WAN MASQUERADE_LOC BRIDGE_WANDEV BRIDGE_LOCDEV
+# read configurations
+for i in ${_configs}
 do
-	if [ -n "$(echo ${interface} | ${c_grep} BRIDGE)" ]; then
-		[ $BRIDGE_USED -eq 0 ] && continue;
-	fi
-
-	eval "intTmpName=\$${interface}"
-	intTmpName=${intTmpName:="Not Set"}
-	o_echo -n "  * ${interface}"
-	print_result 0 "${intTmpName}" "yellow"
+	conf_context=
+	conf_context=$(${c_sed} -n -f ${_includes}/config.sed ${_confdir}/${i}.conf)
+	eval ${conf_context}
 done
-o_echo
+
+# check directive with true/false values (true: 1, false: 0)
+for cVAR in ALLOWSELF USE_LOG MASQ_USED
+do
+	eval "cVARTMP=\$${cVAR}"
+	parseValue $cVARTMP $cVAR
+done
 
 
 #
 # global configuration
 #
 
-next_numbering
-o_echo $"${NB}. Reset Netfilter"
+o_echo $"4. Reset Netfilter"
 o_echo
 
 ins_mod
@@ -198,23 +156,11 @@ init_service
 
 
 #
-# Bridge Init
-#
-next_numbering
-o_echo
-o_echo $"${NB}. Init Bridge Mode"
-o_echo
-
-init_bridge
-
-
-#
 # Init Kernel parameter
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Basic Kernel Parameter Configuration"
+o_echo $"5. Basic Kernel Parameter Configuration"
 o_echo
 
 init_kernel
@@ -224,9 +170,8 @@ init_kernel
 # Deny Invalid Packet
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Drop Invalid Package"
+o_echo $"6. Drop Invalid Package"
 o_echo
 
 init_invalid
@@ -235,9 +180,8 @@ init_invalid
 # Allow All Service
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Allow All Service"
+o_echo $"7. Allow All Service"
 o_echo
 
 add_all_rule
@@ -246,9 +190,8 @@ add_all_rule
 # User define command (execute "!" command)
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Execute user defined pre command"
+o_echo $"8. Execute user defined pre command"
 o_echo
 user_cmd "pre"
 
@@ -257,54 +200,39 @@ user_cmd "pre"
 # Outgoing Service configuration
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Allow Outgoing Service Configuration"
+o_echo $"9. Allow Outgoing Service Configuration"
 o_echo
 
 add_port_rule outgoing OUT_TCP_ALLOWPORT OUT_UDP_ALLOWPORT
-add_brport_rule outgoing OUT_TCP_ALLOWPORT OUT_UDP_ALLOWPORT
 
+# for name service
 o_echo $"  * Name Service Configuration"
 add_named_port
-o_echo
-[ "$BRIDGE_USED" -ne 0 ] && {
-	o_echo $"  * Bridge Name Service Configuration"
-	add_named_port BRIDGE
-}
 
 
 #
 # Incoming Service configuration 
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Allow Incoming Service Configuration"
+o_echo $"10. Allow Incoming Service Configuration"
 o_echo
 
 add_port_rule incoming TCP_ALLOWPORT TCP_HOSTPERPORT UDP_ALLOWPORT UDP_HOSTPERPORT
-add_brport_rule incoming BR_TCP_ALLOWPORT BR_TCP_HOSTPERPORT BR_UDP_ALLOWPORT BR_UDP_HOSTPERPORT
-
-[ -f "${_tmpifile}" ]  && rm -rf "${_tmpifile}"  >& /dev/null
-[ -f "${_tmpofile}" ]  && rm -rf "${_tmpofile}"  >& /dev/null
-[ -f "${_passiveif}" ] && rm -rf "${_passiveif}" >& /dev/null
-[ -f "${_passiveof}" ] && rm -rf "${_passiveof}" >& /dev/null
 
 # for icmp
 
-o_echo $"  * ICMP service Configuration"
+o_echo "  * ICMP service Configuration"
 add_icmp_host ICMP_HOSTPERPING ICMP_HOSTPERTRACE
-add_bricmp_host BR_ICMP_HOSTPERPING BR_ICMP_HOSTPERTRACE
 
 
 #
 # Masqurade Configuration
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Masqurade Configuration"
+o_echo $"11. Masqurade Configuration"
 o_echo
 
 add_masq_rule
@@ -314,9 +242,8 @@ add_masq_rule
 # Forwarding Configuration
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Forwarding Configuration"
+o_echo $"12. Forwarding Configuration"
 o_echo
 
 add_forward_rule
@@ -326,9 +253,8 @@ add_forward_rule
 # User define command (execute "!" command)
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Execute user defined post Command"
+o_echo $"13. Execute user defined post Command"
 o_echo
 user_cmd "post"
 
@@ -337,9 +263,9 @@ user_cmd "post"
 # Tos Configuration
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. TOS Configuration"
+o_echo $"14. TOS Configuration"
+o_echo
 
 add_tos_rule
 [ $? -ne 0 ] && {
@@ -353,9 +279,8 @@ add_tos_rule
 # Deny rule set
 #
 
-next_numbering
 o_echo
-o_echo $"${NB}. Deny rule set configuration"
+o_echo $"15. Deny rule set configuration"
 o_echo
 
 init_deny
