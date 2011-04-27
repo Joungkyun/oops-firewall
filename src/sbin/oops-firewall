@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 #
-# $Id: oops-firewall,v 1.14 2009-05-01 16:48:42 oops Exp $
+# $Id: oops-firewall,v 1.2 2006-12-29 05:45:17 oops Exp $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim
@@ -21,11 +21,8 @@ source ${_includes}/oops-firewall.h
 # init modules
 ${c_depmod} -a &> /dev/null
 
-iprange_mod_check
-_iprange=$?
-
 # parse option
-opts=$(${c_getopt} ac:hntvzV $*)
+opts=$(${c_getopt} ac:htvV $*)
 [ $? -ne 0 ] && usage
 set -- ${opts}
 
@@ -35,9 +32,7 @@ do
 		-a) _bridgeclear=1; shift;;
 		-t) _testmode=1; shift;;
 		-v) _verbose=1; shift;;
-		-n) _noansi=1; shift;;
 		-c) _confdir=$2; shift; shift;;
-		-z) _stopbrg=1; shift;;
 		-V) printVersion;;
 		--) shift; break;;
 	esac
@@ -89,28 +84,6 @@ case "$?" in
 esac
 export extend_mangle
 
-# if exists mine.conf, add in configuration list
-[ -f "${_confdir}/mine.conf" ] && _configs="${_configs} mine"
-
-# read configurations
-for i in ${_configs}
-do
-	conf_context=$(LANG="C" ${c_sed} -n -f ${_includes}/config.sed ${_confdir}/${i}.conf)
-	eval ${conf_context}
-done
-
-# check directive with true/false values (true: 1, false: 0)
-for cVAR in ALLOWSELF USE_LOG MASQ_USED BRIDGE_USED BRIDGE_CONTROL BRUTE_FORCE_LOG
-do
-	eval "cVARTMP=\$${cVAR}"
-	parseValue "$cVARTMP" "$cVAR"
-done
-
-if [ "$_stopbrg" = "1" ]; then
-	clear_bridge
-	exit 0
-fi
-
 #
 # IP Address check
 #
@@ -120,7 +93,7 @@ o_echo
 o_echo $"${NB}. IP address Check"
 o_echo
 
-[ $_bridgeclear -eq 1 ] && clear_bridge self
+[ $_bridgeclear -eq 1 ] && clear_bridge
 
 # get device list
 getDeviceList devlist
@@ -134,30 +107,45 @@ done
 # print device information
 for dv in ${devlist}
 do
-	chkIP=
-	chkSN=
-	chkNT=
+    chkIP=
+    chkSN=
+    chkNT=
 
-	parseDevice "${dv}" devName devNum
-	eval "chkIP=\${${devName}${devNum}_IPADDR}"
+    parseDevice "${dv}" devName devNum
+    eval "chkIP=\${${devName}${devNum}_IPADDR}"
 
-	if [ -n "${chkIP}" ]; then
+    if [ -n "${chkIP}" ]; then
 
-		eval "chkSN=\${${devName}${devNum}_SUBNET}"
-		eval "chkNT=\${${devName}${devNum}_NET}"
-		eval "chkPX=\${${devName}${devNum}_PREFIX}"
+      eval "chkSN=\${${devName}${devNum}_SUBNET}"
+      eval "chkNT=\${${devName}${devNum}_NET}"
 
-		o_echo $"  * ${devName}${devNum} Information"
-		o_echo -n $"    IP ADDRESS"
-		print_result 0 "${chkIP}" "yellow"
-		o_echo -n $"    SUBNET MASK"
-		print_result 0 "${chkSN}" "yellow"
-		o_echo -n $"    NETWORK"
-		print_result 0 "${chkNT}" "yellow"
-		o_echo -n $"    NETWORK PREPIX"
-		print_result 0 "${chkPX}" "yellow"
-		o_echo
+      o_echo $"  * ${devName}${devNum} Information"
+      o_echo -n $"    IP ADDRESS"
+      print_result 0 "${chkIP}" "yellow"
+      o_echo -n $"    SUBNET MASK"
+      print_result 0 "${chkSN}" "yellow"
+      o_echo -n $"    NETWORK"
+      print_result 0 "${chkNT}" "yellow"
+      o_echo
     fi
+done
+
+# if exists mine.conf, add in configuration list
+[ -f "${_confdir}/mine.conf" ] && _configs="${_configs} mine"
+
+# read configurations
+for i in ${_configs}
+do
+	conf_context=
+	conf_context=$(${c_sed} -n -f ${_includes}/config.sed ${_confdir}/${i}.conf)
+	eval ${conf_context}
+done
+
+# check directive with true/false values (true: 1, false: 0)
+for cVAR in ALLOWSELF USE_LOG MASQ_USED BRIDGE_USED
+do
+	eval "cVARTMP=\$${cVAR}"
+	parseValue $cVARTMP $cVAR
 done
 
 next_numbering
@@ -293,7 +281,7 @@ add_brport_rule incoming BR_TCP_ALLOWPORT BR_TCP_HOSTPERPORT BR_UDP_ALLOWPORT BR
 
 # for icmp
 
-o_echo $"  * ICMP service Configuration"
+o_echo "  * ICMP service Configuration"
 add_icmp_host ICMP_HOSTPERPING ICMP_HOSTPERTRACE
 add_bricmp_host BR_ICMP_HOSTPERPING BR_ICMP_HOSTPERTRACE
 
@@ -340,6 +328,7 @@ user_cmd "post"
 next_numbering
 o_echo
 o_echo $"${NB}. TOS Configuration"
+o_echo
 
 add_tos_rule
 [ $? -ne 0 ] && {
