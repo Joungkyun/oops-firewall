@@ -1,6 +1,6 @@
 # Masq rule function
 #
-# $Id: masq.h,v 1.7 2008-01-09 17:53:55 oops Exp $
+# $Id$
 #
 
 add_masq_init() {

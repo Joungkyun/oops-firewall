@@ -1,6 +1,6 @@
 # Init function
 #
-# $Id: init.h,v 1.4 2007-03-29 19:13:46 oops Exp $
+# $Id$
 #
 
 init_service() {

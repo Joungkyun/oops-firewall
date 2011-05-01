@@ -1,6 +1,6 @@
 # Print function
 #
-# $Id: print.h,v 1.8 2009-05-02 16:24:46 oops Exp $
+# $Id$
 #
 
 printBanner() {

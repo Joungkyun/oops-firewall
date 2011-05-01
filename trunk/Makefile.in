@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.9 2011-01-14 04:30:13 oops Exp $
+# $Id$
 
 VERSION		= @version@
 CC			= @cc@
