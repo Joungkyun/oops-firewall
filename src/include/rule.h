@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id: rule.h,v 1.19 2009-07-06 16:35:30 oops Exp $
+# $Id$
 #
 
 add_named_port() {

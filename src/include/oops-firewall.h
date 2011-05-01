@@ -1,6 +1,6 @@
 # header include file
 #
-# $Id: oops-firewall.h,v 1.4 2011-01-13 12:55:07 oops Exp $
+# $Id$
 #
 
 BRIDGE_NAME="brg0"

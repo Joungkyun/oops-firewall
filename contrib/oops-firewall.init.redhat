@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# $Id: oops-firewall.init.redhat,v 1.4 2009-04-30 19:24:05 oops Exp $
+# $Id$
 #
 # Startup script for the OOPS FireWall
 #

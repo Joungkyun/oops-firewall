@@ -1,4 +1,4 @@
-# $Id: user_pre.sed,v 1.3 2009-04-30 13:33:37 oops Exp $
+# $Id$
 
 :sumline
 # Case that the last character of ther line is '/'

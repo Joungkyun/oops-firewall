@@ -1,6 +1,6 @@
 # Check function
 #
-# $Id: check.h,v 1.2 2008-07-17 17:49:16 oops Exp $
+# $Id$
 #
 
 isroot() {

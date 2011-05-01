@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id: command.h,v 1.11 2010-11-18 18:39:23 oops Exp $
+# $Id$
 #
 
 # command line command

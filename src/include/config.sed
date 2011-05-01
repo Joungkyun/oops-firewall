@@ -1,4 +1,4 @@
-# $Id: config.sed,v 1.4 2009-04-30 13:33:37 oops Exp $
+# $Id$
 
 # removed comment
 s/#.*\|"//g

@@ -1,6 +1,6 @@
 # IPTables Modules function
 #
-# $Id: modules.h,v 1.5 2009-07-06 12:19:34 oops Exp $
+# $Id$
 #
 
 ins_mod() {
