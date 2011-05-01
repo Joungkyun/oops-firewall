@@ -1,5 +1,5 @@
 # kernel module list for using oops-firewall
-# $Id: modules.list,v 1.2 2005-12-03 19:50:06 oops Exp $
+# $Id$
 #
 
 # Default kernel module lists

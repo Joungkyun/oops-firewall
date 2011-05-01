@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: oops-firewall.init,v 1.1 2005-12-03 19:32:03 oops Exp $
+# $Id$
 #
 # Startup script for the OOPS FireWall
 #

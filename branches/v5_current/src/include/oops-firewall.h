@@ -1,6 +1,6 @@
 # header include file
 #
-# $Id: oops-firewall.h,v 1.1 2005-12-03 19:36:40 oops Exp $
+# $Id$
 #
 
 source ${_includes}/color.h

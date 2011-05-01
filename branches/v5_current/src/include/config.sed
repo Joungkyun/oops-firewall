@@ -1,4 +1,4 @@
-# $Id: config.sed,v 1.2 2005-12-26 18:05:22 oops Exp $
+# $Id$
 
 :sumline
 # 줄 마지막이 \ (줄넘김 문자) 일 경우 처리

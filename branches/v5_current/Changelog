@@ -1,6 +1,6 @@
 OOPS Firewall Chnages
 
-$Id: Changelog,v 1.44.2.4 2008-07-19 06:42:15 oops Exp $
+$Id$
 
 2008.07.18 JoungKyun.Kim <http://oops.org> 5.1.0
 - fixed make wrong rule on *_HOSTPERPORT

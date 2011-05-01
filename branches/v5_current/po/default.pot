@@ -9,7 +9,7 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id: default.pot,v 1.5.2.1 2008-07-17 19:19:26 oops Exp $
+# $Id$
 #
 #, fuzzy
 msgid ""

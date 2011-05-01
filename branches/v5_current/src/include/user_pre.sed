@@ -1,4 +1,4 @@
-# $Id: user_pre.sed,v 1.1 2005-12-26 18:06:19 oops Exp $
+# $Id$
 
 :sumline
 # 줄 마지막이 \ (줄넘김 문자) 일 경우 처리

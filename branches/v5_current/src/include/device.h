@@ -1,6 +1,6 @@
 # Device function
 #
-# $Id: device.h,v 1.1 2005-12-03 19:37:28 oops Exp $
+# $Id$
 #
 
 # 네트워크 디바이스 (eth/ppp) 목록을 얻어오는 함수
