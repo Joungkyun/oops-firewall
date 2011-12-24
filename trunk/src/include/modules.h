@@ -116,3 +116,27 @@ rm_mod() {
 		print_result ${CHKMOD}
 	fi
 }
+
+set_mod_parm() {
+	if [ -n "${CONNTBL_MAX}" ]; then
+		if [ ${__version_r} -lt 2004023000 ]; then
+			echo ${CONNTBL_MAX} > /proc/sys/net/ipv4/ip_conntrack_max
+		elif [ ${__version_r} -lt 2006020000 ]; then
+			echo ${CONNTBL_MAX} > /proc/sys/net/ipv4/netfilter/ip_conntrack_max
+		else
+			echo ${CONNTBL_MAX} > /proc/sys/net/netfilter/nf_conntrack_max
+		fi
+	fi
+
+	# enable modify hashsize after 2.6.14
+	[ ${__version_r} -lt 2006014000 ] && return
+
+	if [ -n "${HASHSIZE}" ]; then
+		if [ ${__version_r} -lt 2006020000 ]; then
+			echo ${HASHSIZE} > /sys/module/ip_conntrack/parameters/hashsize
+		else
+			echo ${HASHSIZE} > /sys/module/nf_conntrack/parameters/hashsize
+		fi
+	fi
+}
+
