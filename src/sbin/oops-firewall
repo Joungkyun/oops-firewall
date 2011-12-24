@@ -196,6 +196,8 @@ o_echo
 # Init Service
 init_service
 
+# set conntrack table and hashsize
+set_mod_parm
 
 #
 # Bridge Init
