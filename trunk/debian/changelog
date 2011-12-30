@@ -1,3 +1,9 @@
+oops-firewall (6.2.8-1) stable; urgency=low
+
+  * operate ip_conntarck_max and hashsize on interface.conf
+
+ -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Fri, 30 Dec 2011 16:18:43 +0900
+
 oops-firewall (6.2.7-1) stable; urgency=low
 
   * valid debianized

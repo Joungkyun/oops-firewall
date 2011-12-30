@@ -3,11 +3,14 @@ OOPS Firewall Chnages
 $Id$
 
 
-* 6.2.7
+* 6.2.8
 ---------------------------------------------------------------------
 + 2011.12.25
 	- operate ip_conntarck_max and hashsize on interface.conf
 
+
+* 6.2.7
+---------------------------------------------------------------------
 + 2011.01.13
 	- fixed debian ipcalc command
 	- valid debianized
