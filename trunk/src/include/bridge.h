@@ -165,3 +165,12 @@ bridge_wan_check() {
 		export FIREWALL_WAN=$(echo "${FIREWALL_WAN}" | ${c_sed} "s/${BRIDGE_WANDEV}/${BRIDGE_NAME}/g")
 	fi
 }
+
+#
+# Local variables:
+# tab-width: 4
+# c-basic-offset: 4
+# End:
+# vim: set filetype=sh noet sw=4 ts=4 fdm=marker:
+# vim<600: noet sw=4 ts=4:
+#
