@@ -89,7 +89,7 @@ ins_mod() {
 
 rm_mod() {
 	CHKMOD=
-    
+
 	if [ -z "${1}" -o "${1}" = "1" ] ; then
 		modchk=$(${c_lsmod} | ${c_awk} '/^(ipt_|ip_|iptable_|xt_|nf_|x_tables)/ {print $1}' | \
 				${c_grep} -v 'ip_tables\|ip_conntrack')
@@ -98,7 +98,7 @@ rm_mod() {
 			o_echo
 			o_echo $"  * Netfilter Module Shutdown"
 		fi
-  
+
 		for i in ${modchk} ip_conntrack ip_tables
 		do 
 			${c_rmmod} ${i} 2> /dev/null
@@ -140,3 +140,11 @@ set_mod_parm() {
 	fi
 }
 
+#
+# Local variables:
+# tab-width: 4
+# c-basic-offset: 4
+# End:
+# vim: set filetype=sh noet sw=4 ts=4 fdm=marker:
+# vim<600: noet sw=4 ts=4:
+#

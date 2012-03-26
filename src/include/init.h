@@ -385,8 +385,17 @@ init_deny() {
 		${c_iptables} -A INPUT -p icmp --icmp-type echo-request -j REJECT
 		${c_iptables} -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT
 		if [ ${BRIDGE_USED} -eq 1 ]; then
- 			${c_iptables} -A FORWARD -s ${BRG0_NETPX} -p icmp --icmp-type echo-request -j ACCEPT
- 			${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request -j REJECT
+			${c_iptables} -A FORWARD -s ${BRG0_NETPX} -p icmp --icmp-type echo-request -j ACCEPT
+			${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request -j REJECT
 		fi
 	}
 }
+
+#
+# Local variables:
+# tab-width: 4
+# c-basic-offset: 4
+# End:
+# vim: set filetype=sh noet sw=4 ts=4 fdm=marker:
+# vim<600: noet sw=4 ts=4:
+#
