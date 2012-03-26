@@ -5,6 +5,9 @@ $Id$
 
 * 6.2.8
 ---------------------------------------------------------------------
++ 2012.03.26
+	- fixed masqStartCheck that wrong return value
+
 + 2011.12.25
 	- operate ip_conntarck_max and hashsize on interface.conf
 
