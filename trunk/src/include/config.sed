@@ -1,19 +1,22 @@
 # $Id$
 
 # removed comment
-s/#.*\|"//g
+s/[[:space:]]\+#.*\|"//g
 
 :sumline
 # Case that the last character of ther line is '/'
 /\\[ \t]*$/ {
-  # input next line to patern space.
-  N
+	# input next line to patern space.
+	N
 
-  # remove '/' character and newline
-  s/[ \t]*\\[ \t]*[\r\n]\+[ \t]*/ /g
+	# removed next line comment
+	s/[[:space:]]\+#.*\|"//g
 
-  # repeat Until '/' character don't exists.
-  t sumline
+	# remove '/' character and newline
+	s/[ \t]*\\[ \t]*[\r\n]\+[ \t]*/ /g
+
+	# repeat Until '/' character don't exists.
+	t sumline
 }
 
 # remove line of direction format
@@ -27,6 +30,9 @@ s/^[ \t]\+//g
 
 # remove white space before or after equal mark
 s/[ \t]*=[ \t]*/="/g
+
+# remove last blanks
+s/[[:space:]]\+$//g
 
 # close quote of variable's value
 s/$/";/g

@@ -3,14 +3,17 @@
 :sumline
 # Case that the last character of ther line is '/'
 /\\[ \t]*$/ {
-  # input next line to patern space.
-  N
+	# input next line to patern space.
+	N
 
-  # remove '/' character and newline
-  s/[ \t]*\\[ \t]*[\r\n]\+[ \t]*/ /g
+	# removed next line comment
+	s/[[:space:]]\+#.*\|"//g
 
-  # repeat Until '/' character don't exists.
-  t sumline
+	# remove '/' character and newline
+	s/[ \t]*\\[ \t]*[\r\n]\+[ \t]*/ /g
+
+	# repeat Until '/' character don't exists.
+	t sumline
 }
 
 # remove first space each lines.
