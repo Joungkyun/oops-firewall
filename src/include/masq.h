@@ -12,7 +12,7 @@ add_masq_init() {
 	o_echo $"  * Deprecated Direction Check"
 	for i in MASQ_DEVICE MASQ_CLIENT_DEVICE
 	do
-		eval "masq_chk_direction=\$${i}"
+		eval "masq_chk_direction=\"\$${i}\""
 		[ "${i}" = "MASQ_DEVICE" ] && _alter="MASQUERADE_WAN" || _alter="MASQUERADE_LOC"
 		if [ -n "${masq_chk_direction}" ]; then
 			o_echo -n "    ==> "
@@ -58,13 +58,13 @@ masqStartCheck() {
 
 	[ -z "${VARNAME}" ] && return 0
 
-	eval "cvalue=\$${VARNAME}"
+	eval "cvalue=\"\$${VARNAME}\""
 
 	echo ${cvalue} | ${c_grep} "^\(+\|0:\)" >& /dev/null
 	[ $? -ne 0 ] && return 0
 
 	cvalue=$(echo ${cvalue} | ${c_sed} 's/^+//g')
-	eval "${VARNAME}=${cvalue}"
+	eval "${VARNAME}=\"${cvalue}\""
 
 	[ -z "${RETVARNAME}" ] && return 1 || eval "${RETVARNAME}=1"
 }
@@ -81,7 +81,7 @@ bridge_masq_rule() {
 		MASQ_INTERNAL=$1
 	else
 		WordToUpper "${MASQUERADE_LOC}" MASQ_TMP_DEV
-		eval "MASQ_INTERNAL=\${${MASQ_TMP_DEV}_NET}/\${${MASQ_TMP_DEV}_PREFIX}"
+		eval "MASQ_INTERNAL=\"\${${MASQ_TMP_DEV}_NET}/\${${MASQ_TMP_DEV}_PREFIX}\""
 	fi
 
 	o_echo "  * MASQ configration on Bridge Service"
@@ -97,6 +97,26 @@ bridge_masq_rule() {
 	[ "${_testmode}" = 0 ] && \
 		${c_iptables} -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
 								-m state --state ESTABLISHED,RELATED -j ACCEPT
+}
+
+#
+# divided host and port for given value
+# div_host_port value d|s ret_var_name
+#
+div_host_port() {
+	local ORGV=$1
+	local LOC=$2
+	local RETV=$3
+	local addr
+	local port
+
+	addr=${ORGV%@*}
+	port=${ORGV#*@}
+	port=$(echo "${port}" | ${c_sed} 's/-/:/g')
+
+	[ "${addr}" = "${port}" ] && port="" || port=" --${LOC}port ${port}"
+
+	eval "${RETV}=\"${addr}${port}\""
 }
 
 add_masq_rule() {
@@ -119,6 +139,9 @@ add_masq_rule() {
 			echo ${values} | {
 				IFS=':' read pc public dest
 
+				div_host_port ${pc} s pc
+
+				[ -n "${dest}" ] && div_host_port ${dest} d dest
 				[ -n "${dest}" ] && dest=" -d ${dest}"
 
 				if [ "${pc}" = "0" ]; then
