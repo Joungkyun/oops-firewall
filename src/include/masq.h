@@ -69,6 +69,36 @@ masqStartCheck() {
 	[ -z "${RETVARNAME}" ] && return 1 || eval "${RETVARNAME}=1"
 }
 
+#
+# Bridge 사용시, Forwarding table에서 MASQ 처리가 원할하도록 하기 위할 룰
+#
+bridge_masq_rule() {
+	local MASQ_INTERNAL
+
+	[ ${BRIDGE_USED} -eq 0 ] && return 0
+
+	if [ -n "$1" ]; then
+		MASQ_INTERNAL=$1
+	else
+		WordToUpper "${MASQUERADE_LOC}" MASQ_TMP_DEV
+		eval "MASQ_INTERNAL=\${${MASQ_TMP_DEV}_NET}/\${${MASQ_TMP_DEV}_PREFIX}"
+	fi
+
+	o_echo "  * MASQ configration on Bridge Service"
+
+	o_echo "    iptables -A FORWARD -s ${MASQ_INTERNAL} -p tcp --dport 1:65535 \\"
+	o_echo "                        -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT"
+	[ "${_testmode}" = 0 ] && \
+	${c_iptables} -A FORWARD -s ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
+							-m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+	o_echo "    iptables -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \\"
+	o_echo "                        -m state --state ESTABLISHED,RELATED -j ACCEPT"
+	[ "${_testmode}" = 0 ] && \
+		${c_iptables} -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
+								-m state --state ESTABLISHED,RELATED -j ACCEPT
+}
+
 add_masq_rule() {
 	add_masq_init
 	[ $? -ne 0 ] && return 0
@@ -92,11 +122,13 @@ add_masq_rule() {
 					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -j SNAT --to ${output}"
 					[ "${_testmode}" = 0 ] && \
 						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -j SNAT --to ${output}
+					bridge_masq_rule
 				else
 					o_echo "  * iptables -t nat -A POSTROUTING -s ${pc} -o ${MASQUERADE_WAN} \\"
 					o_echo "             -j SNAT --to ${output}"
 					[ "${_testmode}" = 0 ] && \
 						${c_iptables} -t nat -A POSTROUTING -s ${pc} -o ${MASQUERADE_WAN} -j SNAT --to ${output}
+					bridge_masq_rule ${pc}
 				fi
 			}
 		done
@@ -110,25 +142,7 @@ add_masq_rule() {
 		[ "${_testmode}" = 0 ] && \
 			${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -j SNAT --to ${MASQ_IPADDR}
 
-		# Bridge 사용시에는 Forwarding table 에서 MASQ 처리가 되도록 룰을 적용
-		if [ "${BRIDGE_USED}" -ne 0 ]; then
-			WordToUpper "${MASQUERADE_LOC}" MASQ_TMP_DEV
-			eval "MASQ_INTERNAL=\${${MASQ_TMP_DEV}_NET}/\${${MASQ_TMP_DEV}_PREFIX}"
-
-			o_echo "  * MASQ configration on Bridge Service"
-
-			o_echo "    iptables -A FORWARD -s ${MASQ_INTERNAL} -p tcp --dport 1:65535 \\"
-			o_echo "                        -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT"
-			[ "${_testmode}" = 0 ] && \
-			${c_iptables} -A FORWARD -s ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
-									-m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-
-			o_echo "    iptables -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \\"
-			o_echo "                        -m state --state ESTABLISHED,RELATED -j ACCEPT"
-			[ "${_testmode}" = 0 ] && \
-				${c_iptables} -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
-										-m state --state ESTABLISHED,RELATED -j ACCEPT
-		fi
+		bridge_masq_rule
 	fi
 
 	# Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정
