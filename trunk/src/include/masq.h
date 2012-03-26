@@ -110,8 +110,8 @@ div_host_port() {
 	local addr
 	local port
 
-	addr=${ORGV%@*}
-	port=${ORGV#*@}
+	addr=${ORGV%:*}
+	port=${ORGV#*:}
 	port=$(echo "${port}" | ${c_sed} 's/-/:/g')
 
 	[ "${addr}" = "${port}" ] && port="" || port=" --${LOC}port ${port}"
@@ -137,7 +137,7 @@ add_masq_rule() {
 			masqStartCheck ${values} MASQ_WHOLE_ADJ
 
 			echo ${values} | {
-				IFS=':' read pc public dest
+				IFS='+' read pc public dest
 
 				div_host_port ${pc} s pc
 
