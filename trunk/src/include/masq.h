@@ -47,13 +47,26 @@ add_masq_init() {
 	return 0
 }
 
+#
+# 전체 MASQ를 걸지 여부를 확인
+# masqStartCheck 체크값_변수이름 [MASQ_WHOLE_ADJ]
+#
 masqStartCheck() {
-  SCHKTMP=$1
-  SCHKTMPNAME=$2
+	local VARNAME=$1
+	local RETVARNAME=$2
+	local cvalue
 
-  SCHKTMP1=$(echo ${SCHKTMP} | ${c_awk} -F ':' '{print $1}')
-  [ "${SCHKTMP1}" != "0" ] && return 0
-  [ -z "${SCHKTMPNAME}" ] && return 1 || eval "${SCHKTMPNAME}=1"
+	[ -z "${VARNAME}" ] && return 0
+
+	eval "cvalue=\$${VARNAME}"
+
+	echo ${cvalue} | ${c_grep} "^\(+\|0:\)" >& /dev/null
+	[ $? -ne 0 ] && return 0
+
+	cvalue=$(echo ${cvalue} | ${c_sed} 's/^+//g')
+	eval "${VARNAME}=${cvalue}"
+
+	[ -z "${RETVARNAME}" ] && return 1 || eval "${RETVARNAME}=1"
 }
 
 add_masq_rule() {

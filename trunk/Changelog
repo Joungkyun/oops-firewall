@@ -7,6 +7,8 @@ $Id$
 ---------------------------------------------------------------------
 + 2012.03.26
 	- fixed masqStartCheck that wrong return value
+	- MASQ_MATCH_START value start '+' character, don't permit
+	  masquerate of whole start network
 
 + 2011.12.25
 	- operate ip_conntarck_max and hashsize on interface.conf
