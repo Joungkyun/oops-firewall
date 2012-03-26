@@ -7,7 +7,7 @@
 	N
 
 	# removed next line comment
-	s/[[:space:]]\+#.*\|"//g
+	s/\([[:space:]]\+\)\?#.*\|"//g
 
 	# remove '/' character and newline
 	s/[ \t]*\\[ \t]*[\r\n]\+[ \t]*/ /g
