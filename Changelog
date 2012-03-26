@@ -8,6 +8,7 @@ $Id$
 + 2012.03.27
 	- enhanced nat + bridge environments
 	- enhanced MASQ_MATCH_START that support DESTINATION rule
+	- fixed deprecated directive on masq
 
 + 2012.03.26
 	- fixed masqStartCheck that wrong return value

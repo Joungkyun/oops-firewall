@@ -150,7 +150,7 @@ add_masq_rule() {
 	fi
 
 	# Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정
-	for cdv in ${MASQ_CLIENT_DEVICE}
+	for cdv in ${MASQUERADE_LOC}
 	do
 		TMP_CLIENT=
 		WordToUpper ${cdv} TMP_CLIENT
