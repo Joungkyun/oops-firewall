@@ -109,7 +109,7 @@ add_masq_rule() {
 	[ "${_testmode}" = 0 ] && \
 		${c_iptables} -t nat -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
-	# 외부로 나가는 출발점을 지정하도록 함. 값은 적용사설ip:출발지주소 의 형태를
+	# 외부로 나가는 출발점을 지정하도록 함. 값은 적용사설ip:출발지주소[:도착지주소] 의 형태를
 	# 취하며 적용사설ip의 값이 0 일경우에는 everywhere 로 적용함.
 	if [ -n "${MASQ_MATCH_START}" ]; then
 		for values in ${MASQ_MATCH_START}
@@ -117,17 +117,21 @@ add_masq_rule() {
 			masqStartCheck ${values} MASQ_WHOLE_ADJ
 
 			echo ${values} | {
-				IFS=':' read pc output
+				IFS=':' read pc public dest
+
+				[ -n "${dest}" ] && dest=" -d ${dest}"
+
 				if [ "${pc}" = "0" ]; then
-					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -j SNAT --to ${output}"
+					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${dest} -j SNAT --to ${public}"
 					[ "${_testmode}" = 0 ] && \
-						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -j SNAT --to ${output}
+						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${dest} -j SNAT --to ${public}
 					bridge_masq_rule
 				else
-					o_echo "  * iptables -t nat -A POSTROUTING -s ${pc} -o ${MASQUERADE_WAN} \\"
-					o_echo "             -j SNAT --to ${output}"
+					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -s ${pc}${dest} \\"
+					o_echo "             -j SNAT --to ${public}"
 					[ "${_testmode}" = 0 ] && \
-						${c_iptables} -t nat -A POSTROUTING -s ${pc} -o ${MASQUERADE_WAN} -j SNAT --to ${output}
+						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \
+									-s ${pc}${dest} -j SNAT --to ${public}
 					bridge_masq_rule ${pc}
 				fi
 			}
