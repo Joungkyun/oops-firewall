@@ -53,7 +53,7 @@ masqStartCheck() {
 
   SCHKTMP1=$(echo ${SCHKTMP} | ${c_awk} -F ':' '{print $1}')
   [ "${SCHKTMP1}" != "0" ] && return 0
-  [ -z "${SCHKTMPNAME}" ] && SCHKTMPNAME=1 || eval "${SCHKTMPNAME}=1"
+  [ -z "${SCHKTMPNAME}" ] && return 1 || eval "${SCHKTMPNAME}=1"
 }
 
 add_masq_rule() {
