@@ -32,14 +32,14 @@ add_masq_init() {
 		WordToUpper ${MASQUERADE_WAN} MASQ_DEVICE_UPPER
 		eval "MASQ_IPADDR=\"\$${MASQ_DEVICE_UPPER}_IPADDR\""
 	fi
-  
+
 	if [ -z "${MASQUERADE_LOC}" ]; then
 		o_echo -n "  * "
 		print_color "MASQUERADE_LOC"
 		o_echo $" is not set"
 		return 1
 	fi
-  
+
 	# enabled packet forwarding
 	[ -f "/proc/sys/net/ipv4/ip_forward" ] && \
 		echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -72,7 +72,7 @@ add_masq_rule() {
 		for values in ${MASQ_MATCH_START}
 		do
 			masqStartCheck ${values} MASQ_WHOLE_ADJ
-  
+
 			echo ${values} | {
 				IFS=':' read pc output
 				if [ "${pc}" = "0" ]; then
