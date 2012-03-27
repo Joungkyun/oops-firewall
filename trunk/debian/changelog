@@ -1,8 +1,16 @@
 oops-firewall (6.2.8-1) stable; urgency=low
 
   * operate ip_conntarck_max and hashsize on interface.conf
+  * fixed masqStartCheck that wrong return value
+  * MASQ_MATCH_START value start '+' character, don't permit
+    masquerate of whole start network
+  * enhanced configure parser
+  * enhanced nat + bridge environments
+  * enhanced MASQ_MATCH_START that support DESTINATION rule
+  * fixed deprecated directive on masq
+  * change seperate character ':' to '+' on MASQ_MATCH_START directive
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Fri, 30 Dec 2011 16:18:43 +0900
+ -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Tue, 27 Mar 2012 15:36:43 +0900
 
 oops-firewall (6.2.7-1) stable; urgency=low
 
