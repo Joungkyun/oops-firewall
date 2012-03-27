@@ -134,10 +134,10 @@ add_masq_rule() {
 	if [ -n "${MASQ_MATCH_START}" ]; then
 		for values in ${MASQ_MATCH_START}
 		do
-			masqStartCheck ${values} MASQ_WHOLE_ADJ
+			masqStartCheck values MASQ_WHOLE_ADJ
 
 			echo ${values} | {
-				IFS='+' read pc public dest
+				IFS=',' read pc public dest
 
 				div_host_port ${pc} s pc
 
