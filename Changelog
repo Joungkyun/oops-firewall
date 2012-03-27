@@ -10,6 +10,7 @@ $Id$
 	- enhanced MASQ_MATCH_START that support DESTINATION rule
 	- fixed deprecated directive on masq
 	- change seperate character ':' to '+' on MASQ_MATCH_START directive
+	- release 6.2.8
 
 + 2012.03.26
 	- fixed masqStartCheck that wrong return value

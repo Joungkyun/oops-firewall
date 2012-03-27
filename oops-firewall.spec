@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
+* Tue Mar 27 2012 JoungKyun.Kim <http://oops.org> 45:6.2.8-1
+- update 6.2.8
+
 * Fri Jan 14 2011 JoungKyun.Kim <http://oops.org> 44:6.2.7-1
 - update 6.2.7
 
