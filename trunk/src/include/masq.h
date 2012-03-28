@@ -101,22 +101,54 @@ bridge_masq_rule() {
 
 #
 # divided host and port for given value
-# div_host_port value d|s ret_var_name
+# div_host_port value d|s ret_var_name protocol_var_name
 #
 div_host_port() {
 	local ORGV=$1
 	local LOC=$2
 	local RETV=$3
+	local PROTO=$4
 	local addr
 	local port
+	local proto
 
 	addr=${ORGV%:*}
 	port=${ORGV#*:}
 	port=$(echo "${port}" | ${c_sed} 's/-/:/g')
 
-	[ "${addr}" = "${port}" ] && port="" || port=" --${LOC}port ${port}"
+	if [ "${addr}" = "${port}" ]; then
+		port=""
+	else
+		check_protocol "${port}" port proto
+		port=" --${LOC}port ${port}"
+	fi
 
 	eval "${RETV}=\"${addr}${port}\""
+	[ -n "${proto}" ] && eval "${PROTO}=\"${proto}\""
+}
+
+check_protocol() {
+	local VAL=$1
+	local PORTNAME=$2
+	local PROTONAME=$3
+	local v1
+	local v2
+
+	v2=$(echo "${VAL}" | ${c_sed} 's/^[^0-9]\+//g')
+
+	eval "${PORTNAME}=\"${v2}\""
+	[ "${VAL}" = "${v2}" ] && eval "${PROTONAME}=\"-p tcp \"" && return 0
+
+	v1=$(echo "${VAL}" | ${c_sed} 's/[0-9:]//g')
+
+	case "${v1}" in
+		"T|t") proto="tcp" ;;
+		"U|u") proto="udp" ;;
+		"I|i") proto="icmp" ;;
+		*) proto="tcp" ;;
+	esac
+	eval "${PROTONAME}=\"-p ${proto} \""
+
 }
 
 add_masq_rule() {
@@ -139,10 +171,13 @@ add_masq_rule() {
 			echo ${values} | {
 				IFS=',' read pc public dest
 
-				div_host_port ${pc} s pc
+				local proto=
+				div_host_port "${pc}" s pc sproto
 
-				[ -n "${dest}" ] && div_host_port ${dest} d dest
+				[ -n "${dest}" ] && div_host_port "${dest}" d dest dproto
 				[ -n "${dest}" ] && dest=" -d ${dest}"
+
+				[ -n "${sproto}" ] && proto=${sproto} || [ -n "${dproto}" ] && proto=${dproto}
 
 				if [ "${pc}" = "0" ]; then
 					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${dest} -j SNAT --to ${public}"
@@ -150,11 +185,12 @@ add_masq_rule() {
 						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${dest} -j SNAT --to ${public}
 					bridge_masq_rule
 				else
-					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -s ${pc}${dest} \\"
+					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \\"
+					o_echo "             ${proto}-s ${pc}${dest} \\"
 					o_echo "             -j SNAT --to ${public}"
 					[ "${_testmode}" = 0 ] && \
 						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \
-									-s ${pc}${dest} -j SNAT --to ${public}
+									${proto}-s ${pc}${dest} -j SNAT --to ${public}
 					bridge_masq_rule ${pc}
 				fi
 			}
