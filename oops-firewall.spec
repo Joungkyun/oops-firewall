@@ -1,9 +1,9 @@
 %define _unpackaged_files_terminate_build 0
 Summary: Individaul Firewall with IPTABLES
 Name: oops-firewall
-Version: 6.2.8
+Version: 6.2.9
 Release: 1
-Epoch: 44
+Epoch: 46
 License: GPL
 Group: Applications/Security
 URL: http://oops.org/?t=lecture&sb=firewall&n=1
@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
+* Tue Mar 28 2012 JoungKyun.Kim <http://oops.org> 46:6.2.9-1
+- update 6.2.9
+
 * Tue Mar 27 2012 JoungKyun.Kim <http://oops.org> 45:6.2.8-1
 - update 6.2.8
 
