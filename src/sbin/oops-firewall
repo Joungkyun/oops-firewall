@@ -234,6 +234,17 @@ o_echo
 init_invalid
 
 #
+# Allow Basic Rule
+#
+
+next_numbering
+o_echo
+o_echo $"${NB}. Allow Basic Rules"
+o_echo
+
+init_default_rule
+
+#
 # Allow All Service
 #
 
@@ -264,16 +275,9 @@ o_echo
 o_echo $"${NB}. Allow Outgoing Service Configuration"
 o_echo
 
-add_port_rule outgoing OUT_TCP_ALLOWPORT OUT_UDP_ALLOWPORT
+add_port_rule outgoing OUT_TCP_ALLOWPORT OUT_TCP_HOSTPERPORT \
+						OUT_UDP_ALLOWPORT OUT_UDP_HOSTPERPORT
 add_brport_rule outgoing OUT_TCP_ALLOWPORT OUT_UDP_ALLOWPORT
-
-o_echo $"  * Name Service Configuration"
-add_named_port
-o_echo
-[ "$BRIDGE_USED" -ne 0 ] && {
-	o_echo $"  * Bridge Name Service Configuration"
-	add_named_port BRIDGE
-}
 
 
 #
