@@ -120,7 +120,7 @@ init_service() {
 	o_echo -n $"    Remove rule of OUTPUT"
 	print_result ${__chkchain}
 
-	# ƒø≥Œ 2.4.18 ¿ÃªÛø°º≠ ¿€µø
+	# Ïª§ÎÑê 2.4.18 Ïù¥ÏÉÅÏóêÏÑú ÏûëÎèô
 	if [ "${extend_mangle}" = "1" ]; then
 		if [ ${_testmode} -eq 0 ]; then
 			${c_iptables} -t mangle -P INPUT ACCEPT
@@ -178,7 +178,7 @@ init_kernel() {
 	#	print_result ${__kpchk}
 	#fi
 
-	# TCP Syncookies ∏¶ ªÁøÎ«“ºˆ ¿÷∞‘ «œ±‚ ¿ß«ÿ
+	# TCP Syncookies Î•º ÏÇ¨Ïö©Ìï†Ïàò ÏûàÍ≤å ÌïòÍ∏∞ ÏúÑÌï¥
 	if [ -f "/proc/sys/net/ipv4/tcp_syncookies" ]; then
 		if [ ${_testmode} -eq 0 ]; then
 			echo 1 > /proc/sys/net/ipv4/tcp_syncookies
@@ -189,8 +189,8 @@ init_kernel() {
 	fi
 
 
-	# RFC1812ø° µ˚∏• IP spoof πÊ¡ˆ∏¶ ¿ß«— º≥¡§(ƒø≥Œ 2.2 ¿ÃªÛ πˆ¿¸)
-	# æ∆∑°ø°º≠ ip Ω∫«™«Œ «ÿ¥Á «◊∏Ò ¬¸∞Ì
+	# RFC1812Ïóê Îî∞Î•∏ IP spoof Î∞©ÏßÄÎ•º ÏúÑÌïú ÏÑ§Ï†ï(Ïª§ÎÑê 2.2 Ïù¥ÏÉÅ Î≤ÑÏ†Ñ)
+	# ÏïÑÎûòÏóêÏÑú ip Ïä§Ìë∏Ìïë Ìï¥Îãπ Ìï≠Î™© Ï∞∏Í≥†
 	_pfile="/proc/sys/net/ipv4/conf/*/rp_filter"
 	for pfile in $_pfile
 	do
@@ -205,7 +205,7 @@ init_kernel() {
 		fi
 	done
 
-	# ¡§¿«µ«¡ˆ æ ¿∫ ø°∑Ø ∏ﬁΩ√¡ˆ∏¶ ∏∑¿Ω
+	# Ï†ïÏùòÎêòÏßÄ ÏïäÏùÄ ÏóêÎü¨ Î©îÏãúÏßÄÎ•º ÎßâÏùå
 	if [ -f "/proc/sys/net/ipv4/icmp_ignore_bogus_error_responses" ]; then
 		if [ ${_testmode} -eq 0 ]; then
 			echo 1 > /proc/sys/net/ipv4/icmp_ignore_bogus_error_responses
@@ -215,7 +215,7 @@ init_kernel() {
 		print_result ${__kpchk}
 	fi
 
-	# ip ¡÷º“∏¶ Ω∫«™«Œ«—¥Ÿ∞Ì øπªÛµ«¥¬ ∞ÊøÏ ∑Œ±◊ø° ±‚∑œ«œ±‚
+	# ip Ï£ºÏÜåÎ•º Ïä§Ìë∏ÌïëÌïúÎã§Í≥† ÏòàÏÉÅÎêòÎäî Í≤ΩÏö∞ Î°úÍ∑∏Ïóê Í∏∞Î°ùÌïòÍ∏∞
 	#if [ -f "/proc/sys/net/ipv4/conf/all/log_martians" ]; then
 	#	if [ ${_testmode} -eq 0 ]; then
 	#		echo 1 > /proc/sys/net/ipv4/conf/all/log_martians
@@ -226,10 +226,10 @@ init_kernel() {
 	#fi
 
 
-	# ∫Í∑ŒµÂƒ≥Ω∫∆Æ, ∏÷∆ºƒ≥Ω∫∆Æ ¡÷º“ø° ICMP ∏ﬁΩ√¡ˆ ∫∏≥ª¥¬∞Õ ∏∑±‚
-	# "smurf" ∞¯∞› πÊ¡ˆøÎ
-	# æ∆∑°ø°º≠ «ÿ¥Á ¡∂«◊ ¬¸∞Ì
-	# ƒø≥Œ 2.2 ¿ÃªÛø° «ÿ¥Á
+	# Î∏åÎ°úÎìúÏ∫êÏä§Ìä∏, Î©ÄÌã∞Ï∫êÏä§Ìä∏ Ï£ºÏÜåÏóê ICMP Î©îÏãúÏßÄ Î≥¥ÎÇ¥ÎäîÍ≤É ÎßâÍ∏∞
+	# "smurf" Í≥µÍ≤© Î∞©ÏßÄÏö©
+	# ÏïÑÎûòÏóêÏÑú Ìï¥Îãπ Ï°∞Ìï≠ Ï∞∏Í≥†
+	# Ïª§ÎÑê 2.2 Ïù¥ÏÉÅÏóê Ìï¥Îãπ
 	if [ -f "/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts" ]; then
 		if [ ${_testmode} -eq 0 ]; then
 			echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
@@ -246,11 +246,6 @@ init_invalid() {
 
 	for v in $_tables
 	do
-		case "$v" in
-			INPUT) _pv="INPUT  ";;
-			OUTPUT) _pv="OUTPUT ";;
-			*) _pv="${v}"
-		esac
 		if [ "${v}" != "FORWARD" ]; then
 			__logprefix="${v} ANY Packet Refuse"
 		else
@@ -258,54 +253,65 @@ init_invalid() {
 		fi
 
 		[ ${USE_LOG} -eq 1 ] && {
-			o_echo "  * iptables -A ${_pv} -m stat --state ${_nI} \\"
+			o_echo "  * iptables -A ${v} -m stat --state ${_nI} \\"
 			o_echo "             ${_logformat} \\"
 			o_echo "             --log-prefix \"${__logprefix}\""
 			${c_iptables} -A ${v} -m state --state ${_nI} ${_logformat} --log-prefix "${__logprefix}"
 		}
-		o_echo "  * iptables -A ${_pv} -m state --state ${_nI} -j DROP"
+		printf "  * iptables -A %-7s -m state --state ${_nI} -j DROP\n" "${v}"
 		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${v} -m state --state ${_nI} -j DROP
 	done
 }
 
-init_deny() {
-	_tables="INPUT"
+init_default_rule() {
+	_tables="INPUT OUTPUT"
 	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
 
-	# ∏µÁ º≠∫ÒΩ∫∏¶ ∞≈∫Œ
-	o_echo $"  * Reject All Syn Packet"
-	for _tb in OUTPUT ${_tables}
+	# ESTABLISHED ÏÑ∏ÏÖòÍ≥º RELATE ÏÑ∏ÏÖòÏùÑ Ìï≠ÏÉÅ ÌóàÏö©ÌïúÎã§.
+	# FTP sessionÏùò Í≤ΩÏö∞ nf_conntrack_ftp Î™®ÎìàÏù¥ Ïò¨ÎùºÏôÄ ÏûàÏñ¥Ïïº
+	# ÏûëÎèôÌïúÎã§.
+	for v in $_tables
 	do
-		case "$_tb" in
-			INPUT) _ptb="INPUT  ";;
-			OUTPUT) _ptb="OUTPUT ";;
-			*) _ptb="$_tb"
-		esac
-		[ ${USE_LOG} -eq 1 ] && {
-			o_echo "    iptables -A ${_ptb} -p tcp -m state --state NEW ${_logformat} --log-prefix 'SYN Refuse'"
-			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${_tb} -p tcp -m state --state NEW ${_logformat} --log-prefix 'SYN Refuse'
-		}
-		o_echo "    iptables -A ${_ptb} -p tcp -m state --state NEW -j REJECT"
-		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p tcp -m state --state NEW -j REJECT
+		printf "  * iptables -A %-7s -m state --state ${_nE},${_nR} -j ACCEPT\n" "${v}"
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${v} -m state --state ${_nE},${_nR} -j ACCEPT
 	done
+
+	# Ïô∏Î∂Ä DNS ÏßàÏùòÎ•º ÌóàÏö©ÌïúÎã§.
+	o_echo "  * iptables -A OUTPUT  -p udp --dport 53 -m state --state ${_nN} -j ACCEPT"
+	[ ${_testmode} -eq 0 ] && ${c_iptables} -A OUTPUT -p udp --dport 53 -m state --state ${_nN} -j ACCEPT
+
+	[ ${BRIDGE_USED} -eq 0 ] && {
+		for dv in ${BRIDGE_INTERNAL}
+		do
+			o_echo "  * iptables -A FORWARD -p udp ! -d ${dv} --dport 53 -j ACCEPT"
+			[ ${_testmode} -eq 0 ] && ${c_iptables} -A FORWARD -p udp ! -d ${dv} --dport 53 -j ACCEPT
+		done
+	}
+}
+
+init_deny() {
+	_tables="INPUT OUTPUT"
+	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
 
 	o_echo
 	o_echo $"  * Drop All TCP packet"
 	for _tb in ${_tables}
 	do
-		case "$_tb" in
-			INPUT) _ptb="INPUT  ";;
-			OUTPUT) _ptb="OUTPUT ";;
-			*) _ptb="$_tb"
+		case ${_tb} in
+			INPUT) _tbv="Inbound" ;;
+			OUTPUT) _tbv="Outbound" ;;
+			*) _tbv="Bridging" ;;
 		esac
+
 		[ "${USE_LOG}" = "1" ] && {
-			o_echo "    iptables -A ${_ptb} -p tcp --dport ${_allport} ${_logformat} --log-prefix 'TCP Refuse'"
+			printf "    iptables -A %-7s -p tcp ${_logformat} \\" ${_tb}
+			printf "             --log-prefix 'Drop %-8s TCP request'\n" ${_tbv}
 			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${_tb} -p tcp --dport ${_allport} ${_logformat} --log-prefix 'TCP Refuse'
+				${c_iptables} -A ${_tb} -p tcp ${_logformat} \
+							--log-prefix "Drop ${_tbv} TCP request refuse"
 		}
-		o_echo "    iptables -A ${_ptb} -p tcp --dport ${_allport} -j DROP"
-		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p tcp --dport ${_allport} -j DROP
+		printf "    iptables -A %-7s -p tcp  -j DROP\n" ${_tb}
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p tcp -j DROP
 	done
 
 	o_echo
@@ -317,78 +323,49 @@ init_deny() {
 			OUTPUT) _ptb="OUTPUT ";;
 			*) _ptb="$_tb"
 		esac
-		if [ "${_tb}" = "FORWARD" ]; then
-			[ "${USE_LOG}" = "1" ] && {
-				o_echo "    iptables -A ${_ptb} -i ${BRIDGE_NAME} -p udp --sport 32767:33167 ${_logformat} --log-prefix 'UDP Traceroute'"
-				[ ${_testmode} -eq 0 ] && \
-					o_echo "    iptables -A ${_ptb} -d ${BRG0_NETPX} -p udp --sport 32767:33167 ${_logformat} --log-prefix 'UDP Traceroute'"
-			}
-			o_echo "    iptables -A ${_ptb} -d ${BRG0_NETPX} -p udp --sport 32767:33167 -j ACCEPT"
-			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${_tb} -d ${BRG0_NETPX} -p udp --sport 32767:33167 -j ACCEPT
-			_fdest=" -d ${BRG0_NETPX}"
-		else
-			_fdest=
-		fi
+
+		case ${_tb} in
+			INPUT) _tbv="Inbound" ;;
+			OUTPUT) _tbv="Outbound" ;;
+			*) _tbv="Bridging" ;;
+		esac
 
 		[ "${USE_LOG}" = "1" ] && {
-			o_echo "    iptables -A ${_ptb}${_fdest} -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'"
+			printf "    iptables -A %-7s -p udp ${_logformat} \\" ${_tb}
+			printf "             --log-prefix 'Drop %-8s UDP request'\n" ${_tbv}
 			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${_tb}${_fdest} -p udp --dport ${_allport} ${_logformat} --log-prefix 'UDP Refuse'
+				${c_iptables} -A ${_tb} -p udp ${_logformat} --log-prefix "Drop ${_tbv} UDP Refuse"
 		}
-		o_echo "    iptables -A ${_ptb}${_fdest} -p udp --dport ${_allport} -j DROP"
-		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb}${_fdest} -p udp --dport ${_allport} -j DROP
+		printf "    iptables -A %-7s -p udp  -j DROP\n" ${_tb}
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p udp -j DROP
 	done
 
 	o_echo
-	o_echo $"  * Prevented internal ping and traceroute request"
+	o_echo $"  * Rejcet all ICMP packet"
 
-	_tables="INPUT OUTPUT"
-	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
+	for _tb in ${_tables}
+	do
+		case ${_tb} in
+			INPUT) _tbv="Inbound" ;;
+			OUTPUT) _tbv="Outbound" ;;
+			*) _tbv="Bridging" ;;
+		esac
 
-	# PING ¿ª ∏∑¿Ω
-	[ "${USE_LOG}" = "1" ] && {
-		o_echo "    iptables -A INPUT   -p icmp --icmp-type echo-request \\"
-		o_echo "             ${_logformat} \\"
-		o_echo "             --log-prefix 'PING request Refuse'"
-		o_echo "    iptables -A OUTPUT  -p icmp --icmp-type time-exceeded \\"
-		o_echo "             ${_logformat} \\"
-		o_echo "             --log-prefix 'Traceroute Refuse'"
-		if [ ${BRIDGE_USED} -eq 1 ]; then
-			o_echo "    iptables -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request \\"
-			o_echo "             ${_logformat} \\"
-			o_echo "             --log-prefix 'Traceroute Refuse'"
-			o_echo "    iptables -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type time-exceeded \\"
-			o_echo "             ${_logformat} \\"
-			o_echo "             --log-prefix 'Traceroute Refuse'"
-		fi
-		[ ${_testmode} -eq 0 ] && {
-			${c_iptables} -A INPUT -p icmp --icmp-type echo-request ${_logformat} \
-						--log-prefix 'PING request Refuse'
-			${c_iptables} -A OUTPUT -p icmp --icmp-type time-exceeded ${_logformat} \
-						--log-prefix 'Traceroute Refuse'
-			if [ ${BRIDGE_USED} -eq 1 ]; then
-				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request ${_logformat} \
-							--log-prefix 'PING request Refuse'
-				${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type time-exceeded ${_logformat} \
-							--log-prefix 'Traceroute Refuse'
-			fi
+		# ICMP block
+		[ "{USE_LOG}" = "1" ] && {
+			printf "    iptables -A %-7s -p icmp ${_logformat} \\" ${_tb}
+			printf "             --log-prefix '%-8s ICMP request refuse'\n" ${_tbv}
+
+			[ ${_testmode} -eq 0 ] && \
+				${c_iptables} -A ${_tb} -p icmp ${_logformat} \
+							--log-prefix "${_tbv} ICMP request refuse"
 		}
-	}
-	o_echo "    iptables -A INPUT   -p icmp --icmp-type echo-request -j REJECT"
-	o_echo "    iptables -A OUTPUT  -p icmp --icmp-type time-exceeded -j REJECT"
-	if [ ${BRIDGE_USED} -eq 1 ]; then
-		o_echo "    iptables -A FORWARD -s ${BRG0_NETPX} -p icmp --icmp-type echo-request -j ACCEPT"
-		o_echo "    iptables -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request -j REJECT"
-	fi
-	[ ${_testmode} -eq 0 ] && {
-		${c_iptables} -A INPUT -p icmp --icmp-type echo-request -j REJECT
-		${c_iptables} -A OUTPUT -p icmp --icmp-type time-exceeded -j REJECT
-		if [ ${BRIDGE_USED} -eq 1 ]; then
-			${c_iptables} -A FORWARD -s ${BRG0_NETPX} -p icmp --icmp-type echo-request -j ACCEPT
-			${c_iptables} -A FORWARD -d ${BRG0_NETPX} -p icmp --icmp-type echo-request -j REJECT
-		fi
-	}
+
+		printf "    iptables -A %-7s -p icmp -j REJECT\n" ${_tb}
+		[ ${_testmode} -eq 0 ] && {
+			${c_iptables} -A ${_tb} -p icmp -j REJECT
+		}
+	done
 }
 
 #

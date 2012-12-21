@@ -48,8 +48,8 @@ add_masq_init() {
 }
 
 #
-# ÀüÃ¼ MASQ¸¦ °ÉÁö ¿©ºÎ¸¦ È®ÀÎ
-# masqStartCheck Ã¼Å©°ª_º¯¼öÀÌ¸§ [MASQ_WHOLE_ADJ]
+# ì „ì²´ MASQë¥¼ ê±¸ì§€ ì—¬ë¶€ë¥¼ í™•ì¸
+# masqStartCheck ì²´í¬ê°’_ë³€ìˆ˜ì´ë¦„ [MASQ_WHOLE_ADJ]
 #
 masqStartCheck() {
 	local VARNAME=$1
@@ -70,7 +70,7 @@ masqStartCheck() {
 }
 
 #
-# Bridge »ç¿ë½Ã, Forwarding table¿¡¼­ MASQ Ã³¸®°¡ ¿øÇÒÇÏµµ·Ï ÇÏ±â À§ÇÒ ·ê
+# Bridge ì‚¬ìš©ì‹œ, Forwarding tableì—ì„œ MASQ ì²˜ë¦¬ê°€ ì›í• í•˜ë„ë¡ í•˜ê¸° ìœ„í•  ë£°
 #
 bridge_masq_rule() {
 	local MASQ_INTERNAL
@@ -155,14 +155,14 @@ add_masq_rule() {
 	add_masq_init
 	[ $? -ne 0 ] && return 0
 
-	# MSSQ ½Ã³ª Á¢¼Ó Áö¿¬ Çö»óÀ» Çâ»ó ½ÃÅ°±â À§ÇÑ ¿É¼Ç
+	# MSSQ ì‹œë‚˜ ì ‘ì† ì§€ì—° í˜„ìƒì„ í–¥ìƒ ì‹œí‚¤ê¸° ìœ„í•œ ì˜µì…˜
 	o_echo "  * iptables -t nat -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN \\"
 	o_echo "             -j TCPMSS --clamp-mss-to-pmtu"
 	[ "${_testmode}" = 0 ] && \
 		${c_iptables} -t nat -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
-	# ¿ÜºÎ·Î ³ª°¡´Â Ãâ¹ßÁ¡À» ÁöÁ¤ÇÏµµ·Ï ÇÔ. °ªÀº Àû¿ë»ç¼³ip:Ãâ¹ßÁöÁÖ¼Ò[:µµÂøÁöÁÖ¼Ò] ÀÇ ÇüÅÂ¸¦
-	# ÃëÇÏ¸ç Àû¿ë»ç¼³ipÀÇ °ªÀÌ 0 ÀÏ°æ¿ì¿¡´Â everywhere ·Î Àû¿ëÇÔ.
+	# ì™¸ë¶€ë¡œ ë‚˜ê°€ëŠ” ì¶œë°œì ì„ ì§€ì •í•˜ë„ë¡ í•¨. ê°’ì€ ì ìš©ì‚¬ì„¤ip:ì¶œë°œì§€ì£¼ì†Œ[:ë„ì°©ì§€ì£¼ì†Œ] ì˜ í˜•íƒœë¥¼
+	# ì·¨í•˜ë©° ì ìš©ì‚¬ì„¤ipì˜ ê°’ì´ 0 ì¼ê²½ìš°ì—ëŠ” everywhere ë¡œ ì ìš©í•¨.
 	if [ -n "${MASQ_MATCH_START}" ]; then
 		for values in ${MASQ_MATCH_START}
 		do
@@ -197,8 +197,8 @@ add_masq_rule() {
 		done
 	fi
 
-	# Ãâ¹ßÁö ÁÖ¼Ò ÁöÁ¤¿¡¼­ »ç¼³ IP°¡ everywhere ÀÌ Àû¿ë ¾ÈµÉ °æ¿ì everywhere À»
-	# masq device ·Î ÁöÁ¤
+	# ì¶œë°œì§€ ì£¼ì†Œ ì§€ì •ì—ì„œ ì‚¬ì„¤ IPê°€ everywhere ì´ ì ìš© ì•ˆë  ê²½ìš° everywhere ì„
+	# masq device ë¡œ ì§€ì •
 	if [ "${MASQ_WHOLE_ADJ}" != "1" ]; then
 		o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \\"
 		o_echo "             -j SNAT --to ${MASQ_IPADDR}"
@@ -208,7 +208,7 @@ add_masq_rule() {
 		bridge_masq_rule
 	fi
 
-	# Forwarding Rule ÀÌ ¸®¾ó IP¿Í »ç¼³ IP°£¿¡ Àß Åë½ÅÀÌ µÇµµ·Ï »ç¼³¸ÁÀ¸·Î Çâ»ó MASQ µµ ¼³Á¤
+	# Forwarding Rule ì´ ë¦¬ì–¼ IPì™€ ì‚¬ì„¤ IPê°„ì— ìž˜ í†µì‹ ì´ ë˜ë„ë¡ ì‚¬ì„¤ë§ìœ¼ë¡œ í–¥ìƒ MASQ ë„ ì„¤ì •
 	for cdv in ${MASQUERADE_LOC}
 	do
 		TMP_CLIENT=

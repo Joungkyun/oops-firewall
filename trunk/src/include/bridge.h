@@ -61,17 +61,17 @@ init_bridge() {
 	bridge_dev_check
 	[ $? -ne 0 ] && return 1
 
-	# bridge interface µî·Ï
+	# bridge interface ë“±ë¡
 	[ ! "$($c_brctl show | $c_grep $BRIDGE_NAME)" ] && \
 		o_echo "  * brctl addbr $BRIDGE_NAME" && \
 		[ $_testmode -eq 0 ] && $c_brctl addbr $BRIDGE_NAME
 
-	# bridge interface ¿¡ wan device µî·Ï
+	# bridge interface ì— wan device ë“±ë¡
 	[ ! "$($c_brctl show | $c_grep $BRIDGE_WANDEV)" ] && \
 		o_echo "  * brctl addif $BRIDGE_NAME $BRIDGE_WANDEV" && \
 		[ $_testmode -eq 0 ] && $c_brctl addif $BRIDGE_NAME $BRIDGE_WANDEV
 
-	# bridge interface ¿¡ local device µî·Ï
+	# bridge interface ì— local device ë“±ë¡
 	[ ! "$($c_brctl show | $c_grep $BRIDGE_LOCDEV)" ] && \
 		o_echo "  * brctl addif $BRIDGE_NAME $BRIDGE_LOCDEV" && \
 		[ $_testmode -eq 0 ] && $c_brctl addif $BRIDGE_NAME $BRIDGE_LOCDEV
@@ -108,7 +108,7 @@ init_bridge() {
 		bridge_wan_info $BRIDGE_NAME
 	fi
 
-	# BRIDGE ÀÇ Á¢¼Ó Áö¿¬ Çö»óÀ» Çâ»ó ½ÃÅ°±â À§ÇÑ ¿É¼Ç
+	# BRIDGE ì˜ ì ‘ì† ì§€ì—° í˜„ìƒì„ í–¥ìƒ ì‹œí‚¤ê¸° ìœ„í•œ ì˜µì…˜
 	o_echo "  * ${c_iptables} -A FORWARD -p tcp --tcp-flags SYN,RST SYN \\"
 	o_echo "                  -j TCPMSS --clamp-mss-to-pmtu"
 	[ "${_testmode}" = 0 ] && \
