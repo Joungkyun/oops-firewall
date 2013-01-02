@@ -133,18 +133,6 @@ shell> /etc/init.d/oops-firewall {start|stop|restart}
 
 를 이용할 수 있다.
 
-주의할 것은, Bridge mode 를 사용할 경우, init script 의 stop action 은 주
-의해서 사용해야 한다.  Bridge mode 사용시에는 oops-firewall 에서 brctl 을
-관리하기 때문에 stop 을 할 경우 network interface 가 내려가는 문제가 발생
-할 수 있다. 그러므로, 종료를 하거나 또는 network interface 를 Bridge mode
-사용하기 전으로 초기화 할 목적이 아니라면 stop 을 사용해서는 안된다.
-
-단지 룰셋을 재적용 하려면 restart 를 이용해야 하며,  Network 단절 없이 룰
-셋을 내리려면 right-stop 을 이용한다. (restart 는 right-stop and start 이
-다.)
-
-Bridge mode 를 사용하지 않을 경우에는 stop 이나 right-stop 이나 동일하다.
-
 
 
 5. oops-firewall 옵션

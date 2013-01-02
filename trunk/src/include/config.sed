@@ -31,6 +31,10 @@ s/^[ \t]\+//g
 # remove white space before or after equal mark
 s/[ \t]*=[ \t]*/="/g
 
+# rutine of +=
+s/+="/+=/g
+s/^\([A-Z_]\+\)[ \t]*+=[ \t]*/\1="${\1} /g
+
 # remove last blanks
 s/[[:space:]]\+$//g
 

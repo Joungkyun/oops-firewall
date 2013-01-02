@@ -3,6 +3,7 @@
 # $Id$
 #
 
+# {{{ init_service()
 init_service() {
 	__chkchain=0
 
@@ -165,7 +166,9 @@ init_service() {
 		print_result ${__chkchain}
 	fi
 }
+# }}}
 
+# {{{ init_kernel()
 init_kernel() {
 	__kpchk=0
 
@@ -238,8 +241,24 @@ init_kernel() {
 		o_echo -n $"  * Deny Ping at BroadCast"
 		print_result ${__kpchk}
 	fi
-}
 
+	# netfilter에서 bridge를 사용할 수 있도록 한다. 
+	#
+	if [ -f "/proc/sys/net/bridge/bridge-nf-call-iptables" ]; then
+		if [ ${BRIDGE_USED} -eq 1 ]; then
+			sysctl -w "net.bridge.bridge-nf-call-iptables=1" >& /dev/null
+			sysctl -w "net.bridge.bridge-nf-call-arptables=1" >& /dev/null
+		else
+			sysctl -w "net.bridge.bridge-nf-call-iptables=0" >& /dev/null
+			sysctl -w "net.bridge.bridge-nf-call-arptables=0" >& /dev/null
+		fi
+		o_echo -n $"  * Enable netfilter on Bridge"
+		print_result 0
+	fi
+}
+# }}}
+
+# {{{ init_invalid()
 init_invalid() {
 	_tables="INPUT OUTPUT"
 	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
@@ -258,11 +277,15 @@ init_invalid() {
 			o_echo "             --log-prefix \"${__logprefix}\""
 			${c_iptables} -A ${v} -m state --state ${_nI} ${_logformat} --log-prefix "${__logprefix}"
 		}
-		printf "  * iptables -A %-7s -m state --state ${_nI} -j DROP\n" "${v}"
+		[ $_verbose -eq 1 ] && {
+			printf "  * iptables -A %-7s -m state --state ${_nI} -j DROP\n" "${v}"
+		}
 		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${v} -m state --state ${_nI} -j DROP
 	done
 }
+# }}}
 
+# {{{ init_default_rule()
 init_default_rule() {
 	_tables="INPUT OUTPUT"
 	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
@@ -270,25 +293,87 @@ init_default_rule() {
 	# ESTABLISHED 세션과 RELATE 세션을 항상 허용한다.
 	# FTP session의 경우 nf_conntrack_ftp 모듈이 올라와 있어야
 	# 작동한다.
+	o_echo $"  * Permit Established and Related session"
 	for v in $_tables
 	do
-		printf "  * iptables -A %-7s -m state --state ${_nE},${_nR} -j ACCEPT\n" "${v}"
+		[ $_verbose -eq 1 ] && {
+			printf "    iptables -A %-7s -m state --state ${_nE},${_nR} -j ACCEPT\n" "${v}"
+		}
 		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${v} -m state --state ${_nE},${_nR} -j ACCEPT
 	done
 
-	# 외부 DNS 질의를 허용한다.
-	o_echo "  * iptables -A OUTPUT  -p udp --dport 53 -m state --state ${_nN} -j ACCEPT"
-	[ ${_testmode} -eq 0 ] && ${c_iptables} -A OUTPUT -p udp --dport 53 -m state --state ${_nN} -j ACCEPT
+	# PERMIT outgoing ping
+	o_echo
+	o_echo $"  * Permit Outgoing PING"
+	o_echo "    iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT"
+	o_echo "    iptables -A INPUT  -p icmp --icmp-type echo-reply -j ACCEPT"
+	[ ${_testmode} -eq 0 ] && {
+		${c_iptables} -A INPUT   -p icmp --icmp-type echo-reply -j ACCEPT
+		${c_iptables} -A OUTPUT  -p icmp --icmp-type echo-request -j ACCEPT
+	}
 
-	[ ${BRIDGE_USED} -eq 0 ] && {
-		for dv in ${BRIDGE_INTERNAL}
-		do
-			o_echo "  * iptables -A FORWARD -p udp ! -d ${dv} --dport 53 -j ACCEPT"
-			[ ${_testmode} -eq 0 ] && ${c_iptables} -A FORWARD -p udp ! -d ${dv} --dport 53 -j ACCEPT
-		done
+	# PERMIT outgoing traceroute
+	o_echo
+	o_echo $"  * Permit Outgoing Traceroute"
+	o_echo "    iptables -A INPUT   -p icmp --icmp-type time-exceeded -j ACCEPT"
+	o_echo "    iptables -A INPUT   -p icmp --icmp-type port-unreachable -j ACCEPT"
+	# For traceroute
+	o_echo "    iptables -A OUTPUT  -p udp --dport 33434:33525 -j ACCEPT"
+	# For tracepath
+	o_echo "    iptables -A OUTPUT  -p udp --dport 44444:44624 -j ACCEPT"
+	[ ${_testmode} -eq 0 ] && {
+		${c_iptables} -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
+		${c_iptables} -A INPUT -p icmp --icmp-type port-unreachable -j ACCEPT
+		${c_iptables} -A OUTPUT -p udp --dport 33434:33525 -j ACCEPT
+		${c_iptables} -A OUTPUT -p udp --dport 44444:44624 -j ACCEPT
+	}
+
+	#
+	# Bridge mode
+	#
+	[ ${BRIDGE_USED} -eq 0 ] && return
+
+	# PERMIT outgoing ping on BRIDGE
+	o_echo
+	o_echo $"  * Permit Outgoing PING on Bridge"
+	o_echo "    iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \\"
+	o_echo "             -p icmp --icmp-type echo-reply -j ACCEPT"
+	o_echo "    iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \\"
+	o_echo "             -p icmp --icmp-type echo-request -j ACCEPT"
+	[ ${_testmode} -eq 0 ] && {
+		${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \
+					-p icmp --icmp-type echo-reply -j ACCEPT
+		${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \
+					-p icmp --icmp-type echo-request -j ACCEPT
+	}
+
+	# PERMIT outgoing traceroute on BRIDGE
+	o_echo
+	o_echo $"  * Permit Outgoing Traceroute"
+	o_echo "    iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \\"
+	o_echo "             -p icmp --icmp-type time-exceeded -j ACCEPT"
+	o_echo "    iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \\"
+	o_echo "             -p icmp --icmp-type port-unreachable -j ACCEPT"
+	# For traceroute
+	o_echo "    iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \\"
+	o_echo "             -p udp --dport 33434:33525 -j ACCEPT"
+	# For tracepath
+	o_echo "    iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \\"
+	o_echo "             -p udp --dport 44444:44624 -j ACCEPT"
+	[ ${_testmode} -eq 0 ] && {
+		${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \
+					-p icmp --icmp-type time-exceeded -j ACCEPT
+		${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \
+					-p icmp --icmp-type port-unreachable -j ACCEPT
+		${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \
+					-p udp --dport 33434:33525 -j ACCEPT
+		${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \
+					-p udp --dport 44444:44624 -j ACCEPT
 	}
 }
+# }}}
 
+# {{{ init_deny()
 init_deny() {
 	_tables="INPUT OUTPUT"
 	[ ${BRIDGE_USED} -eq 1 ] && _tables="${_tables} FORWARD"
@@ -304,13 +389,17 @@ init_deny() {
 		esac
 
 		[ "${USE_LOG}" = "1" ] && {
-			printf "    iptables -A %-7s -p tcp ${_logformat} \\" ${_tb}
-			printf "             --log-prefix 'Drop %-8s TCP request'\n" ${_tbv}
+			[ $_verbose -eq 1 ] && {
+				printf "    iptables -A %-7s -p tcp ${_logformat} \\" ${_tb}
+				printf "             --log-prefix 'Drop %-8s TCP request'\n" ${_tbv}
+			}
 			[ ${_testmode} -eq 0 ] && \
 				${c_iptables} -A ${_tb} -p tcp ${_logformat} \
 							--log-prefix "Drop ${_tbv} TCP request refuse"
 		}
-		printf "    iptables -A %-7s -p tcp  -j DROP\n" ${_tb}
+		[ $_verbose -eq 1 ] && {
+			printf "    iptables -A %-7s -p tcp  -j DROP\n" ${_tb}
+		}
 		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p tcp -j DROP
 	done
 
@@ -318,12 +407,6 @@ init_deny() {
 	o_echo $"  * Drop All UDP packet"
 	for _tb in ${_tables}
 	do
-		case "$_tb" in
-			INPUT) _ptb="INPUT  ";;
-			OUTPUT) _ptb="OUTPUT ";;
-			*) _ptb="$_tb"
-		esac
-
 		case ${_tb} in
 			INPUT) _tbv="Inbound" ;;
 			OUTPUT) _tbv="Outbound" ;;
@@ -331,12 +414,16 @@ init_deny() {
 		esac
 
 		[ "${USE_LOG}" = "1" ] && {
-			printf "    iptables -A %-7s -p udp ${_logformat} \\" ${_tb}
-			printf "             --log-prefix 'Drop %-8s UDP request'\n" ${_tbv}
+			[ $_verbose -eq 1 ] && {
+				printf "    iptables -A %-7s -p udp ${_logformat} \\" ${_tb}
+				printf "             --log-prefix 'Drop %-8s UDP request'\n" ${_tbv}
+			}
 			[ ${_testmode} -eq 0 ] && \
 				${c_iptables} -A ${_tb} -p udp ${_logformat} --log-prefix "Drop ${_tbv} UDP Refuse"
 		}
-		printf "    iptables -A %-7s -p udp  -j DROP\n" ${_tb}
+		[ $_verbose -eq 1 ] && {
+			printf "    iptables -A %-7s -p udp  -j DROP\n" ${_tb}
+		}
 		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${_tb} -p udp -j DROP
 	done
 
@@ -353,20 +440,25 @@ init_deny() {
 
 		# ICMP block
 		[ "{USE_LOG}" = "1" ] && {
-			printf "    iptables -A %-7s -p icmp ${_logformat} \\" ${_tb}
-			printf "             --log-prefix '%-8s ICMP request refuse'\n" ${_tbv}
+			[ $_verbose -eq 1 ] && {
+				printf "    iptables -A %-7s -p icmp ${_logformat} \\" ${_tb}
+				printf "             --log-prefix '%-8s ICMP request refuse'\n" ${_tbv}
+			}
 
 			[ ${_testmode} -eq 0 ] && \
 				${c_iptables} -A ${_tb} -p icmp ${_logformat} \
 							--log-prefix "${_tbv} ICMP request refuse"
 		}
 
-		printf "    iptables -A %-7s -p icmp -j REJECT\n" ${_tb}
+		[ $_verbose -eq 1 ] && {
+			printf "    iptables -A %-7s -p icmp -j DROP\n" ${_tb}
+		}
 		[ ${_testmode} -eq 0 ] && {
-			${c_iptables} -A ${_tb} -p icmp -j REJECT
+			${c_iptables} -A ${_tb} -p icmp -j DROP
 		}
 	done
 }
+# }}}
 
 #
 # Local variables:

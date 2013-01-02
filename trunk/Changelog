@@ -5,6 +5,9 @@ $Id$
 
 * 7.0.0
 ---------------------------------------------------------------------
++ 2013.01.03
+	- rewrite and redesign bridge filter rule
+
 + 2012.12.21
 	- rewrite and redesign iptables rule
 

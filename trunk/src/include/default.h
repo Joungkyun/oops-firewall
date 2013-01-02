@@ -8,10 +8,9 @@ _gcol=50
 _testmode=0
 _verbose=0
 _noansi=0
-_bridgeclear=0
 _iprange=0
 
-export _ver _gcol _testmode _verbose _noansi _bridgeclear _ftppassive _iprange
+export _ver _gcol _testmode _verbose _noansi _ftppassive _iprange
 
 _tmpifile="/tmp/oops-firewall-tmpi.$$"
 _tmpofile="/tmp/oops-firewall-tmpo.$$"
@@ -31,12 +30,9 @@ _logformat="-m limit --limit 1/h --limit-burst 3 -j LOG"
 # configration file name list
 _configs="interface application filter masq forward tos bridge"
 
-# bridge support
-BRIDGE_SET=0
-
 export _tmpifile _tmpofile _passiveif _passiveof
 export _userport _nN _nE _nR _nI
-export _logformat _configs BRIDGE_SET
+export _logformat _configs
 
 [ -f "${_tmpifile}" ]  && rm -rf "${_tmpifile}"  >& /dev/null
 [ -f "${_tmpofile}" ]  && rm -rf "${_tmpofile}"  >& /dev/null
