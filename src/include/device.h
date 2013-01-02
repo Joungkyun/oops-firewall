@@ -13,7 +13,8 @@
 getDeviceList() {
 	devVarName=$1
 	devCheckVar=$2
-	devGetVar=$(${c_awk} -F ':' "/(eth|ppp|${BRIDGE_NAME}|bond)[0-9]*:/ {print \$1}" /proc/net/dev)
+
+	devGetVar=$(${c_awk} -F ':' "/(eth|ppp|${BRIDGE_DEVNAME}|bond)[0-9]*:/ {print \$1}" /proc/net/dev)
 
 	if [ -z "${devGetVar}" ]; then
 		return 1
@@ -85,16 +86,16 @@ parseDevice() {
 	parseDevNum=$3
 
 	parseTmpName=$(echo ${parseDevDeviceName} | ${c_sed} 's/[0-9]\+//g')
-	parseTmpNum=$(echo ${parseDevDeviceName} | ${c_sed} 's/eth\|ppp\|bond\|brg\|tun\|tap//g')
+	parseTmpNum=$(echo ${parseDevDeviceName} | ${c_sed} 's/eth\|ppp\|bond\|br\|tun\|tap//g')
 
-	WordToUpper ${parseTmpName} parseTmpName
-
-	eval "${parseDevName}=\"${parseTmpName}\""
 	if [ "$parseTmpName" = "$parseTmpNum" ]; then
 		eval "${parseDevNum}=\"\""
 	else
 		eval "${parseDevNum}=\"${parseTmpNum}\""
 	fi
+
+	WordToUpper ${parseTmpName} parseTmpName
+	eval "${parseDevName}=\"${parseTmpName}\""
 }
 
 getDeviceIP() {
@@ -192,7 +193,7 @@ firewall_wan_check() {
 	[ -n "${FIREWALL_WAN}" ] && return
 
 	_donelist=
-	for i in BRIDGE_WAN MASQ_DEVICE FORWARD_MASTER
+	for i in BRIDGE_DEVNAME MASQ_DEVICE FORWARD_MASTER
 	do
 		eval "chkinter=\$${i}"
 		[ -z "${chkinter}" ] && continue

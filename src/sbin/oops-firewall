@@ -32,12 +32,10 @@ set -- ${opts}
 for i
 do
 	case "$i" in
-		-a) _bridgeclear=1; shift;;
 		-t) _testmode=1; shift;;
 		-v) _verbose=1; shift;;
 		-n) _noansi=1; shift;;
 		-c) _confdir=$2; shift; shift;;
-		-z) _stopbrg=1; shift;;
 		-V) printVersion;;
 		--) shift; break;;
 	esac
@@ -100,16 +98,15 @@ do
 done
 
 # check directive with true/false values (true: 1, false: 0)
-for cVAR in ALLOWSELF USE_LOG MASQ_USED BRIDGE_USED BRIDGE_CONTROL BRUTE_FORCE_LOG
+for cVAR in ALLOWSELF USE_LOG MASQ_USED BRIDGE_USED BRUTE_FORCE_LOG
 do
 	eval "cVARTMP=\$${cVAR}"
 	parseValue "$cVARTMP" "$cVAR"
 done
 
-if [ "$_stopbrg" = "1" ]; then
-	clear_bridge
-	exit 0
-fi
+[ $BRIDGE_USED -eq 1 ] && \
+[ -z "${BRIDGE_DEVNAME}" -o "${BRIDGE_DEVNAME}" = "" ] && \
+	BRIDGE_DEVNAME="br0"
 
 #
 # IP Address check
@@ -119,8 +116,6 @@ next_numbering
 o_echo
 o_echo $"${NB}. IP address Check"
 o_echo
-
-[ $_bridgeclear -eq 1 ] && clear_bridge self
 
 # get device list
 getDeviceList devlist
@@ -166,9 +161,8 @@ o_echo
 
 # interface name check
 firewall_wan_check
-bridge_wan_check
 
-for interface in FIREWALL_WAN MASQUERADE_WAN MASQUERADE_LOC BRIDGE_WANDEV BRIDGE_LOCDEV
+for interface in FIREWALL_WAN MASQUERADE_WAN MASQUERADE_LOC BRIDGE_DEVNAME BRIDGE_WANDEV BRIDGE_LANDEV
 do
 	if [ -n "$(echo ${interface} | ${c_grep} BRIDGE)" ]; then
 		[ $BRIDGE_USED -eq 0 ] && continue;
@@ -277,7 +271,8 @@ o_echo
 
 add_port_rule outgoing OUT_TCP_ALLOWPORT OUT_TCP_HOSTPERPORT \
 						OUT_UDP_ALLOWPORT OUT_UDP_HOSTPERPORT
-add_brport_rule outgoing OUT_TCP_ALLOWPORT OUT_UDP_ALLOWPORT
+
+add_br_rule BR_OUT_TCP_ALLOW BR_OUT_UDP_ALLOW
 
 
 #
@@ -290,7 +285,8 @@ o_echo $"${NB}. Allow Incoming Service Configuration"
 o_echo
 
 add_port_rule incoming TCP_ALLOWPORT TCP_HOSTPERPORT UDP_ALLOWPORT UDP_HOSTPERPORT
-add_brport_rule incoming BR_TCP_ALLOWPORT BR_TCP_HOSTPERPORT BR_UDP_ALLOWPORT BR_UDP_HOSTPERPORT
+
+add_br_rule BR_TCP_ALLOW BR_UDP_ALLOW
 
 [ -f "${_tmpifile}" ]  && rm -rf "${_tmpifile}"  >& /dev/null
 [ -f "${_tmpofile}" ]  && rm -rf "${_tmpofile}"  >& /dev/null
@@ -301,8 +297,8 @@ add_brport_rule incoming BR_TCP_ALLOWPORT BR_TCP_HOSTPERPORT BR_UDP_ALLOWPORT BR
 
 o_echo $"  * ICMP service Configuration"
 add_icmp_host ICMP_HOSTPERPING ICMP_HOSTPERTRACE
-add_bricmp_host BR_ICMP_HOSTPERPING BR_ICMP_HOSTPERTRACE
 
+add_br_icmp BR_PING_ALLOW BR_TRACE_ALLOW
 
 #
 # Masqurade Configuration
