@@ -48,8 +48,8 @@ add_masq_init() {
 }
 
 #
-# ì „ì²´ MASQë¥¼ ê±¸ì§€ ì—¬ë¶€ë¥¼ í™•ì¸
-# masqStartCheck ì²´í¬ê°’_ë³€ìˆ˜ì´ë¦„ [MASQ_WHOLE_ADJ]
+# ÀüÃ¼ MASQ¸¦ °ÉÁö ¿©ºÎ¸¦ È®ÀÎ
+# masqStartCheck Ã¼Å©°ª_º¯¼öÀÌ¸§ [MASQ_WHOLE_ADJ]
 #
 masqStartCheck() {
 	local VARNAME=$1
@@ -70,7 +70,7 @@ masqStartCheck() {
 }
 
 #
-# Bridge ì‚¬ìš©ì‹œ, Forwarding tableì—ì„œ MASQ ì²˜ë¦¬ê°€ ì›í• í•˜ë„ë¡ í•˜ê¸° ìœ„í•  ë£°
+# Bridge »ç¿ë½Ã, Forwarding table¿¡¼­ MASQ Ã³¸®°¡ ¿øÇÒÇÏµµ·Ï ÇÏ±â À§ÇÒ ·ê
 #
 bridge_masq_rule() {
 	local MASQ_INTERNAL
@@ -101,68 +101,36 @@ bridge_masq_rule() {
 
 #
 # divided host and port for given value
-# div_host_port value d|s ret_var_name protocol_var_name
+# div_host_port value d|s ret_var_name
 #
 div_host_port() {
 	local ORGV=$1
 	local LOC=$2
 	local RETV=$3
-	local PROTO=$4
 	local addr
 	local port
-	local proto
 
 	addr=${ORGV%:*}
 	port=${ORGV#*:}
 	port=$(echo "${port}" | ${c_sed} 's/-/:/g')
 
-	if [ "${addr}" = "${port}" ]; then
-		port=""
-	else
-		check_protocol "${port}" port proto
-		port=" --${LOC}port ${port}"
-	fi
+	[ "${addr}" = "${port}" ] && port="" || port=" --${LOC}port ${port}"
 
 	eval "${RETV}=\"${addr}${port}\""
-	[ -n "${proto}" ] && eval "${PROTO}=\"${proto}\""
-}
-
-check_protocol() {
-	local VAL=$1
-	local PORTNAME=$2
-	local PROTONAME=$3
-	local v1
-	local v2
-
-	v2=$(echo "${VAL}" | ${c_sed} 's/^[^0-9]\+//g')
-
-	eval "${PORTNAME}=\"${v2}\""
-	[ "${VAL}" = "${v2}" ] && eval "${PROTONAME}=\"-p tcp \"" && return 0
-
-	v1=$(echo "${VAL}" | ${c_sed} 's/[0-9:]//g')
-
-	case "${v1}" in
-		"T|t") proto="tcp" ;;
-		"U|u") proto="udp" ;;
-		"I|i") proto="icmp" ;;
-		*) proto="tcp" ;;
-	esac
-	eval "${PROTONAME}=\"-p ${proto} \""
-
 }
 
 add_masq_rule() {
 	add_masq_init
 	[ $? -ne 0 ] && return 0
 
-	# MSSQ ì‹œë‚˜ ì ‘ì† ì§€ì—° í˜„ìƒì„ í–¥ìƒ ì‹œí‚¤ê¸° ìœ„í•œ ì˜µì…˜
+	# MSSQ ½Ã³ª Á¢¼Ó Áö¿¬ Çö»óÀ» Çâ»ó ½ÃÅ°±â À§ÇÑ ¿É¼Ç
 	o_echo "  * iptables -t nat -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN \\"
 	o_echo "             -j TCPMSS --clamp-mss-to-pmtu"
 	[ "${_testmode}" = 0 ] && \
 		${c_iptables} -t nat -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
-	# ì™¸ë¶€ë¡œ ë‚˜ê°€ëŠ” ì¶œë°œì ì„ ì§€ì •í•˜ë„ë¡ í•¨. ê°’ì€ ì ìš©ì‚¬ì„¤ip:ì¶œë°œì§€ì£¼ì†Œ[:ë„ì°©ì§€ì£¼ì†Œ] ì˜ í˜•íƒœë¥¼
-	# ì·¨í•˜ë©° ì ìš©ì‚¬ì„¤ipì˜ ê°’ì´ 0 ì¼ê²½ìš°ì—ëŠ” everywhere ë¡œ ì ìš©í•¨.
+	# ¿ÜºÎ·Î ³ª°¡´Â Ãâ¹ßÁ¡À» ÁöÁ¤ÇÏµµ·Ï ÇÔ. °ªÀº Àû¿ë»ç¼³ip:Ãâ¹ßÁöÁÖ¼Ò[:µµÂøÁöÁÖ¼Ò] ÀÇ ÇüÅÂ¸¦
+	# ÃëÇÏ¸ç Àû¿ë»ç¼³ipÀÇ °ªÀÌ 0 ÀÏ°æ¿ì¿¡´Â everywhere ·Î Àû¿ëÇÔ.
 	if [ -n "${MASQ_MATCH_START}" ]; then
 		for values in ${MASQ_MATCH_START}
 		do
@@ -171,13 +139,10 @@ add_masq_rule() {
 			echo ${values} | {
 				IFS=',' read pc public dest
 
-				local proto=
-				div_host_port "${pc}" s pc sproto
+				div_host_port ${pc} s pc
 
-				[ -n "${dest}" ] && div_host_port "${dest}" d dest dproto
+				[ -n "${dest}" ] && div_host_port ${dest} d dest
 				[ -n "${dest}" ] && dest=" -d ${dest}"
-
-				[ -n "${sproto}" ] && proto=${sproto} || [ -n "${dproto}" ] && proto=${dproto}
 
 				if [ "${pc}" = "0" ]; then
 					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${dest} -j SNAT --to ${public}"
@@ -185,20 +150,19 @@ add_masq_rule() {
 						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${dest} -j SNAT --to ${public}
 					bridge_masq_rule
 				else
-					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \\"
-					o_echo "             ${proto}-s ${pc}${dest} \\"
+					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -s ${pc}${dest} \\"
 					o_echo "             -j SNAT --to ${public}"
 					[ "${_testmode}" = 0 ] && \
 						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \
-									${proto}-s ${pc}${dest} -j SNAT --to ${public}
+									-s ${pc}${dest} -j SNAT --to ${public}
 					bridge_masq_rule ${pc}
 				fi
 			}
 		done
 	fi
 
-	# ì¶œë°œì§€ ì£¼ì†Œ ì§€ì •ì—ì„œ ì‚¬ì„¤ IPê°€ everywhere ì´ ì ìš© ì•ˆë  ê²½ìš° everywhere ì„
-	# masq device ë¡œ ì§€ì •
+	# Ãâ¹ßÁö ÁÖ¼Ò ÁöÁ¤¿¡¼­ »ç¼³ IP°¡ everywhere ÀÌ Àû¿ë ¾ÈµÉ °æ¿ì everywhere À»
+	# masq device ·Î ÁöÁ¤
 	if [ "${MASQ_WHOLE_ADJ}" != "1" ]; then
 		o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \\"
 		o_echo "             -j SNAT --to ${MASQ_IPADDR}"
@@ -208,7 +172,7 @@ add_masq_rule() {
 		bridge_masq_rule
 	fi
 
-	# Forwarding Rule ì´ ë¦¬ì–¼ IPì™€ ì‚¬ì„¤ IPê°„ì— ì˜ í†µì‹ ì´ ë˜ë„ë¡ ì‚¬ì„¤ë§ìœ¼ë¡œ í–¥ìƒ MASQ ë„ ì„¤ì •
+	# Forwarding Rule ÀÌ ¸®¾ó IP¿Í »ç¼³ IP°£¿¡ Àß Åë½ÅÀÌ µÇµµ·Ï »ç¼³¸ÁÀ¸·Î Çâ»ó MASQ µµ ¼³Á¤
 	for cdv in ${MASQUERADE_LOC}
 	do
 		TMP_CLIENT=

@@ -3,6 +3,8 @@
 # $Id$
 #
 
+BRIDGE_NAME="brg0"
+
 if [ -f "/etc/redhat-relase" ]; then
 	export distribution="redhat"
 elif [ -f "/etc/debian_version" ]; then

@@ -3,18 +3,17 @@
 # $Id$
 #
 
-# ë„¤íŠ¸ì›Œí¬ ë””ë°”ì´ìŠ¤ (eth/ppp/bridge) ëª©ë¡ì„ ì–»ì–´ì˜¤ëŠ” í•¨ìˆ˜
-# getDeviceList ëª©ë¡ë³€ìˆ˜ëª… ì²´í¬ë””ë°”ì´ìŠ¤ì´ë¦„
+# ³×Æ®¿öÅ© µğ¹ÙÀÌ½º (eth/ppp/bridge) ¸ñ·ÏÀ» ¾ò¾î¿À´Â ÇÔ¼ö
+# getDeviceList ¸ñ·Ïº¯¼ö¸í Ã¼Å©µğ¹ÙÀÌ½ºÀÌ¸§
 #
-# ëª©ë¡ ë³€ìˆ˜ëª…ì€ ë””ë°”ì´ìŠ¤ ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì§ˆ ë³€ìˆ˜ ì´ë¦„ì„ ì§€ì •
-# ì²´í¬ ë””ë°”ì´ìŠ¤ì´ë¦„ì„ ì§€ì •í•  ê²½ìš° í•´ë‹¹ ë””ë°”ì´ìŠ¤ê°€ ì¡´ì¬í•˜ë©´ 0ì„ ë¦¬í„´
-# ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ 1ì„ ë¦¬í„´í•¨ìœ¼ë¡œì„œ ë””ë°”ì´ìŠ¤ ì¡´ì¬ì—¬ë¶€ë¥¼ ì²´í¬í•  ìˆ˜ ìˆìŒ
+# ¸ñ·Ï º¯¼ö¸íÀº µğ¹ÙÀÌ½º ¸®½ºÆ®¸¦ °¡Áú º¯¼ö ÀÌ¸§À» ÁöÁ¤
+# Ã¼Å© µğ¹ÙÀÌ½ºÀÌ¸§À» ÁöÁ¤ÇÒ °æ¿ì ÇØ´ç µğ¹ÙÀÌ½º°¡ Á¸ÀçÇÏ¸é 0À» ¸®ÅÏ
+# Á¸ÀçÇÏÁö ¾ÊÀ¸¸é 1À» ¸®ÅÏÇÔÀ¸·Î¼­ µğ¹ÙÀÌ½º Á¸Àç¿©ºÎ¸¦ Ã¼Å©ÇÒ ¼ö ÀÖÀ½
 #
 getDeviceList() {
 	devVarName=$1
 	devCheckVar=$2
-
-	devGetVar=$(${c_awk} -F ':' "/(eth|ppp|${BRIDGE_DEVNAME}|bond)[0-9]*:/ {print \$1}" /proc/net/dev)
+	devGetVar=$(${c_awk} -F ':' "/(eth|ppp|${BRIDGE_NAME}|bond)[0-9]*:/ {print \$1}" /proc/net/dev)
 
 	if [ -z "${devGetVar}" ]; then
 		return 1
@@ -86,16 +85,16 @@ parseDevice() {
 	parseDevNum=$3
 
 	parseTmpName=$(echo ${parseDevDeviceName} | ${c_sed} 's/[0-9]\+//g')
-	parseTmpNum=$(echo ${parseDevDeviceName} | ${c_sed} 's/eth\|ppp\|bond\|br\|tun\|tap//g')
+	parseTmpNum=$(echo ${parseDevDeviceName} | ${c_sed} 's/eth\|ppp\|bond\|brg\|tun\|tap//g')
 
+	WordToUpper ${parseTmpName} parseTmpName
+
+	eval "${parseDevName}=\"${parseTmpName}\""
 	if [ "$parseTmpName" = "$parseTmpNum" ]; then
 		eval "${parseDevNum}=\"\""
 	else
 		eval "${parseDevNum}=\"${parseTmpNum}\""
 	fi
-
-	WordToUpper ${parseTmpName} parseTmpName
-	eval "${parseDevName}=\"${parseTmpName}\""
 }
 
 getDeviceIP() {
@@ -193,7 +192,7 @@ firewall_wan_check() {
 	[ -n "${FIREWALL_WAN}" ] && return
 
 	_donelist=
-	for i in BRIDGE_DEVNAME MASQ_DEVICE FORWARD_MASTER
+	for i in BRIDGE_WAN MASQ_DEVICE FORWARD_MASTER
 	do
 		eval "chkinter=\$${i}"
 		[ -z "${chkinter}" ] && continue

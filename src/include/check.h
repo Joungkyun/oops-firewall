@@ -26,10 +26,10 @@ kernelCheck() {
 	__major=$[ ${__major_r} * 1000000000 ]
 	__version_r=$[ ${__major} + ${__minor} + ${__patch} + ${__rele} ]
 
-	# 2.4.0 ë³´ë‹¤ ì‘ìœ¼ë©´ ì‘ë™ ë©ˆì¶¤
+	# 2.4.0 º¸´Ù ÀÛÀ¸¸é ÀÛµ¿ ¸ØÃã
 	if [ ${__dontpoint} -gt ${__version_r} ]; then
 		return 2
-	# 2.4.18 ë³´ë‹¤ ì‘ìœ¼ë©´ mangle table í™•ì¥ ì‚¬ìš© ì•ˆí•¨
+	# 2.4.18 º¸´Ù ÀÛÀ¸¸é mangle table È®Àå »ç¿ë ¾ÈÇÔ
 	elif [ ${__chkpoint} -gt ${__version_r} ]; then
 		return 0
 	else
@@ -41,9 +41,6 @@ iprange_mod_check() {
 	ipt="/lib/modules/$(uname -r)/kernel/net/ipv4/netfilter"
 	[ -f "${ipt}/ipt_iprange.ko" ] && return 1
 	[ -f "${ipt}/ipt_iprange.o" ] && return 1
-
-	ipt="/lib/modules/$(uname -r)/kernel/net/netfilter"
-	[ -f "${ipt}/xt_iprange.ko" ] && return 1
 
 	return 0
 }

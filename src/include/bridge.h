@@ -25,17 +25,32 @@ bridge_wan_info() {
 	export BRIDGE_WANIP BRIDGE_WANMASK BRIDGE_WANNET BRIDGE_SUBNET BRG0_NETPX
 }
 
+bridge_dev_check() {
+	# Ethernet device check
+	[ ! "$($c_grep "${BRIDGE_WANDEV}:" /proc/net/dev 2> /dev/null)" ] && \
+		echo $"  * BRIDGE WAN Interface name \"$BRIDGE_WANDEV\" is not found" && \
+		echo $"  * BRIDGE MODE go off!" && \
+		export BRIDGE_USED=0 && return 1
+
+	[ ! "$($c_grep "${BRIDGE_LOCDEV}:" /proc/net/dev 2> /dev/null)" ] && \
+		echo $"  * BRIDGE Local Interface name \"$BRIDGE_LOCDEV\" is not found" && \
+		echo $"  * BRIDGE MODE go off!" && \
+		export BRIDGE_USED=0 && return 1
+
+	return 0
+}
+
 init_bridge() {
-	if [ $BRIDGE_USED -eq 0 ]; then
-		o_echo $"  * BRIDGE mode don't set"
+	if [ $BRIDGE_SET -eq 0 ] ;then
+		o_echo $"  * BRIDGE not support on build time"
+		o_echo $"    If you want use this function, isntall bridge-utils package"
+		o_echo $"    and, set 1 on BRIDGE_SET default.h and, configure path of"
+	    o_echo $"    c_brctl environment on command.h"
 		return 1
 	fi
 
-	${c_iptables} -m physdev --help > /dev/null
-	if [ $? -ne 0 ]; then
-		o_echo $"  * The version of iptables must be over 1.2.8 or"
-		o_echo $"  * must support physdev extension"
-		BRIDGE_USED=0
+	if [ $BRIDGE_USED -eq 0 ]; then
+		o_echo $"  * BRIDGE mode don't set"
 		return 1
 	fi
 
@@ -43,281 +58,112 @@ init_bridge() {
 	BRIDGE_WANMASK=
 	BRIDGE_WANGW=$($c_route -n 2> /dev/null | $c_awk '/UG/ {print $2}')
 
+	bridge_dev_check
 	[ $? -ne 0 ] && return 1
 
-	bridge_wan_info $BRIDGE_DEVNAME
+	# bridge interface µî·Ï
+	[ ! "$($c_brctl show | $c_grep $BRIDGE_NAME)" ] && \
+		o_echo "  * brctl addbr $BRIDGE_NAME" && \
+		[ $_testmode -eq 0 ] && $c_brctl addbr $BRIDGE_NAME
 
-	# BRIDGE ì˜ ì ‘ì† ì§€ì—° í˜„ìƒì„ í–¥ìƒ ì‹œí‚¤ê¸° ìœ„í•œ ì˜µì…˜
+	# bridge interface ¿¡ wan device µî·Ï
+	[ ! "$($c_brctl show | $c_grep $BRIDGE_WANDEV)" ] && \
+		o_echo "  * brctl addif $BRIDGE_NAME $BRIDGE_WANDEV" && \
+		[ $_testmode -eq 0 ] && $c_brctl addif $BRIDGE_NAME $BRIDGE_WANDEV
+
+	# bridge interface ¿¡ local device µî·Ï
+	[ ! "$($c_brctl show | $c_grep $BRIDGE_LOCDEV)" ] && \
+		o_echo "  * brctl addif $BRIDGE_NAME $BRIDGE_LOCDEV" && \
+		[ $_testmode -eq 0 ] && $c_brctl addif $BRIDGE_NAME $BRIDGE_LOCDEV
+
+	bridge_wan_info $BRIDGE_NAME
+
+	if [ -z "$BRIDGE_WANIP" ]; then
+		# Set promisc mode on real interface
+		o_echo "  * ifconfig $BRIDGE_WANDEV 0.0.0.0"
+		[ $_testmode -eq 0 ] && \
+			$c_ifconfig $BRIDGE_WANDEV 0.0.0.0
+		o_echo "  * ifconfig $BRIDGE_LOCDEV 0.0.0.0"
+		[ $_testmode -eq 0 ] && \
+			$c_ifconfig $BRIDGE_LOCDEV 0.0.0.0
+
+		WordToUpper "$BRIDGE_WANDEV" UPPERNAME
+		eval "BRIDGE_WANIP=\$${UPPERNAME}_IPADDR"
+		eval "BRIDGE_WANMASK=\$${UPPERNAME}_SUBNET"
+
+		# Set IP on Bridge Interface
+		[ -n "$BRIDGE_WANIP" -a -n "$BRIDGE_WANMASK" ] && \
+			o_echo "  * ifconfig $BRIDGE_NAME $BRIDGE_WANIP netmask $BRIDGE_WANMASK up" && \
+			[ $_testmode -eq 0 ] && \
+				$c_ifconfig $BRIDGE_NAME $BRIDGE_WANIP netmask $BRIDGE_WANMASK up
+
+		# Set gateway
+		_gw_chk=$($c_route -n | $c_grep UG | $c_awk '{print $2}')
+
+		[ -n "$BRIDGE_WANGW" -a "$BRIDGE_WANGW" != "$_gw_chk" ] && \
+			o_echo "  * $c_route add default gw $BRIDGE_WANGW" && \
+			[ $_testmode -eq 0 ] && \
+				$c_route add default gw $BRIDGE_WANGW
+
+		bridge_wan_info $BRIDGE_NAME
+	fi
+
+	# BRIDGE ÀÇ Á¢¼Ó Áö¿¬ Çö»óÀ» Çâ»ó ½ÃÅ°±â À§ÇÑ ¿É¼Ç
 	o_echo "  * ${c_iptables} -A FORWARD -p tcp --tcp-flags SYN,RST SYN \\"
 	o_echo "                  -j TCPMSS --clamp-mss-to-pmtu"
 	[ "${_testmode}" = 0 ] && \
 		${c_iptables} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 
 	if [ $MASQ_USED -eq 1 ]; then
-		[ -z "${MASQUERADE_WAN}" ] && MASQUERADE_WAN="$BRIDGE_DEVNAME"
+		[ -z "${MASQUERADE_WAN}" ] && MASQUERADE_WAN="$BRIDGE_WANDEV"
 		[ -z "${MASQUERADE_LOC}" ] && MASQUERADE_LOC="eth1"
 
-		makeDeviceEnv $BRIDGE_DEVNAME
+		[ "$MASQUERADE_LOC" = "$BRIDGE_WANDEV" ] && \
+			o_echo $"  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device" && \
+			o_echo $"  * MASQ mode changed off mode!" && \
+			export MASQ_USED=0
+		[ "$MASQUERADE_LOC" = "$BRIDGE_LOCDEV" ] && \
+			o_echo $"  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device" && \
+			o_echo $"  * MASQ mode changed off mode!" && \
+			export MASQ_USED=0
+
+		makeDeviceEnv $BRIDGE_NAME
 	fi
 }
 
-add_br_rule () {
-	local types=$*
-	local dev=
-	local var=
+clear_bridge() {
+	[ -z "$BRIDGE_CONTROL" -o "$BRIDGE_CONTROL" = 0 ] && return
 
-	[ ${BRIDGE_USED} -eq 0 ] && return
+	$c_brctl show 2> /dev/null | $c_grep "$BRIDGE_NAME" >& /dev/null
+	cleardev=$?
+	$c_ifconfig $BRIDGE_NAME >& /dev/null
+	clearifc=$?
 
-	echo ${types} | ${c_grep} "_OUT_" >& /dev/null
-	[ $? -eq 0 ] && dev="${BRIDGE_LANDEV}" || dev="${BRIDGE_WANDEV}"
+	o_echo "  * Unset bridge setting"
 
-	for i in ${types}
-	do
-		chk="$(echo ${i} | $c_grep TCP)"
-		[ -n "${chk}" ] && proto="tcp" || proto="udp"
-		[ -n "${chk}" ] && ment="TCP" || ment="UDP"
+	[ $clearifc -eq 0 ] && \
+		[ $_testmode -eq 0 ] && $c_ifconfig $BRIDGE_NAME down >& /dev/null
 
-		o_echo $"  * BRIDGE ${ment} service"
+	if [ $cleardev -eq 0 -a $_testmode -eq 0 ]; then
+		$c_brctl delif $BRIDGE_NAME $BRIDGE_LOCDEV >& /dev/null
+		$c_brctl delif $BRIDGE_NAME $BRIDGE_WANDEV >& /dev/null
+		$c_brctl delbr $BRIDGE_NAME >& /dev/null
+	fi
 
-		eval "var=\$${i}"
-
-		for v in ${var}
-		do
-			echo ${v} | {
-				IFS='|' read source dest
-
-				srcip="${source%%:*}"
-				sport="${source#*:}"
-				dstip="${dest%%:*}"
-				dport="${dest#*:}"
-
-				[ "${srcip}" = "${sport}" ] && sport=""
-				[ "${dstip}" = "${dport}" ] && dport=""
-
-				[ -n "${sport}" ] && port_set s ${sport} sport sconn
-				[ -n "${dport}" ] && port_set d ${dport} dport dconn
-
-				[ -n "${dconn}" ] && constate="${dconn}"
-				[ -n "${sconn}" ] && constate="${sconn}"
-				[ -z "${constate}" ] && constate="-m state --state ${_nN}"
-
-				iprange_set ${srcip} srcip
-				iprange_set ${dstip} dstip
-
-				iprange_check ${srcip}
-				rangechk=$?
-				if [ $rangechk -eq 0 ]; then
-					iprange_check ${dstip}
-					rangechk=$?
-				fi
-
-				if [ $rangechk -eq 1 ]; then
-					iprange_check ${srcip}
-					rangechk=$?
-					[ $rangechk -eq 1 ] && srcip="--src-range ${srcip}" || srcip="-s ${srcip}"
-
-					iprange_check ${dstip}
-					rangechk=$?
-					[ $rangechk -eq 1 ] && dstip="--dst-range ${dstip}" || dstip="-d ${dstip}"
-
-					[ $_verbose -eq 1 ] && {
-						o_echo "    iptables -A FORWARD -m physdev --physdev-in ${dev} -p ${proto} -m iprange \\"
-						o_echo "             ${srcip}${sport} ${dstip}${dport} \\"
-						o_echo "             ${constate} -j ACCEPT"
-					}
-
-					[ $_testmode -eq 0 ] && \
-						${c_iptables} -A FORWARD -m physdev --physdev-in ${dev} -p ${proto} -m iprange \
-									${srcip}${sport} ${dstip}${dport} \
-									${constate} -j ACCEPT
-				else
-					[ $_verbose -eq 1 ] && {
-						o_echo "    iptables -A FORWARD -m physdev --physdev-in ${dev} -p ${proto} \\"
-						o_echo "             -s ${srcip}${sport} -d ${dstip}${dport} \\"
-						o_echo "             ${constate} -j ACCEPT"
-					}
-					[ $_testmode -eq 0 ] && \
-						${c_iptables} -A FORWARD -m physdev --physdev-in ${dev} -p ${proto} \
-									-s ${srcip}${sport} -d ${dstip}${dport} ${constate} -j ACCEPT
-				fi
-			}
-		done
-		o_echo
-	done
+	[ $clearifc -eq 0 ] && \
+		[ $_testmode -eq 0 ] && /sbin/service network restart &> /dev/null
 }
 
-add_br_icmp() {
-	local types=$*
+bridge_wan_check() {
+	[ $BRIDGE_USED -eq 0 ] && return
+	if [ -z "$BRIDGE_WANDEV" -o -z "$BRIDGE_LOCDEV" ]; then
+		BRIDGE_USED=0
+		return
+	fi
 
-	[ ${BRIDGE_USED} -eq 0 ] && return
-
-	for v in ${types}
-	do
-		echo ${v} | ${c_grep} "PING" >& /dev/null
-		[ $? -eq 0 ] && add_br_ping $v || add_br_trace $v
-	done
-}
-
-add_br_ping() {
-	local types=$*
-	local dev=
-	local var=
-
-	[ ${BRIDGE_USED} -eq 0 ] && return
-
-	for i in ${types}
-	do
-		o_echo $"    ==> for bridge ping service"
-
-		eval "var=\$${i}"
-
-		for v in ${var}
-		do
-			echo ${v} | {
-				IFS='|' read srcip dstip
-
-				iprange_set ${srcip} srcip
-				iprange_set ${dstip} dstip
-
-				iprange_check ${srcip}
-				rangechk=$?
-				if [ $rangechk -eq 0 ]; then
-					iprange_check ${dstip}
-					rangechk=$?
-				fi
-
-				if [ $rangechk -eq 1 ]; then
-					iprange_check ${srcip}
-					rangechk=$?
-					[ $rangechk -eq 1 ] && rsrcip="--dst-range ${srcip}" || rsrcip="-d ${srcip}"
-					[ $rangechk -eq 1 ] && srcip="--src-range ${srcip}" || srcip="-s ${srcip}"
-
-					iprange_check ${dstip}
-					rangechk=$?
-					[ $rangechk -eq 1 ] && rdstip="--src-range ${dstip}" || rdstip="-s ${dstip}"
-					[ $rangechk -eq 1 ] && dstip="--dst-range ${dstip}" || dstip="-d ${dstip}"
-
-					[ $_verbose -eq 1 ] && {
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type echo-request -m iprange \\"
-						o_echo "               ${srcip} ${dstip} -j ACCEPT"
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type echo-reply -m iprange \\"
-						o_echo "               ${rdstip} ${rsrcip} -j ACCEPT"
-					}
-
-					[ $_testmode -eq 0 ] && {
-						${c_iptables} -A FORWARD -p icmp --icmp-type echo-request -m iprange \
-									${srcip} ${dstip} -j ACCEPT
-						${c_iptables} -A FORWARD -p icmp --icmp-type echo-reply -m iprange \
-									${rdstip} ${rsrcip} -j ACCEPT
-					}
-				else
-					[ $_verbose -eq 1 ] && {
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type echo-request \\"
-						o_echo "               -s ${srcip} -d ${dstip} -j ACCEPT"
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type echo-reply \\"
-						o_echo "               -s ${dstip} -d ${srcip} -j ACCEPT"
-					}
-
-					[ $_testmode -eq 0 ] && {
-						${c_iptables} -A FORWARD -p icmp --icmp-type echo-request \
-									-s ${srcip} -d ${dstip} -j ACCEPT
-						${c_iptables} -A FORWARD -p icmp --icmp-type echo-reply \
-									-s ${dstip} -d ${srcip} -j ACCEPT
-					}
-				fi
-			}
-		done
-		o_echo
-	done
-}
-
-add_br_trace() {
-	local types=$*
-	local dev=
-	local var=
-
-	[ ${BRIDGE_USED} -eq 0 ] && return
-
-	for i in ${types}
-	do
-		o_echo $"    ==> for bridge trace service"
-
-		eval "var=\$${i}"
-
-		for v in ${var}
-		do
-			echo ${v} | {
-				IFS='|' read srcip dstip
-
-				iprange_set ${srcip} srcip
-				iprange_set ${dstip} dstip
-
-				iprange_check ${srcip}
-				rangechk=$?
-				if [ $rangechk -eq 0 ]; then
-					iprange_check ${dstip}
-					rangechk=$?
-				fi
-
-				if [ $rangechk -eq 1 ]; then
-					iprange_check ${srcip}
-					rangechk=$?
-					[ $rangechk -eq 1 ] && rsrcip="--dst-range ${srcip}" || rsrcip=" -d ${srcip}"
-					[ $rangechk -eq 1 ] && srcip="--src-range ${srcip}" || srcip=" -s ${srcip}"
-
-					iprange_check ${dstip}
-					rangechk=$?
-					[ $rangechk -eq 1 ] && rdstip="--src-range ${dstip}" || rdstip=" -s ${dstip}"
-					[ $rangechk -eq 1 ] && dstip="--dst-range ${dstip}" || dstip=" -d ${dstip}"
-
-					[ $_verbose -eq 1 ] && {
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type time-exceeded -m iprange \\"
-						o_echo "               ${rdstip} ${rsrcip} -j ACCEPT"
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type port-unreachable -m iprange \\"
-						o_echo "               ${rdstip} ${rsrcip} -j ACCEPT"
-						# For traceroute
-						o_echo "      iptables -A FORWARD -p udp -m iprange\\"
-						o_echo "               ${srcip} ${dstip} --dport 33434:33525 -j ACCEPT"
-						# For tracepath
-						o_echo "      iptables -A FORWARD -p udp -m iprange\\"
-						o_echo "               ${srcip} ${dstip} --dport 44444:44624 -j ACCEPT"
-					}
-
-					[ ${_testmode} -eq 0 ] && {
-						${c_iptables} -A FORWARD -p icmp --icmp-type time-exceeded -m iprange \
-									${rdstip} ${rsrcip} -j ACCEPT
-						${c_iptables} -A FORWARD -p icmp --icmp-type port-unreachable -m iprange \
-									${rdstip} ${rsrcip} -j ACCEPT
-						${c_iptables} -A FORWARD -p udp -m iprange ${srcip} ${dstip} --dport 33434:33525 -j ACCEPT
-						${c_iptables} -A FORWARD -p udp -m iprange ${srcip} ${dstip} --dport 44444:44624 -j ACCEPT
-					}
-				else
-					[ $_verbose -eq 1 ] && {
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type time-exceeded \\"
-						o_echo "               -s ${dstip} -d ${srcip} -j ACCEPT"
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type port-unreachable \\"
-						o_echo "               -s ${dstip} -d ${srcip} -j ACCEPT"
-						# For traceroute
-						o_echo "      iptables -A FORWARD -p udp\\"
-						o_echo "               -s ${srcip} -d ${dstip} --dport 33434:33525 -j ACCEPT"
-						# For tracepath
-						o_echo "      iptables -A FORWARD -p udp\\"
-						o_echo "               -s ${srcip} -d ${dstip} --dport 44444:44624 -j ACCEPT"
-					}
-
-					[ ${_testmode} -eq 0 ] && {
-						${c_iptables} -A FORWARD -p icmp --icmp-type time-exceeded \
-									-s ${dstip} -d ${srcip} -j ACCEPT
-						${c_iptables} -A FORWARD -p icmp --icmp-type port-unreachable \
-									-s ${dstip} -d ${srcip} -j ACCEPT
-						${c_iptables} -A FORWARD -p udp -s ${srcip} -d ${dstip} --dport 33434:33525 -j ACCEPT
-						${c_iptables} -A FORWARD -p udp -s ${srcip} -d ${dstip} --dport 44444:44624 -j ACCEPT
-					}
-				fi
-			}
-		done
-		o_echo
-	done
+	if [ -n "$(echo "${FIREWALL_WAN}" | ${c_grep} "${BRIDGE_WANDEV}")" ]; then
+		export FIREWALL_WAN=$(echo "${FIREWALL_WAN}" | ${c_sed} "s/${BRIDGE_WANDEV}/${BRIDGE_NAME}/g")
+	fi
 }
 
 #
