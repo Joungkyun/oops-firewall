@@ -3,7 +3,6 @@
 # $Id$
 #
 
-# {{{ ins_mod
 ins_mod() {
 	chk=
 	load=
@@ -19,33 +18,36 @@ ins_mod() {
 			chk=
 			load=
 
-			mod_file=${i%%:*}
-			mod_opts=${i##*:}
-			mod_name=${mod_file%%.ko}
-			mod_name=${mod_name%%.o}
+			echo $i | grep "^xt_" >& /dev/null
+			modnam_chk=$?
 
-			[ -z "${mod_file}" ] && mod_file=$i
-			[ "${mod_file}" = "${mod_opts}" ] && mod_opts=
+			if [ $modnam_chk -eq 0 ]; then
+				mod_name=${xt_%%:*}
+				mod_opts=${xt_##*:}
+			else
+				mod_name=${i%%:*}
+				mod_opts=${i##*:}
+			fi
 
-			mod_sname=$(echo ${mod_name} | ${c_sed} 's/^\(xt\|nf\|ip\)_//g')
-			loads=$(${c_lsmod} | $c_grep "^\(xt\|nf\|ip\)_${mod_sname}")
+			[ "${mod_name}" = "${mod_opts}" ] && mod_opts=
+			[ -z "${mod_name}" ] && mod_name=$i
+
+			loads=$(${c_lsmod} | $c_grep "^${mod_name}")
 
 			if [ -z "${loads}" ]; then
 				if [ "${mod_opts}" = "unload" ]; then
-					o_echo -n $"    Unload ${mod_file} module"
+					o_echo -n $"    Unload ${mod_name} module"
 					print_result 1 "skip" "yellow"
 					continue
 				fi
 
-				${c_modprobe} ${mod_name} ${mod_opts} > /dev/null 2>&1
+				${c_modprobe} -k ${mod_name} ${mod_opts} > /dev/null 2>&1
 				chk=$?
 
 				if [ "${chk}" != 0 ]; then
-					if [ ! -f "/lib/modules/$(${c_uname} -r)/kernel/net/netfilter/${mod_file}" ]; then
-						if [ ! -f "/lib/modules/$(${c_uname} -r)/kernel/net/ipv4/netfilter/${mod_file}" ]; then
-							chk=0
-							msg="maybe builtin"
-						fi
+					if [ ! -f "/lib/modules/$(${c_uname} -r)/kernel/net/ipv4/netfilter/${mod_name}" ]; then
+						chk=0
+						msg="maybe builtin"
 					fi
 				fi
 
@@ -54,7 +56,7 @@ ins_mod() {
 				print_result ${chk} "${msg}"
 			else
 				if [ "${mod_opts}" = "unload" ]; then
-					rm_mod "${mod_file}"
+					rm_mod "${mod_name}"
 					continue
 				fi
 
@@ -69,11 +71,9 @@ ins_mod() {
 			chk=$?
 
 			if [ "${chk}" != 0 ]; then
-				if [ ! -f "/lib/modules/$(${c_uname} -r)/kernel/net/netfilter/${1}" ]; then
-					if [ ! -f "/lib/modules/$(${c_uname} -r)/kernel/net/ipv4/netfilter/${1}" ]; then
-						chk=0
-						msg="maybe builtin"
-					fi
+				if [ ! -f "/lib/modules/$(${c_uname} -r)/kernel/net/ipv4/netfilter/${1}" ]; then
+					chk=0
+					msg="maybe builtin"
 				fi
 			fi
 
@@ -86,9 +86,7 @@ ins_mod() {
 		fi
 	fi
 }
-# }}}
 
-# {{{ rm_mod
 rm_mod() {
 	CHKMOD=
 
@@ -141,7 +139,6 @@ set_mod_parm() {
 		fi
 	fi
 }
-# }}}
 
 #
 # Local variables:

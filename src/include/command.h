@@ -21,11 +21,12 @@ c_iptables="@iptables@"
 c_ifconfig="@ifconfig@"
 
 # bridge command
+c_brctl="@brctl@"
 c_route="@route@"
 
 export c_depmod c_lsmod c_rmmod c_modprobe
 export c_sed c_grep c_awk c_cat c_uname c_ipcalc c_cut
-export c_iptables c_ifconfig c_route
+export c_iptables c_ifconfig c_brctl c_route
 
 brute_force_set() {
 	[ -z "${BRUTE_FORCE_FILTER}" ] && return
@@ -187,7 +188,7 @@ layer7_set() {
 	done
 }
 
-# ì‚¬ìš©ìž ì‹¤í–‰ì„ ìœ„í•œ í•¨ìˆ˜
+# »ç¿ëÀÚ ½ÇÇàÀ» À§ÇÑ ÇÔ¼ö
 user_cmd () {
 	case "$1" in
 		pre) 
@@ -228,28 +229,11 @@ user_cmd () {
 	fi
 }
 
-anywhere_set() {
-	local var=$1
-	local varname=$2
-
-	[ "${var}" != "0/0" -a "${var}" != "anywhere" -a "${var}" != "ANYWHERE" ] && return
-	[ -z "${varname}" ] && return
-
-	eval "${varname}=\"0.0.0.0/0\""
-}
-
-# Usage:
-#        10.10.10.10-20          => 10.10.10.10-10.10.10.20
-#        10.10.10.10-15.20       => 10.10.10.10-10.10.15.20
-#        10.10.10.10-11.15.20    => 10.10.10.10-10.11.15.20
-#        10.10.10.10-11.11.15.20 => 10.10.10.10-11.11.15.20
-#
 iprange_set() {
-	local value=$1
-	local varname=$2
+	value=$1
+	varname=$2
 
 	if [ $_iprange -eq 0 ]; then
-		anywhere_set "${value}" value
 		[ -n "${varname}" ] && eval "${varname}=\"${value}\""
 
 		#iprange_check $value
@@ -265,13 +249,10 @@ iprange_set() {
 	primary=${value%%-*}
 	secondary=${value##*-}
 
-	anywhere_set "${primary}" primary
-	anywhere_set "${secondary}" secondary
-
 	[ -n "${varname}" ] && unset $varname
 
 	if [ "${primary}" == "${secondary}" ]; then
-		[ -n "${varname}" ] && eval "${varname}=\"${primary}\""
+		[ -n "${varname}" ] && eval "${varname}=\"${value}\""
 		return
 	fi
 
@@ -296,36 +277,6 @@ iprange_set() {
 	if [ -n "${varname}" ]; then
 		eval "${varname}=\"${primary}-${secondary}\""
 		export ${varname}
-	fi
-}
-
-port_set() {
-	local mode=$1
-	local val=$2
-	local var=$3
-	local cvar=$4
-
-	local _port
-	local _conn
-	local constate="-m state --state"
-
-	_port=${val%%:*}
-	_conn=${val##*:}
-
-	[ "${_port}" = "${_conn}" ] && _conn=
-
-	_port=$(echo "${_port}" | ${c_sed} -e 's/-/:/g')
-
-	if [ -n "${var}" ]; then
-		[ "${mode}" = "" ] && \
-			eval "${var}=\"${_port}\"" || \
-			eval "${var}=\" --${mode}port ${_port}\""
-		export $var
-	fi
-
-	if [ -n "${cvar}" -a -n "${_conn}" ]; then
-		eval "${cvar}=\"-m state --state ${_conn}\""
-		export $cvar
 	fi
 }
 

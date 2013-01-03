@@ -136,9 +136,7 @@ case "$1" in
     if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
       echo 0 > /proc/sys/net/ipv4/ip_forward
     fi
-
-    sysctl -w "net.bridge.bridge-nf-call-iptables=0" >& /dev/null || true
-    sysctl -w "net.bridge.bridge-nf-call-arptables=0" >& /dev/null || true
+    ${command} -z >& /dev/null
     ;;
   force-reload|restart)
     $0 right-stop
