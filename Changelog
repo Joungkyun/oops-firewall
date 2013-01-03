@@ -5,6 +5,13 @@ $Id$
 
 * 7.0.0
 ---------------------------------------------------------------------
++ 2013.01.04
+	- fixed MASQ_MATCH_START protocol bug
+	- fixed MASQ_MATCH_START source port bug
+	- support ip range on MASQ_MATCH_START
+	- add TCP_FORWARD_TO_SS, UDP_FORWARD_TO_SS directive
+	- support ip range on Forward directive
+
 + 2013.01.03
 	- rewrite and redesign bridge filter rule
 

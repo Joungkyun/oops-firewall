@@ -70,36 +70,6 @@ masqStartCheck() {
 }
 
 #
-# Bridge 사용시, Forwarding table에서 MASQ 처리가 원할하도록 하기 위할 룰
-#
-bridge_masq_rule() {
-	local MASQ_INTERNAL
-
-	[ ${BRIDGE_USED} -eq 0 ] && return 0
-
-	if [ -n "$1" ]; then
-		MASQ_INTERNAL=$1
-	else
-		WordToUpper "${MASQUERADE_LOC}" MASQ_TMP_DEV
-		eval "MASQ_INTERNAL=\"\${${MASQ_TMP_DEV}_NET}/\${${MASQ_TMP_DEV}_PREFIX}\""
-	fi
-
-	o_echo "  * MASQ configration on Bridge Service"
-
-	o_echo "    iptables -A FORWARD -s ${MASQ_INTERNAL} -p tcp --dport 1:65535 \\"
-	o_echo "                        -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT"
-	[ "${_testmode}" = 0 ] && \
-	${c_iptables} -A FORWARD -s ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
-							-m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-
-	o_echo "    iptables -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \\"
-	o_echo "                        -m state --state ESTABLISHED,RELATED -j ACCEPT"
-	[ "${_testmode}" = 0 ] && \
-		${c_iptables} -A FORWARD -s ! ${MASQ_INTERNAL} -p tcp --dport 1:65535 \
-								-m state --state ESTABLISHED,RELATED -j ACCEPT
-}
-
-#
 # divided host and port for given value
 # div_host_port value d|s ret_var_name protocol_var_name
 #
@@ -109,19 +79,21 @@ div_host_port() {
 	local RETV=$3
 	local PROTO=$4
 	local addr
-	local port
-	local proto
+	local port=
+	local proto=
 
 	addr=${ORGV%:*}
 	port=${ORGV#*:}
-	port=$(echo "${port}" | ${c_sed} 's/-/:/g')
 
-	if [ "${addr}" = "${port}" ]; then
-		port=""
-	else
+	[ "${addr}" = "${port}" ] && port=""
+
+	if [ -n "${port}" ]; then
+		port=$(echo "${port}" | ${c_sed} 's/-/:/g')
 		check_protocol "${port}" port proto
 		port=" --${LOC}port ${port}"
 	fi
+
+	iprange_set ${addr} addr
 
 	eval "${RETV}=\"${addr}${port}\""
 	[ -n "${proto}" ] && eval "${PROTO}=\"${proto}\""
@@ -142,9 +114,9 @@ check_protocol() {
 	v1=$(echo "${VAL}" | ${c_sed} 's/[0-9:]//g')
 
 	case "${v1}" in
-		"T|t") proto="tcp" ;;
-		"U|u") proto="udp" ;;
-		"I|i") proto="icmp" ;;
+		T|t) proto="tcp" ;;
+		U|u) proto="udp" ;;
+		I|i) proto="icmp" ;;
 		*) proto="tcp" ;;
 	esac
 	eval "${PROTONAME}=\"-p ${proto} \""
@@ -167,31 +139,51 @@ add_masq_rule() {
 		for values in ${MASQ_MATCH_START}
 		do
 			masqStartCheck values MASQ_WHOLE_ADJ
+			values=$(echo ${values} | ${c_sed} 's/,/|/g')
 
 			echo ${values} | {
-				IFS=',' read pc public dest
+				IFS='|' read pc public dest
 
 				local proto=
 				div_host_port "${pc}" s pc sproto
 
 				[ -n "${dest}" ] && div_host_port "${dest}" d dest dproto
-				[ -n "${dest}" ] && dest=" -d ${dest}"
 
-				[ -n "${sproto}" ] && proto=${sproto} || [ -n "${dproto}" ] && proto=${dproto}
+				iprange_check ${dest}
+				rangechk=$?
+
+				if [ -n "${dest}" ]; then
+					if [ $rangechk -eq 1 ]; then
+						dest=" --dst-range ${dest}"
+						rangemod="-m iprange "
+					else
+						dest=" -d ${dest}"
+						rangemod=""
+					fi
+				fi
+
+				[ -n "${sproto}" ] && proto="${sproto}"
+				[ -z "${proto}" -a -n "${dproto}" ] && proto="${dproto}"
+
+				iprange_set $public public
 
 				if [ "${pc}" = "0" ]; then
-					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${dest} -j SNAT --to ${public}"
+					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${rangemod}${dest} -j SNAT --to ${public}"
 					[ "${_testmode}" = 0 ] && \
-						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${dest} -j SNAT --to ${public}
-					bridge_masq_rule
+						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN}${rangemod}${dest} -j SNAT --to ${public}
 				else
-					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \\"
-					o_echo "             ${proto}-s ${pc}${dest} \\"
+					iprange_check ${pc}
+					rangechk=$?
+
+					[ $rangechk -eq 1 ] && pc="--src-range ${pc}" || pc="-s ${pc}"
+					[ $rangechk -eq 1 ] && rangemod="-m iprange "
+
+					o_echo "  * iptables -t nat -A POSTROUTING -o ${MASQUERADE_WAN} ${proto} \\"
+					o_echo "             ${rangemod}${pc}${dest} \\"
 					o_echo "             -j SNAT --to ${public}"
 					[ "${_testmode}" = 0 ] && \
-						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} \
-									${proto}-s ${pc}${dest} -j SNAT --to ${public}
-					bridge_masq_rule ${pc}
+						${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} ${proto} \
+									${rangemod}${pc}${dest} -j SNAT --to ${public}
 				fi
 			}
 		done
@@ -204,8 +196,6 @@ add_masq_rule() {
 		o_echo "             -j SNAT --to ${MASQ_IPADDR}"
 		[ "${_testmode}" = 0 ] && \
 			${c_iptables} -t nat -A POSTROUTING -o ${MASQUERADE_WAN} -j SNAT --to ${MASQ_IPADDR}
-
-		bridge_masq_rule
 	fi
 
 	# Forwarding Rule 이 리얼 IP와 사설 IP간에 잘 통신이 되도록 사설망으로 향상 MASQ 도 설정

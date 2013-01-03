@@ -31,6 +31,22 @@ init_bridge() {
 		return 1
 	fi
 
+	if [ -z "${BRIDGE_WANDEV}" -o "${BRIDGE_WANDEV}" = "" ]; then
+		o_echo $"  * BRIDGE_WANDEV is empty. First config this directive"
+		o_echo $"    in the interface.conf"
+		BRIDGE_USED=0
+		export BRIDGE_USED
+		return 1
+	fi
+
+	if [ -z "${BRIDGE_LANDEV}" -o "${BRIDGE_LANDEV}" = "" ]; then
+		o_echo $"  * BRIDGE_LANDEV is empty. First config this directive"
+		o_echo $"    in the interface.conf"
+		BRIDGE_USED=0
+		export BRIDGE_USED
+		return 1
+	fi
+
 	${c_iptables} -m physdev --help > /dev/null
 	if [ $? -ne 0 ]; then
 		o_echo $"  * The version of iptables must be over 1.2.8 or"
