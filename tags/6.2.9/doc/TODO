@@ -1,0 +1,6 @@
+$Id$
+
+1. check ftp passive/active mode delay problem
+   - outgoing passive mode delay problem
+2. check inbound filter operation on Bridge mode
+   check completely outbound filtering on Bridge mode
