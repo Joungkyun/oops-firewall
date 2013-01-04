@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 0
 Summary: Individaul Firewall with IPTABLES
 Name: oops-firewall
-Version: 6.2.9
+Version: 7.0.0
 Release: 1
 Epoch: 46
 License: GPL
@@ -19,9 +19,6 @@ Vendor:   OOPS Development ORG
 %description
 It keeps your network system basically secure for external access
 with iptables package in KERNEL v2.4 or v2.6
-
-In version 6.0, support Bridge firewall
-
 
 %package doc
 Summary: OOPS Firewall Documentation
@@ -107,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
+* Fri Jan  4 2013 JoungKyun.Kim <http://oops.org> 46:7.0.0-1
+- update 7.0.0
+
 * Tue Mar 28 2012 JoungKyun.Kim <http://oops.org> 46:6.2.9-1
 - update 6.2.9
 
