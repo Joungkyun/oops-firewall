@@ -27,6 +27,7 @@ Configuration:
   --initdir=DIR     redhat init script path [/etc/rc.d/init.d]
   --destdir=DIR     Absulute path !! for needed packaging
   --userpath=DIR,.. Additional PATH environment varibles
+  --langenv=VAL     install configuration files with src/conf/VAL
 
 Check Utility:
   --perl=PATH       path of perl
@@ -137,6 +138,9 @@ do
       userpath=$(echo ${userpath} | sed 's/,/ /g')
       CHKDIR="${CHKDIR} ${userpath}"
       ;;
+	--langenv=*)
+      langenv=$(echo ${i} | sed 's/.*=//g')
+	  ;;
     -h|--h*)
       usage $0
       ;;
@@ -249,6 +253,10 @@ echo
 ${rm} -rf ./temp
 ${mkdir} -p ./temp
 ${cp} -af src/* ./temp/
+if [ -n "${langenv}" -a -d "./src/conf/${langenv}" ]; then
+	${rm} -rf ./temp/conf/
+	${cp} -af src/conf/${langenv}/ ./temp/conf
+fi
 
 ${mkdir} -p ./temp/contrib
 if [ -f "/etc/debian_version" ]; then
@@ -257,13 +265,13 @@ else
   ${cp} -af contrib/*.redhat ./temp/contrib/oops-firewall.init
 fi
 
-${find} ./temp -name "CVS" -exec rm -rf {} \; >& /dev/null
+${find} ./temp -name ".svn" -exec rm -rf {} \; >& /dev/null
 
 _target="awk bindir cat confdir cut depmod getopt grep"
 _target="${_target} ifconfig includedir initdir ipcalc"
 _target="${_target} iptables lsmod modprobe rm rmmod"
 _target="${_target} sed shareddir touch uname version"
-_target="${_target} route"
+_target="${_target} route langenv"
 
 for i in ${_target}
 do
@@ -295,7 +303,7 @@ ${install} -m 644  po/Makefile.in po/Makefile
 
 _target="bindir cc confdir destdir includedir initdir install"
 _target="${_target} ls mkdir msgfmt prefix rm sed shareddir"
-_target="${_target} version cflags"
+_target="${_target} version cflags langenv"
 
 for i in $_target
 do

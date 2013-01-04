@@ -37,7 +37,8 @@ Documentation for oops firewall
 	--includedir=/usr/include/oops-firewall \
 	--shareddir=/usr/share \
 	--initdir=/etc/rc.d/init.d \
-	--destdir=%{buildroot}
+	--destdir=%{buildroot} \
+#	--langenv=ko
 
 %build
 %{__make}
