@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 0
 Summary: Individaul Firewall with IPTABLES
 Name: oops-firewall
-Version: 7.0.0
+Version: 7.0.1
 Release: 1
 Epoch: 46
 License: GPL
