@@ -1,6 +1,7 @@
 # $Id$
 
 VERSION		= @version@
+LANGENV     = @langenv@
 CC			= @cc@
 PROG		= oops-firewall
 DESTDIR		= @destdir@
@@ -61,6 +62,8 @@ install-doc:
 	$(INSTALL) -m 644 CREDIT $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 	$(INSTALL) -m 644 Changelog $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 	$(INSTALL) -m 644 doc/README $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
+	[ -n "$(LANGENV)" -a -f "doc/$(LANGENV)/README" ] && \
+		$(INSTALL) -m 644 doc/$(LANGENV)/README $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/ || true
 
 dist:
 	$(MKDIR) $(PROG)-$(VERSION)
