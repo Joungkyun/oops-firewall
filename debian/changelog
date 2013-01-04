@@ -1,3 +1,10 @@
+oops-firewall (6.2.10-1) stable; urgency=low
+
+  * fixed MASQ_MATCH_START protocol bug
+  * fixed MASQ_MATCH_START source port bug
+
+ -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Fri,  4 Jan 2013 01:23:22 +0900
+
 oops-firewall (6.2.9-1) stable; urgency=low
 
   * fixed MASQ_MATCH_START port bug

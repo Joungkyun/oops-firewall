@@ -3,21 +3,12 @@ OOPS Firewall Chnages
 $Id$
 
 
-* 7.0.0
+* 6.2.10
 ---------------------------------------------------------------------
 + 2013.01.04
 	- fixed MASQ_MATCH_START protocol bug
 	- fixed MASQ_MATCH_START source port bug
-	- support ip range on MASQ_MATCH_START
-	- add TCP_FORWARD_TO_SS, UDP_FORWARD_TO_SS directive
-	- support ip range on Forward directive
-	- enhanced brute force rule and lyer7 filter on Forward chain
-
-+ 2013.01.03
-	- rewrite and redesign bridge filter rule
-
-+ 2012.12.21
-	- rewrite and redesign iptables rule
+	- release 6.2.10
 
 
 * 6.2.9

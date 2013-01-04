@@ -1,15 +1,15 @@
 %define _unpackaged_files_terminate_build 0
 Summary: Individaul Firewall with IPTABLES
 Name: oops-firewall
-Version: 6.2.9
+Version: 6.2.10
 Release: 1
-Epoch: 46
+Epoch: 47
 License: GPL
 Group: Applications/Security
 URL: http://oops.org/?t=lecture&sb=firewall&n=1
 Source0: ftp://mirror.oops.org/pub/oops/oops-firewall/%{name}-%{version}.tar.bz2
 BuildRoot: /var/tmp/%{name}-root
-Requires: iptables perl sh-utils fileutils
+Requires: iptables perl sh-utils fileutils bridge-utils
 Conflicts: oops_firewall
 BuildArchitectures: noarch
 
@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
+* Fri Jan  4 2013 JoungKyun.Kim <http://oops.org> 47:6.2.10-1
+- update 6.2.10
+
 * Tue Mar 28 2012 JoungKyun.Kim <http://oops.org> 46:6.2.9-1
 - update 6.2.9
 
