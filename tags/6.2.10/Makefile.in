@@ -62,9 +62,16 @@ install-doc:
 	$(INSTALL) -m 644 Changelog $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 	$(INSTALL) -m 644 doc/README $(DESTDIR)$(shareddir)/doc/$(PROG)-$(VERSION)/
 
+dist:
+	$(MKDIR) $(PROG)-$(VERSION)
+	cp -af * $(PROG)-$(VERSION)/ >& /dev/null || true
+	cd $(PROG)-$(VERSION); make distclean; cd -
+	-tar cvfpj $(PROG)-$(VERSION).tar.bz2 $(PROG)-$(VERSION) --exclude=.svn >& /dev/null
+	make distclean
+
 clean:
 	make -C po clean
-	-${RM} -rf ./temp
+	-${RM} -rf ./temp $(PROG)-$(VERSION)
 
 distclean: clean
 	-${RM} -f Makefile po/Makefile
