@@ -11,6 +11,7 @@ $Id$
 	- support ip range on MASQ_MATCH_START
 	- add TCP_FORWARD_TO_SS, UDP_FORWARD_TO_SS directive
 	- support ip range on Forward directive
+	- enhanced brute force rule and lyer7 filter on Forward chain
 
 + 2013.01.03
 	- rewrite and redesign bridge filter rule
