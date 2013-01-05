@@ -5,16 +5,22 @@ This file for making debian package with oops-firewall.
 If you debian user, and want make oops-firewall debina package,
 follows:
 
-1. untar oops-firewall tar ball.
+1. Check dependency packages
 
-   shell> tar xvfpj oops-firewall-7.0.1.tar.bz2
+   You need follows packages to build deb package
 
-2. execute debbuild-sh script
+   debhelper, autotools-dev, ipcalc
 
-   shell> cd oops-firewall-7.0.1
+2. untar oops-firewall tar ball.
+
+   shell> tar xvfpj oops-firewall-7.0.0.tar.bz2
+
+3. execute debbuild-sh script
+
+   shell> cd oops-firewall-7.0.0
    shell> ./debbuild-sh or bash debbuild-sh
 
    If case /bin/sh is soft link that redirect /bin/dash, you must use
    bash instead of sh or dash.
 
-3. create oops-firewall_7.0.1-1_all.deb file parrent directory in current directory
+4. create oops-firewall_7.0.0-1_all.deb file parrent directory in current directory
