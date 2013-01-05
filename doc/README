@@ -30,18 +30,17 @@ By current design, WAN conenction is not limited. Bridge mode is composed
 Composition as an example, as follow.
 
 
-                  FIREWALL
+              FIREWALL
 
-            ┌──────────────────┐
-         ┌──┴──┐            ┌──┴──┐ 
-  WAN   ─┤ eth0├   BRIDGE ─ ┤ eth2├ ─ Bridge Zone
-         └──┬──┘    (br0)   └──┬──┘    (Public Network)
-            │                  │    
-         ┌──┴──┐            ┌──┴──┐ 
-  WAN   ─┤ eth1├   MASQ   ─ ┤ eth3├ ─ Transparant proxy Zone
-         └──┬──┘            └──┬──┘    (Private Network)
-            └──────────────────┘
-
+            ┌──────────┐
+        ┌─┴─┐            ┌─┴─┐
+  WAN ─┤eth0  ├─ BRIDGE ─┤ eth2 ├─ Bridge Zone
+        └─┬─┘    (br0)   └─┬─┘    (Public Network)
+            │                    │
+        ┌─┴─┐            ┌─┴─┐
+  WAN ─┤ eth1 ├─ MASQ   ─┤ eth3 ├─ Transparant proxy Zone
+        └─┬─┘            └─┬─┘    (Private Network)
+            └──────────┘
 
   * Example fo interface.conf configuration:
      FIREWALL_WAN = br0 eth1
@@ -59,17 +58,17 @@ of same is not available on BRIDGE_LANDEV and MASQUERADE_LOC directive.
 If Bridge WAN device and Masquerading WAN device are same, in other words,
 a structure like following figures:
 
-                  FIREWALL
+              FIREWALL
 
-            ┌──────────────────┐
-         ┌──┴──┐            ┌──┴──┐ 
-  WAN   ─┤ eth0├   BRIDGE ─ ┤ eth1├ ─ Bridge Zone
-         └──┬─┬┘    (br0)   └──┬──┘    (Public Network)
-            │ │                │    
-            │ │             ┌──┴──┐ 
-            │ └ ─  MASQ ─ ─ ┤ eth2├ ─ Transparant proxy Zone
-            │               └──┬──┘    (Private Network)
-            └──────────────────┘
+            ┌─────────┐
+        ┌─┴─┐          ┌─┴─┐
+  WAN ─┤eth0  ├ BRIDGE ─┤eth1  ├─ Bridge Zone
+        └─┬┬┘  (br0)   └─┬─┘    (Public Network)
+            ││                │
+            ││            ┌─┴─┐
+            │└─ MASQ   ─┤eth2  ├─ Transparant proxy Zone
+            │              └─┬─┘    (Private Network)
+            └─────────┘
 
   * Example fo interface.conf configuration:
      FIREWALL_WAN = br0
