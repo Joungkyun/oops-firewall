@@ -33,7 +33,7 @@ add_all_rule() {
 				do
 					[ "${intf}" = "INPUT" ] && redir="s" || redir="d"
 					[ $_verbose -eq 1 ] && {
-						printf "  * iptables -A %-6s -%s %s/%s -j ACCEPT\n" "${intf}" "${redir}" "${varNT}" "${VARSN}"
+						printf "  * iptables -A %-6s -%s %s/%s -j ACCEPT\n" "${intf}" "${redir}" "${varNT}" "${varSN}"
 					}
 					[ "${_testmode}" = 0 ] && \
 						${c_iptables} -A ${intf} -${redir} ${varNT}/${varSN} -j ACCEPT
