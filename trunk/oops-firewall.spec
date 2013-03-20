@@ -68,7 +68,7 @@ if [ -f /etc/init.d/iptables ]; then
 	echo "If you want to revoke iptables init script, use follow commands"
 	echo
 	echo "chkconfig --add iptables"
-	echo "chkconfig --level 345 iptbables on"
+	echo "chkconfig --level 345 iptables on"
 
 	/sbin/chkconfig --del iptables
 fi
