@@ -5,6 +5,10 @@ $Id$
 
 * 7.0.1
 ---------------------------------------------------------------------
++ 2013.11.08
+	- fixed iprange function for wrong source or destination
+	  on add_port_rule API
+
 + 2013.01.07
 	- fixed missing subnet no  ALLOWSELF verbose msg
 
