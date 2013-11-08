@@ -1,8 +1,10 @@
 oops-firewall (7.0.1-1) stable; urgency=low
 
   * support i18n configuration with langenv option of configure
+  * fixed missing subnet no  ALLOWSELF verbose msg
+  * fixed iprange function for wrong source or destination on add_port_rule API
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Sat,  5 Jan 2013 04:58:21 +0900
+ -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Sat,  9 Nov 2013 01:07:13 +0900
 
 oops-firewall (7.0.0-1) stable; urgency=low
 

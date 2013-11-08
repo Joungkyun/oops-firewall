@@ -105,6 +105,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
+* Sat Nov  9 2013 JoungKyun.Kim <http://oops.org> 46:7.0.1-1
+- update 7.0.1
+- support i18n configuration with langenv option of configure
+- fixed missing subnet no  ALLOWSELF verbose msg
+- fixed iprange function for wrong source or destination
+  on add_port_rule API
+
 * Fri Jan  4 2013 JoungKyun.Kim <http://oops.org> 46:7.0.0-1
 - update 7.0.0
 
