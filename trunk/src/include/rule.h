@@ -135,12 +135,13 @@ add_port_rule() {
 					rangechk=$?
 
 					if [ ${rangechk} -eq 1 ]; then
+						[ "${table}" = "INPUT" ] && target="src-range" || target="dst-range"
 						[ $_verbose -eq 1 ] && {
-							printf "    iptables -A %-7s -p %-4s -m iprange --dst-range %s --dport %-5s %s -j ACCEPT\n" \
-								"${table}" "${proto}" "${rhosts}" "${oport}" "${constate}"
+							printf "    iptables -A %-7s -p %-4s -m iprange --%s %s --dport %-5s %s -j ACCEPT\n" \
+								"${table}" "${proto}" "${target}" "${rhosts}" "${oport}" "${constate}"
 						}
 						[ ${_testmode} -eq 0 ] && \
-							${c_iptables} -A ${table} -p ${proto} -m iprange --dst-range ${rhosts} \
+							${c_iptables} -A ${table} -p ${proto} -m iprange --${target} ${rhosts} \
 										--dport ${oport} ${constate} -j ACCEPT
 					else
 						[ $_verbose -eq 1 ] && {
