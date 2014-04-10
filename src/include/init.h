@@ -297,9 +297,9 @@ init_default_rule() {
 	for v in $_tables
 	do
 		[ $_verbose -eq 1 ] && {
-			printf "    iptables -A %-7s -m state --state ${_nE},${_nR} -j ACCEPT\n" "${v}"
+			printf "    iptables -A %-7s -p tcp -m state --state ${_nE},${_nR} -j ACCEPT\n" "${v}"
 		}
-		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${v} -m state --state ${_nE},${_nR} -j ACCEPT
+		[ ${_testmode} -eq 0 ] && ${c_iptables} -A ${v} -p tcp -m state --state ${_nE},${_nR} -j ACCEPT
 	done
 
 	# PERMIT outgoing ping
