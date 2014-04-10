@@ -1,12 +1,6 @@
-oops-firewall (7.0.3-1) stable; urgency=low
-
-  * 
-
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Thu, 10 Apr 2014 23:48:22 +0900
-
 oops-firewall (7.0.2-1) stable; urgency=low
 
-  * fixed always allows all sessions of udp protocol 
+  * 
 
  -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Thu, 10 Apr 2014 23:48:22 +0900
 
