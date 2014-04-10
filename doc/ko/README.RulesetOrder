@@ -3,24 +3,24 @@ OOPS Firewall Ruleset Order
 $Id$
 
 
-iptables ëŠ” ì„  ë“±ë¡ëœ ruleset ì´ ë‚˜ì¤‘ì— ë“±ë¡ëœ ruleset ë³´ë‹¤ ìš°ì„ í•˜ëŠ” íŠ¹ì§•
-ì´ ìžˆë‹¤. ì˜ˆë¥¼ ë“¤ì–´,
+iptables ´Â ¼± µî·ÏµÈ ruleset ÀÌ ³ªÁß¿¡ µî·ÏµÈ ruleset º¸´Ù ¿ì¼±ÇÏ´Â Æ¯Â¡
+ÀÌ ÀÖ´Ù. ¿¹¸¦ µé¾î,
 
 iptables -A INPUT -j DROP
 iptables -A INPUT -s 1.1.1.0 -j ACCEPT
 
-ë¼ê³  í•˜ì—¬ INPUT chain ì„ ë§‰ì€ í›„ì—, 1.1.1.0 ì—ì„œì˜ ì ‘ê·¼ì„ í—ˆê°€ í•œë‹¤ë©´, ë‹¹
-ì—°ížˆ 1.1.1.0 ì—ì„œì˜ ì ‘ê·¼ì€ ì„  ruleset ì— ì˜í•´ì„œ ì ‘ì†ì´ ì•ˆë˜ê²Œ ëœë‹¤.  ê·¸ëŸ¬
-ë¯€ë¡œ ìœ„ì˜ ruleset ì€
+¶ó°í ÇÏ¿© INPUT chain À» ¸·Àº ÈÄ¿¡, 1.1.1.0 ¿¡¼­ÀÇ Á¢±ÙÀ» Çã°¡ ÇÑ´Ù¸é, ´ç
+¿¬È÷ 1.1.1.0 ¿¡¼­ÀÇ Á¢±ÙÀº ¼± ruleset ¿¡ ÀÇÇØ¼­ Á¢¼ÓÀÌ ¾ÈµÇ°Ô µÈ´Ù.  ±×·¯
+¹Ç·Î À§ÀÇ ruleset Àº
 
 iptables -A INPUT -s 1.1.1.0 -j ACCEPT
 iptables -A INPUT -j DROP
 
-ì˜ ìˆœì„œëŒ€ë¡œ ì‹¤í–‰ì´ ë˜ì–´ì•¼ í•œë‹¤.
+ÀÇ ¼ø¼­´ë·Î ½ÇÇàÀÌ µÇ¾î¾ß ÇÑ´Ù.
 
-OOPS Firewall ì—­ì‹œ ì´ ë¬¸ì œì— ì˜í–¥ì„ ë°›ê²Œ ë˜ë¯€ë¡œ, OOPS Firewall ì˜ ì˜µì…˜ ì§€
-ì‹œìžë“¤ì˜ ì‹¤í–‰ ìˆœì„œê°€ ì¤‘ìš”í•˜ë‹¤. OOPS Firewall ì—ì„œ rule ì„ ì„¤ê³„í• ë•Œ ë‹¤ìŒì˜
-order ë¥¼ ìˆ™ì§€ ë˜ëŠ” ì°¸ê³ í•˜ì—¬ ì„¤ì •ì„ í•˜ë„ë¡ í•˜ì—¬ì•¼ í•œë‹¤.
+OOPS Firewall ¿ª½Ã ÀÌ ¹®Á¦¿¡ ¿µÇâÀ» ¹Þ°Ô µÇ¹Ç·Î, OOPS Firewall ÀÇ ¿É¼Ç Áö
+½ÃÀÚµéÀÇ ½ÇÇà ¼ø¼­°¡ Áß¿äÇÏ´Ù. OOPS Firewall ¿¡¼­ rule À» ¼³°èÇÒ¶§ ´ÙÀ½ÀÇ
+order ¸¦ ¼÷Áö ¶Ç´Â Âü°íÇÏ¿© ¼³Á¤À» ÇÏµµ·Ï ÇÏ¿©¾ß ÇÑ´Ù.
 
 
  1. ALLOWSELF             (filter.conf)
@@ -29,26 +29,26 @@ order ë¥¼ ìˆ™ì§€ ë˜ëŠ” ì°¸ê³ í•˜ì—¬ ì„¤ì •ì„ í•˜ë„ë¡ í•˜ì—¬ì•¼ í•œë‹¤.
  4. pre user define rule  (user.conf % directive)
  5. OUT_TCP_ALLOWPORT     (filter.conf)
  6. OUT_UDP_ALLOWPORT     (filter.conf)
- 7. BR_OUT_TCP_ALLOW      (bridge.conf)
- 8. BR_OUT_UDP_ALLOW      (bridge.conf)
- 9. TCP_ALLOWPORT         (filter.conf)
-10. TCP_HOSTPERPORT       (filter.conf)
-11. UDP_ALLOWPORT         (filter.conf)
-12. UDP_HOSTPERPORT       (filter.conf)
-13. BR_TCP_ALLOW          (bridge.conf)
-14. BR_UDP_ALLOW          (bridge.conf)
+ 7. TCP_ALLOWPORT         (filter.conf)
+ 8. TCP_HOSTPERPORT       (filter.conf)
+ 9. UDP_ALLOWPORT         (filter.conf)
+10. UDP_HOSTPERPORT       (filter.conf)
+11. BR_TCP_ALLOWPORT      (bridge.conf)
+12. BR_TCP_HOSTPERPORT    (bridge.conf)
+13. BR_UDP_ALLOWPORT      (bridge.conf)
+14. BR_UDP_HOSTPERPORT    (bridge.conf)
 15. ICMP_HOSTPERPING      (filter.conf)
 16. ICMP_HOSTPERTRACE     (filter.conf)
-17. BR_PING_ALLOW         (bridge.conf)
-18. BR_TRACE_ALLOW        (bridge.conf)
+17. BR_ICMP_HOSTPERPING   (bridge.conf)
+18. BR_ICMP_HOSTPERTRACE  (bridge.conf)
 19. MASQ_MATCH_START      (masq.conf)
 20. masquerading rule     (masq.conf)
 21. ALL_FORWARD_TO        (forward.conf)
-22. TCP_FORWARD_TO_SS     (forward.conf)
-23. TCP_FORWARD_TO_S      (forward.conf)
-24. TCP_FORWARD_TO        (forward.conf)
-25. UDP_FORWARD_TO_SS     (forward.conf)
-26. UDP_FORWARD_TO_S      (forward.conf)
-27. UDP_FORWARD_TO        (forward.conf)
-28. post user define rule (user.conf @ directive)
-29. USE_TOS               (tos.conf)
+22. TCP_FORWARD_TO_S      (forward.conf)
+23. TCP_FORWARD_TO        (forward.conf)
+24. UDP_FORWARD_TO_S      (forward.conf)
+25. UDP_FORWARD_TO        (forward.conf)
+26. post user define rule (user.conf @ directive)
+27. USE_TOS               (tos.conf)
+
+

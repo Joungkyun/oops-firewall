@@ -3,43 +3,6 @@ OOPS Firewall Chnages
 $Id$
 
 
-* 7.0.2
----------------------------------------------------------------------
-+ 2014.04.10
-	- fixed always allows all sessions of udp protocol
-
-
-* 7.0.1
----------------------------------------------------------------------
-+ 2013.11.08
-	- fixed iprange function for wrong source or destination
-	  on add_port_rule API
-
-+ 2013.01.07
-	- fixed missing subnet no  ALLOWSELF verbose msg
-
-+ 2013.01.05
-	- support i18n configuration with langenv option of configure
-
-
-* 7.0.0
----------------------------------------------------------------------
-+ 2013.01.04
-	- fixed MASQ_MATCH_START protocol bug
-	- fixed MASQ_MATCH_START source port bug
-	- support ip range on MASQ_MATCH_START
-	- add TCP_FORWARD_TO_SS, UDP_FORWARD_TO_SS directive
-	- support ip range on Forward directive
-	- enhanced brute force rule and lyer7 filter on Forward chain
-	- release 7.0.0
-
-+ 2013.01.03
-	- rewrite and redesign bridge filter rule
-
-+ 2012.12.21
-	- rewrite and redesign iptables rule
-
-
 * 6.2.9
 ---------------------------------------------------------------------
 + 2012.03.28

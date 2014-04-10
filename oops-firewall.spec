@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 0
 Summary: Individaul Firewall with IPTABLES
 Name: oops-firewall
-Version: 7.0.3
+Version: 6.2.9
 Release: 1
 Epoch: 46
 License: GPL
@@ -9,7 +9,7 @@ Group: Applications/Security
 URL: http://oops.org/?t=lecture&sb=firewall&n=1
 Source0: ftp://mirror.oops.org/pub/oops/oops-firewall/%{name}-%{version}.tar.bz2
 BuildRoot: /var/tmp/%{name}-root
-Requires: iptables perl sh-utils fileutils
+Requires: iptables perl sh-utils fileutils bridge-utils
 Conflicts: oops_firewall
 BuildArchitectures: noarch
 
@@ -19,6 +19,9 @@ Vendor:   OOPS Development ORG
 %description
 It keeps your network system basically secure for external access
 with iptables package in KERNEL v2.4 or v2.6
+
+In version 6.0, support Bridge firewall
+
 
 %package doc
 Summary: OOPS Firewall Documentation
@@ -37,8 +40,7 @@ Documentation for oops firewall
 	--includedir=/usr/include/oops-firewall \
 	--shareddir=/usr/share \
 	--initdir=/etc/rc.d/init.d \
-	--destdir=%{buildroot} \
-#	--langenv=ko
+	--destdir=%{buildroot}
 
 %build
 %{__make}
@@ -68,7 +70,7 @@ if [ -f /etc/init.d/iptables ]; then
 	echo "If you want to revoke iptables init script, use follow commands"
 	echo
 	echo "chkconfig --add iptables"
-	echo "chkconfig --level 345 iptables on"
+	echo "chkconfig --level 345 iptbables on"
 
 	/sbin/chkconfig --del iptables
 fi
@@ -105,19 +107,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
-* Thu Apr 10 2014 JoungKyun.Kim <http://oops.org> 47:7.0.2-1
-- fixed always allows all udp session
-
-* Sat Nov  9 2013 JoungKyun.Kim <http://oops.org> 46:7.0.1-1
-- update 7.0.1
-- support i18n configuration with langenv option of configure
-- fixed missing subnet no  ALLOWSELF verbose msg
-- fixed iprange function for wrong source or destination
-  on add_port_rule API
-
-* Fri Jan  4 2013 JoungKyun.Kim <http://oops.org> 46:7.0.0-1
-- update 7.0.0
-
 * Tue Mar 28 2012 JoungKyun.Kim <http://oops.org> 46:6.2.9-1
 - update 6.2.9
 

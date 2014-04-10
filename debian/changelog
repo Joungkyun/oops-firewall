@@ -1,41 +1,8 @@
-oops-firewall (7.0.3-1) stable; urgency=low
-
-  * 
-
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Thu, 10 Apr 2014 23:48:22 +0900
-
-oops-firewall (7.0.2-1) stable; urgency=low
-
-  * fixed always allows all sessions of udp protocol 
-
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Thu, 10 Apr 2014 23:48:22 +0900
-
-oops-firewall (7.0.1-1) stable; urgency=low
-
-  * support i18n configuration with langenv option of configure
-  * fixed missing subnet no  ALLOWSELF verbose msg
-  * fixed iprange function for wrong source or destination on add_port_rule API
-
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Sat,  9 Nov 2013 01:07:13 +0900
-
-oops-firewall (7.0.0-1) stable; urgency=low
-
-  * fixed MASQ_MATCH_START protocol bug
-  * fixed MASQ_MATCH_START source port bug
-  * support ip range on MASQ_MATCH_START
-  * add TCP_FORWARD_TO_SS, UDP_FORWARD_TO_SS directive
-  * support ip range on Forward directive
-  * enhanced brute force rule and lyer7 filter on Forward chain
-  * rewrite and redesign bridge filter rule
-  * rewrite and redesign iptables rule
-
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Wed, 28 Mar 2012 19:09:21 +0900
-
 oops-firewall (6.2.9-1) stable; urgency=low
 
   * fixed MASQ_MATCH_START port bug
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Sat,  5 Jan 2013 01:24:37 +0900
+ -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Wed, 28 Mar 2012 19:09:21 +0900
 
 oops-firewall (6.2.8-1) stable; urgency=low
 

@@ -1,10 +1,10 @@
 # oops-firewall templete file
-# Copyright (C) 2013 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# JoungKyun.Kim <http://oops.org>, 2013
+# JoungKyun.Kim <http://oops.org>, 2000
 #
 # made by
-#    xgettext -d default --from-code=euc-kr -L Shell -s
+#    xgettext -d default --from-code=euc-kr -L Shell -s \
 #       configure src/include/*.h src/sbin/oops-firewall contrib/oops-firewall.init*
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
@@ -14,501 +14,492 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: oops-fireall 7.0.3\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-04 22:03+0900\n"
+"Project-Id-Version: oops-fireall 6.2.8\n"
+"Report-Msgid-Bugs-To: http://oops.org\n"
+"POT-Creation-Date: 2008-06-19 20:44+0900\n"
 "PO-Revision-Date: 2008-06-19 20:48+0900\n"
 "Last-Translator: JoungKyun.Kim <http://oops.org>\n"
 "Language-Team: AnNyung Packaging Team <http://annyung.oops.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=EUC-KR\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
 #: src/include/print.h:24
 msgid "         -V                     print current version"
-msgstr "         -V                     í˜„ì¬ ë²„ì „ ì¶œë ¥"
+msgstr "         -V                     ÇöÀç ¹öÀü Ãâ·Â"
 
 #: src/include/print.h:20
 msgid "         -c config_directory    set configuration directory"
-msgstr "         -c config_directory    ì„¤ì • íŒŒì¼ ë””ë ‰í† ë¦¬ ì§€ì •"
+msgstr "         -c config_directory    ¼³Á¤ ÆÄÀÏ µğ·ºÅä¸® ÁöÁ¤"
 
 #: src/include/print.h:25
 msgid "         -h                     help (this) message"
-msgstr "         -h                     ë„ì›€ë§"
+msgstr "         -h                     µµ¿ò¸»"
 
 #: src/include/print.h:23
 msgid "         -n                     don't print ansi mode"
-msgstr "         -n                     ì•ˆì‹œ ëª¨ë“œ ì¶œë ¥ í•˜ì§€ ì•ŠìŒ"
+msgstr "         -n                     ¾È½Ã ¸ğµå Ãâ·Â ÇÏÁö ¾ÊÀ½"
 
 #: src/include/print.h:21
 msgid "         -t                     run test mode"
-msgstr "         -t                     í…ŒìŠ¤íŠ¸ ëª¨ë“œë¡œ ì‹¤í–‰"
+msgstr "         -t                     Å×½ºÆ® ¸ğµå·Î ½ÇÇà"
 
 #: src/include/print.h:22
 msgid "         -v                     verbose mode"
-msgstr "         -v                     ìƒì„¸ ëª¨ë“œ"
+msgstr "         -v                     »ó¼¼ ¸ğµå"
 
-#: src/include/command.h:170 src/include/command.h:182
-#: src/include/command.h:192 src/include/command.h:301
-#: src/include/command.h:313 src/include/command.h:323
+#: src/include/command.h:116 src/include/command.h:128
+#: src/include/command.h:138
 #, sh-format
 msgid "     ${value} => ${l_chain} can't use with ${l_table}"
-msgstr "     ${value} => ${l_chain} ëŠ” ${l_table} ê³¼ ê°™ì´ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."
+msgstr "     ${value} => ${l_chain} ´Â ${l_table} °ú °°ÀÌ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."
 
-#: src/include/command.h:149 src/include/command.h:280
+#: src/include/command.h:95
 #, sh-format
 msgid "     ${value} => ${l_table} is unknown table"
-msgstr "     ${value} => ${l_table} í…Œì´ë¸”ì€ ì§€ì •í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."
+msgstr "     ${value} => ${l_table} Å×ÀÌºíÀº ÁöÁ¤ÇÒ ¼ö ¾ø½À´Ï´Ù."
 
-#: src/include/command.h:159 src/include/command.h:290
+#: src/include/command.h:105
 #, sh-format
 msgid "     ${value} => CHAIN value must need"
-msgstr "     ${value} => CHAIN ê°’ì€ ë°˜ë“œì‹œ í•„ìš”í•©ë‹ˆë‹¤."
+msgstr "     ${value} => CHAIN °ªÀº ¹İµå½Ã ÇÊ¿äÇÕ´Ï´Ù."
 
-#: src/include/command.h:200 src/include/command.h:331
+#: src/include/command.h:146
 #, sh-format
 msgid "     ${value} => PROTO must be setting"
-msgstr "     ${value} => PROTO ê°’ì€ ë°˜ë“œì‹œ í•„ìš” í•©ë‹ˆë‹¤."
+msgstr "     ${value} => PROTO °ªÀº ¹İµå½Ã ÇÊ¿ä ÇÕ´Ï´Ù."
 
-#: src/include/command.h:221 src/include/command.h:352
+#: src/include/command.h:167
 #, sh-format
 msgid "     ${value} => action MARK is needed mark value"
-msgstr "     ${value} => actoin MARK ëŠ” mark ê°’ì´ ìš”êµ¬ë©ë‹ˆë‹¤."
+msgstr "     ${value} => actoin MARK ´Â mark °ªÀÌ ¿ä±¸µË´Ï´Ù."
 
-#: src/include/command.h:212 src/include/command.h:343
+#: src/include/command.h:158
 #, sh-format
 msgid "     ${value} => action value is used with DROP/MARK"
-msgstr "     ${value} => ACTION ê°’ì€ DROP/MAKR ë‘˜ì¤‘ì— í•˜ë‚˜ë¡œ ì§€ì •í•´ì•¼ í•©ë‹ˆë‹¤."
+msgstr "     ${value} => ACTION °ªÀº DROP/MAKR µÑÁß¿¡ ÇÏ³ª·Î ÁöÁ¤ÇØ¾ß ÇÕ´Ï´Ù."
 
-#: src/include/rule.h:189
+#: src/include/rule.h:422
 #, sh-format
-msgid "    ==> for ${ment} service"
-msgstr "    ==> ${ment} ì„œë¹„ìŠ¤ ì„¤ì •"
+msgid "    ==> for ${i_ct} service"
+msgstr "    ==> ${i_ct} ¼­ºñ½º ¼³Á¤"
 
-#: src/include/bridge.h:186
-msgid "    ==> for bridge ping service"
-msgstr "    ==> Bridge ping ì„œë¹„ìŠ¤ ì„¤ì •"
+#: src/include/rule.h:449
+#, sh-format
+msgid "    ==> for Bridge ${i_ct} service"
+msgstr "    ==> Bridge ${i_ct} ¼­ºñ½º ¼³Á¤"
 
-#: src/include/bridge.h:259
-msgid "    ==> for bridge trace service"
-msgstr "    ==> Bridge trace ì„œë¹„ìŠ¤ ì„¤ì •"
-
-#: src/include/init.h:45 src/include/init.h:144
+#: src/include/init.h:44 src/include/init.h:143
 msgid "    Accept All FORWARD Chain"
-msgstr "    ëª¨ë“  FORWARD ì‚¬ìŠ¬ í—ˆê°€"
+msgstr "    ¸ğµç FORWARD »ç½½ Çã°¡"
 
-#: src/include/init.h:21 src/include/init.h:130
+#: src/include/init.h:20 src/include/init.h:129
 msgid "    Accept All INPUT Chain"
-msgstr "    ëª¨ë“  INPUT ì‚¬ìŠ¬ í—ˆê°€"
+msgstr "    ¸ğµç INPUT »ç½½ Çã°¡"
 
-#: src/include/init.h:33 src/include/init.h:114
+#: src/include/init.h:32 src/include/init.h:113
 msgid "    Accept All OUTPUT Chain"
-msgstr "    ëª¨ë“  OUTPUT ì‚¬ìŠ¬ì„ í—ˆê°€"
+msgstr "    ¸ğµç OUTPUT »ç½½À» Çã°¡"
 
-#: src/include/init.h:78 src/include/init.h:158
+#: src/include/init.h:77 src/include/init.h:157
 msgid "    Accept All POSTROUTING Chain"
-msgstr "    ëª¨ë“  POSTROUTING ì‚¬ìŠ¬ í—ˆê°€"
+msgstr "    ¸ğµç POSTROUTING »ç½½ Çã°¡"
 
-#: src/include/init.h:66 src/include/init.h:100
+#: src/include/init.h:65 src/include/init.h:99
 msgid "    Accept All PREROUTING Chain"
-msgstr "    FORWARD ê·œì¹™ ì œê±°"
+msgstr "    FORWARD ±ÔÄ¢ Á¦°Å"
 
-#: src/sbin/oops-firewall:146
+#: src/sbin/oops-firewall:125
 msgid "    IP ADDRESS"
-msgstr "    IP ì£¼ì†Œ"
+msgstr "    IP ÁÖ¼Ò"
 
-#: src/include/modules.h:80 src/include/modules.h:84
+#: src/include/bridge.h:46
+msgid "    If you want use this function, isntall bridge-utils package"
+msgstr "    ÀÌ ±â´ÉÀ» »ç¿ëÇÏ·Á¸é, ¸ÕÀú bridge-utils ÆĞÅ°Áö¸¦ ¼³Ä¡ ÇÏ½Ê½Ã¿À."
+
+#: src/include/modules.h:72 src/include/modules.h:76
 msgid "    Load ${1} module"
-msgstr "    ${1} ëª¨ë“ˆ ë“±ë¡"
+msgstr "    ${1} ¸ğµâ µî·Ï"
 
-#: src/include/modules.h:52 src/include/modules.h:61
+#: src/include/modules.h:46 src/include/modules.h:55
 #, sh-format
 msgid "    Load ${mod_name} module"
-msgstr "    ${mod_name} ëª¨ë“ˆ ë“±ë¡"
+msgstr "    ${mod_name} ¸ğµâ µî·Ï"
 
-#: src/sbin/oops-firewall:150
+#: src/sbin/oops-firewall:129
 msgid "    NETWORK"
-msgstr "    ë„¤íŠ¸ì›Œí¬"
+msgstr "    ³×Æ®¿öÅ©"
 
-#: src/sbin/oops-firewall:152
+#: src/sbin/oops-firewall:131
 msgid "    NETWORK PREPIX"
-msgstr "    ë„¤íŠ¸ì›Œí¬ í”„ë¦¬í”½ìŠ¤"
+msgstr "    ³×Æ®¿öÅ© ÇÁ¸®ÇÈ½º"
 
-#: src/include/modules.h:117
+#: src/include/modules.h:107
 #, sh-format
 msgid "    Remove ${_mod_name} module"
-msgstr "    ${_mod_name} ëª¨ë“ˆ ì œê±°"
+msgstr "    ${_mod_name} ¸ğµâ Á¦°Å"
 
-#: src/include/modules.h:109
+#: src/include/modules.h:99
 #, sh-format
 msgid "    Remove ${i} module"
-msgstr "    ${i} ëª¨ë“ˆ ì œê±°"
+msgstr "    ${i} ¸ğµâ Á¦°Å"
 
-#: src/include/init.h:151
+#: src/include/init.h:150
 msgid "    Remove rule of FORWARD"
-msgstr "    FORWARD ê·œì¹™ ì œê±°"
+msgstr "    FORWARD ±ÔÄ¢ Á¦°Å"
 
-#: src/include/init.h:39
+#: src/include/init.h:38
 msgid "    Remove rule of FORWARD Chain"
-msgstr "    FORWARD ì‚¬ìŠ¬ì˜ ê·œì¹™ ì œê±°"
+msgstr "    FORWARD »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
 
-#: src/include/init.h:137
+#: src/include/init.h:136
 msgid "    Remove rule of INPUT"
-msgstr "    INPUT ê·œì¹™ì„ ì œê±°"
+msgstr "    INPUT ±ÔÄ¢À» Á¦°Å"
 
-#: src/include/init.h:27
+#: src/include/init.h:26
 msgid "    Remove rule of INPUT Chain"
-msgstr "    INPUT ì‚¬ìŠ¬ì˜ ê·œì¹™ ì œê±°"
+msgstr "    INPUT »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
 
-#: src/include/init.h:121
+#: src/include/init.h:120
 msgid "    Remove rule of OUTPUT"
-msgstr "    OUTPUT ê·œì¹™ì„ ì œê±°"
+msgstr "    OUTPUT ±ÔÄ¢À» Á¦°Å"
 
-#: src/include/init.h:51
+#: src/include/init.h:50
 msgid "    Remove rule of OUTPUT Chain"
-msgstr "    OUTPUT ì‚¬ìŠ¬ì˜ ê·œì¹™ ì œê±°"
+msgstr "    OUTPUT »ç½½ÀÇ ±ÔÄ¢ Á¦°Å"
 
-#: src/include/init.h:84 src/include/init.h:165
+#: src/include/init.h:83 src/include/init.h:164
 msgid "    Remove rule of POSTROUTING"
-msgstr "    POSTROUTING ê·œì¹™ ì œê±°"
+msgstr "    POSTROUTING ±ÔÄ¢ Á¦°Å"
 
-#: src/include/init.h:72 src/include/init.h:107
+#: src/include/init.h:71 src/include/init.h:106
 msgid "    Remove rule of PREROUTING"
-msgstr "    PREROUTING ê·œì¹™ ì œê±°"
+msgstr "    PREROUTING ±ÔÄ¢ Á¦°Å"
 
-#: src/include/init.h:15
+#: src/include/init.h:14
 msgid "    Reset Chain Counter "
-msgstr "    ì‚¬ìŠ¬ ì¹´ìš´í„° ì´ˆê¸°í™”"
+msgstr "    »ç½½ Ä«¿îÅÍ ÃÊ±âÈ­"
 
-#: src/include/init.h:93
+#: src/include/init.h:92
 msgid "    Reset MANGLE Tabel Counter"
-msgstr "    MANGLE í…Œì´ë¸” ì¹´ìš´í„° ì´ˆê¸°í™”"
+msgstr "    MANGLE Å×ÀÌºí Ä«¿îÅÍ ÃÊ±âÈ­"
 
-#: src/include/init.h:60
+#: src/include/init.h:59
 msgid "    Reset NAT Tabel Counter"
-msgstr "    NAT í…Œì´ë¸” ì¹´ìš´í„° ì´ˆê¸°í™”"
+msgstr "    NAT Å×ÀÌºí Ä«¿îÅÍ ÃÊ±âÈ­"
 
-#: src/sbin/oops-firewall:148
+#: src/sbin/oops-firewall:127
 msgid "    SUBNET MASK"
-msgstr "    ì„œë¸Œë„· ë§ˆìŠ¤í¬"
+msgstr "    ¼­ºê³İ ¸¶½ºÅ©"
 
-#: src/include/modules.h:35
+#: src/include/modules.h:31
 #, sh-format
-msgid "    Unload ${mod_file} module"
-msgstr "    ${mod_file} ëª¨ë“ˆ ì œê±°"
+msgid "    Unload ${mod_name} module"
+msgstr "    ${mod_name} ¸ğµâ Á¦°Å"
 
-#: src/include/bridge.h:36 src/include/bridge.h:44
-msgid "    in the interface.conf"
-msgstr "    ì—ì„œ ì´ ì§€ì‹œìì˜ ê°’ì„ ì„¤ì • í•˜ì‹­ì‹œì˜¤"
+#: src/include/bridge.h:47
+msgid "    and, set 1 on BRIDGE_SET default.h and, configure path of"
+msgstr "    ±×¸®°í default.h ÀÇ BRIDGE_SET ÀÇ °«À» 1·Î ¼³Á¤ÇÏ½Ê½Ã¿À."
 
-#: src/sbin/oops-firewall:145
+#: src/include/bridge.h:48
+msgid "    c_brctl environment on command.h"
+msgstr "    ´ÙÀ½, command.h ÀÇ c_brctl º¯¼ö¿¡ brctl ÀÇ °æ·Î¸¦ ¼³Á¤ ÇÏ½Ê½Ã¿À."
+
+#: src/include/rule.h:255
+#, sh-format
+msgid "  * ${a_ment} service"
+msgstr "  * ${a_ment} ¼­ºñ½º"
+
+#: src/sbin/oops-firewall:124
 #, sh-format
 msgid "  * ${devName}${devNum} Information"
-msgstr "  * ${devName}${devNum} ì •ë³´"
+msgstr "  * ${devName}${devNum} Á¤º¸"
 
-#: src/include/forward.h:122
-#, sh-format
-msgid "  * ${i} => Wrong Configuration Value : ${v}"
-msgstr ""
-
-#: src/include/rule.h:114
-#, sh-format
-msgid "  * ${ment} service"
-msgstr "  * ${ment} ì„œë¹„ìŠ¤"
-
-#: src/include/init.h:190
+#: src/include/init.h:187
 msgid "  * Allow to use TCP SYNCOOKIES"
-msgstr "  * TCP SYNCOOKIES íŒŒë¼ë¯¸í„° ì‚¬ìš©"
+msgstr "  * TCP SYNCOOKIES ÆÄ¶ó¹ÌÅÍ »ç¿ë"
 
-#: src/include/bridge.h:96
+#: src/include/bridge.h:36
 #, sh-format
-msgid "  * BRIDGE ${ment} service"
-msgstr "  * BRIDGE ${ment} ì„œë¹„ìŠ¤"
+msgid "  * BRIDGE Local Interface name \"$BRIDGE_LOCDEV\" is not found"
+msgstr "  * BRIDGE ·ÎÄÃ ÀÎÅÍÆäÀÌ½º \"$BRIDGE_LOCDEV\"¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù."
 
-#: src/include/bridge.h:30
+#: src/include/bridge.h:32 src/include/bridge.h:37
+msgid "  * BRIDGE MODE go off!"
+msgstr "  * BRIDGE ¸ğµå°¡ ºñÈ°¼ºÈ­ µË´Ï´Ù!"
+
+#: src/include/bridge.h:31
+#, sh-format
+msgid "  * BRIDGE WAN Interface name \"$BRIDGE_WANDEV\" is not found"
+msgstr "  * BRIDGE WAN ÀÎÅÍÆäÀÌ½º ÀÌ¸§ \"$BRIDGE_WANDEV\" À» Ã£À» ¼ö ¾ø½À´Ï´Ù."
+
+#: src/include/bridge.h:53
 msgid "  * BRIDGE mode don't set"
-msgstr "  * BRIDGE ëª¨ë“œê°€ ì…‹íŒ…ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."
+msgstr "  * BRIDGE ¸ğµå°¡ ¼ÂÆÃµÇÁö ¾Ê¾Ò½À´Ï´Ù."
 
-#: src/include/bridge.h:43
-msgid "  * BRIDGE_LANDEV is empty. First config this directive"
-msgstr "  * BRIDGE_LANDEVê°€ ì§€ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. ë¨¼ì € interface.conf"
+#: src/include/bridge.h:45
+msgid "  * BRIDGE not support on build time"
+msgstr "  * ºôµå½Ã¿¡ BRIDGE ¸¦ Áö¿øÇÏÁö ¾Êµµ·Ï ¼³Á¤ µÇ¾ú½À´Ï´Ù."
 
-#: src/include/bridge.h:35
-msgid "  * BRIDGE_WANDEV is empty. First config this directive"
-msgstr "  * BRIDGE_WANDEVê°€ ì§€ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. ë¨¼ì € interface.conf"
+#: src/include/rule.h:340
+#, sh-format
+msgid "  * Bridge ${a_ment} service"
+msgstr "  * Bridge ${a_ment} ¼­ºñ½º"
 
-#: src/include/command.h:72
-msgid "  * Bridge Brute Force Attack Filter"
-msgstr "  * Bridge Brute Force ê³µê²© í•„í„°"
-
-#: src/include/command.h:250
-msgid "  * Bridge LAYER7 Filter"
-msgstr "  * Bridge LAYER7 í•„í„°"
+#: src/sbin/oops-firewall:264
+msgid "  * Bridge Name Service Configuration"
+msgstr "  * Bridge DNS ¼­ºñ½º ¼³Á¤"
 
 #: src/include/command.h:34
 msgid "  * Brute Force Attack Filter"
-msgstr "  * Brute Force ê³µê²© í•„í„°"
+msgstr "  * Brute Force °ø°İ ÇÊÅÍ"
 
-#: src/include/init.h:206
+#: src/include/init.h:203
 #, sh-format
 msgid "  * CHK IP SPOOFING ${dev}"
-msgstr "  * ${dev} IP ìŠ¤í‘¸í•‘ ì²´í¬"
+msgstr "  * ${dev} IP ½ºÇªÇÎ Ã¼Å©"
 
-#: src/include/init.h:217
+#: src/include/init.h:214
 msgid "  * Deny Invalid MSG"
-msgstr "  * ìœ íš¨í•˜ì§€ ì•Šì€ ë©”ì„¸ì§€ ê±°ì ˆ"
+msgstr "  * À¯È¿ÇÏÁö ¾ÊÀº ¸Ş¼¼Áö °ÅÀı"
 
-#: src/include/init.h:241
+#: src/include/init.h:238
 msgid "  * Deny Ping at BroadCast"
-msgstr "  * BroadCast ë¡œì˜ Ping ì„ ê±°ë¶€"
+msgstr "  * BroadCast ·ÎÀÇ Ping À» °ÅºÎ"
 
-#: src/include/forward.h:29 src/include/masq.h:12
+#: src/include/forward.h:27 src/include/masq.h:12
 msgid "  * Deprecated Direction Check"
-msgstr "  * ë§Œë£Œëœ ì§€ì‹œì ê²€ì‚¬"
+msgstr "  * ¸¸·áµÈ Áö½ÃÀÚ °Ë»ç"
 
-#: src/include/init.h:382
+#: src/include/init.h:294
 msgid "  * Drop All TCP packet"
-msgstr "  * ëª¨ë“  TCP íŒ¨í‚·ì„ Drop"
+msgstr "  * ¸ğµç TCP ÆĞÅ¶À» Drop"
 
-#: src/include/init.h:407
+#: src/include/init.h:312
 msgid "  * Drop All UDP packet"
-msgstr "  * ëª¨ë“  UDP íŒ¨í‚·ì„ Drop"
+msgstr "  * ¸ğµç UDP ÆĞÅ¶À» Drop"
 
-#: src/include/init.h:255
-msgid "  * Enable netfilter on Bridge"
-msgstr "  * ë¸Œë¦¿ì§€ ëª¨ë“œ ë„·í•„í„° ì‚¬ìš© ì„¤ì •"
-
-#: src/sbin/oops-firewall:298
+#: src/sbin/oops-firewall:288
 msgid "  * ICMP service Configuration"
-msgstr "  * ICMP ì„œë¹„ìŠ¤ ì„¤ì •"
+msgstr "  * ICMP ¼­ºñ½º ¼³Á¤"
 
-#: src/include/command.h:135
+#: src/include/command.h:80
 msgid "  * LAYER7 Filter"
-msgstr "  * LAYER7 í•„í„°"
+msgstr "  * LAYER7 ÇÊÅÍ"
 
-#: src/include/modules.h:12
+#: src/include/modules.h:11
 msgid "  * Load Netfilter Module"
-msgstr "  * ë„·í•„í„° ëª¨ë“ˆ ë“±ë¡"
+msgstr "  * ³İÇÊÅÍ ¸ğµâ µî·Ï"
 
-#: src/include/modules.h:101
+#: src/include/bridge.h:123 src/include/bridge.h:127
+msgid "  * MASQ mode changed off mode!"
+msgstr "  * MASQ ¸ğµå°¡ ºñÈ°¼ºÈ­ µË´Ï´Ù!"
+
+#: src/sbin/oops-firewall:260
+msgid "  * Name Service Configuration"
+msgstr "  * DNS ¼­ºñ½º ¼³Á¤"
+
+#: src/include/modules.h:91
 msgid "  * Netfilter Module Shutdown"
-msgstr "  * ë„·í•„í„° ëª¨ë“ˆ ì¢…ë£Œ"
+msgstr "  * ³İÇÊÅÍ ¸ğµâ Á¾·á"
 
-#: src/include/init.h:296
-msgid "  * Permit Established and Related session"
-msgstr "  * ëª¨ë“  ESTABLISED/REALTED ì—°ê²° í—ˆê°€"
+#: src/include/init.h:344
+msgid "  * Prevented internal ping and traceroute request"
+msgstr "  * ³»ºÎ·Î µé¾î¿À´Â ping °ú traceroute ¿äÃ»À» °ÅºÎ"
 
-#: src/include/init.h:307
-msgid "  * Permit Outgoing PING"
-msgstr "  * ì™¸ë¶€ë¡œì˜ PING í—ˆê°€"
+#: src/include/init.h:276
+msgid "  * Reject All Syn Packet"
+msgstr "  * ¸ğµç Syn ÆĞÅ¶À» °ÅºÎ"
 
-#: src/include/init.h:338
-msgid "  * Permit Outgoing PING on Bridge"
-msgstr "  * Bridge ëª¨ë“œì—ì„œ ì™¸ë¶€ë¡œì˜ PING í—ˆê°€"
-
-#: src/include/init.h:317 src/include/init.h:352
-msgid "  * Permit Outgoing Traceroute"
-msgstr "  * ì™¸ë¶€ë¡œì˜ Traceroute í—ˆê°€"
-
-#: src/include/init.h:431
-msgid "  * Rejcet all ICMP packet"
-msgstr "  * ëª¨ë“  ICMP íŒ¨í‚·ì„ ê±°ë¶€"
-
-#: src/include/init.h:10
+#: src/include/init.h:9
 msgid "  * Reset Basic Table"
-msgstr "  * ê¸°ë³¸ í…Œì´ë¸” ì´ˆê¸°í™”"
+msgstr "  * ±âº» Å×ÀÌºí ÃÊ±âÈ­"
 
-#: src/include/init.h:88
+#: src/include/init.h:87
 msgid "  * Reset Mangle Table"
-msgstr "  * Mangle í…Œì´ë¸” ì´ˆê¸°í™”"
+msgstr "  * Mangle Å×ÀÌºí ÃÊ±âÈ­"
 
-#: src/include/init.h:55
+#: src/include/init.h:54
 msgid "  * Reset NAT Table"
-msgstr "  * NAT í…Œì´ë¸” ì´ˆê¸°í™”"
+msgstr "  * NAT Å×ÀÌºí ÃÊ±âÈ­"
 
-#: src/sbin/oops-firewall:349
+#: src/sbin/oops-firewall:339
 msgid "  * TOS Not Config"
-msgstr "  * TOS ì„¤ì •ì´ ì•ˆë˜ì–´ ìˆìŒ"
+msgstr "  * TOS ¼³Á¤ÀÌ ¾ÈµÇ¾î ÀÖÀ½"
 
-#: src/include/bridge.h:52
-msgid "  * The version of iptables must be over 1.2.8 or"
-msgstr ""
-
-#: src/include/rule.h:275
+#: src/include/rule.h:482
 #, sh-format
 msgid "  * Tos configuration in ${i} chain"
-msgstr "  * ${i} ì²´ì¸ Tos ì„¤ì •"
+msgstr "  * ${i} Ã¼ÀÎ Tos ¼³Á¤"
 
-#: src/include/command.h:414
+#: src/include/command.h:224
 msgid "  * USER POST COMMAND (@) Not Config"
-msgstr "  * ì‹¤í–‰ í›„ ìœ ì € ëª…ë ¹(@)ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŒ"
+msgstr "  * ½ÇÇà ÈÄ À¯Àú ¸í·É(@)ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾ÊÀ½"
 
-#: src/include/command.h:411
+#: src/include/command.h:221
 msgid "  * USER PRE COMMAND (%) Not Config"
-msgstr "  * ì‹¤í–‰ ì „ ìœ ì € ëª…ë ¹(%) ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŒ"
+msgstr "  * ½ÇÇà Àü À¯Àú ¸í·É(%) ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾ÊÀ½"
 
-#: src/include/command.h:417
+#: src/include/command.h:227
 msgid "  * Unknown parameter"
-msgstr "  * ì•Œìˆ˜ ì—†ëŠ” íŒŒë¼ë¯¸í„°"
+msgstr "  * ¾Ë¼ö ¾ø´Â ÆÄ¶ó¹ÌÅÍ"
 
-#: src/include/bridge.h:53
-msgid "  * must support physdev extension"
-msgstr ""
+#: src/include/bridge.h:126
+msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE LOC device"
+msgstr "  * MASQ Å¬¶óÀÌ¾ğÆ® µğ¹ÙÀÌ½º °ªÀÌ BRIDGE ·ÎÄÃ µğ¹ÙÀÌ½º °ª°ú µ¿ÀÏ ÇÕ´Ï´Ù."
+
+#: src/include/bridge.h:122
+msgid "  * Value of MASQ Client DEVICE can't same value of BRIDGE WAN device"
+msgstr "  * MASQ Å¬¶óÀÌ¾ğÆ® µğ¹ÙÀÌ½ºÀÇ °ªÀÌ BRIDGE WAN µğ¹ÙÀÌ½º °ª°ú µ¿ÀÏ ÇÕ´Ï´Ù."
 
 #: src/include/masq.h:20
 #, sh-format
 msgid " Use ${_alter} in interface.conf\\n"
-msgstr " interface.conf ì˜ ${_alter} ë¥¼ ì‚¬ìš©í•˜ì‹­ì‹œì˜¤.\\n"
+msgstr " interface.conf ÀÇ ${_alter} ¸¦ »ç¿ëÇÏ½Ê½Ã¿À.\\n"
 
 #: src/include/masq.h:29 src/include/masq.h:39
 msgid " is not set"
-msgstr " ì´ ì„¤ì •ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤."
+msgstr " ÀÌ ¼³Á¤µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù."
 
-#: src/include/print.h:10
+#: src/include/print.h:9
 #, sh-format
 msgid "# OOPS Firewall - Very Easy Iptables Frontend v${_ver}"
-msgstr "# OOPS Firewall - ì„¤ì •ì´ ê°„ë‹¨í•œ iptables í”„ë¡ íŠ¸ì—”ë“œ v${_ver}"
+msgstr "# OOPS Firewall - ¼³Á¤ÀÌ °£´ÜÇÑ iptables ÇÁ·ĞÆ®¿£µå v${_ver}"
 
-#: src/sbin/oops-firewall:247
+#: src/sbin/oops-firewall:232
 #, sh-format
 msgid "${NB}. Allow All Service"
-msgstr "${NB}. ëª¨ë“  ì„œë¹„ìŠ¤ í—ˆê°€"
+msgstr "${NB}. ¸ğµç ¼­ºñ½º Çã°¡"
 
-#: src/sbin/oops-firewall:236
-#, sh-format
-msgid "${NB}. Allow Basic Rules"
-msgstr "${NB}. ê¸°ë³¸ ê·œì¹™ í—ˆê°€"
-
-#: src/sbin/oops-firewall:284
+#: src/sbin/oops-firewall:275
 #, sh-format
 msgid "${NB}. Allow Incoming Service Configuration"
-msgstr "${NB}. ë‚´ë¶€ë¡œ ë“¤ì–´ì˜¤ëŠ” ì„œë¹„ìŠ¤ í—ˆê°€"
+msgstr "${NB}. ³»ºÎ·Î µé¾î¿À´Â ¼­ºñ½º Çã°¡"
 
-#: src/sbin/oops-firewall:269
+#: src/sbin/oops-firewall:254
 #, sh-format
 msgid "${NB}. Allow Outgoing Service Configuration"
-msgstr "${NB}. ì™¸ë¶€ë¡œ ë‚˜ê°€ëŠ” ì„œë¹„ìŠ¤ í—ˆê°€"
+msgstr "${NB}. ¿ÜºÎ·Î ³ª°¡´Â ¼­ºñ½º Çã°¡"
 
-#: src/sbin/oops-firewall:213
+#: src/sbin/oops-firewall:209
 #, sh-format
 msgid "${NB}. Basic Kernel Parameter Configuration"
-msgstr "${NB}. ê¸°ë³¸ ì»¤ë„ íŒŒë¼ë¯¸í„° ì„¤ì •"
+msgstr "${NB}. ±âº» Ä¿³Î ÆÄ¶ó¹ÌÅÍ ¼³Á¤"
 
-#: src/sbin/oops-firewall:53
+#: src/sbin/oops-firewall:51
 #, sh-format
 msgid "${NB}. Check user type"
-msgstr "${NB}. ì‹¤í–‰ ìœ ì € ì²´í¬"
+msgstr "${NB}. ½ÇÇà À¯Àú Ã¼Å©"
 
-#: src/sbin/oops-firewall:360
+#: src/sbin/oops-firewall:350
 #, sh-format
 msgid "${NB}. Deny rule set configuration"
-msgstr "${NB}. ê±°ë¶€ ê·œì¹™ ì„¤ì •"
+msgstr "${NB}. °ÅºÎ ±ÔÄ¢ ¼³Á¤"
 
-#: src/sbin/oops-firewall:225
+#: src/sbin/oops-firewall:221
 #, sh-format
 msgid "${NB}. Drop Invalid Package"
-msgstr "${NB}. ì´ìƒ íŒ¨í‚· ì œê±°"
+msgstr "${NB}. ÀÌ»ó ÆĞÅ¶ Á¦°Å"
 
-#: src/sbin/oops-firewall:333
+#: src/sbin/oops-firewall:323
 #, sh-format
 msgid "${NB}. Execute user defined post Command"
-msgstr "${NB}. í›„ì²˜ë¦¬ ì‚¬ìš©ì ì„¤ì • ê·œì¹™ ì¶”ê°€"
+msgstr "${NB}. ÈÄÃ³¸® »ç¿ëÀÚ ¼³Á¤ ±ÔÄ¢ Ãß°¡"
 
-#: src/sbin/oops-firewall:258
+#: src/sbin/oops-firewall:243
 #, sh-format
 msgid "${NB}. Execute user defined pre command"
-msgstr "${NB}. ì „ì²˜ë¦¬ ì‚¬ìš©ì ì„¤ì • ê·œì¹™ ì¶”ê°€"
+msgstr "${NB}. ÀüÃ³¸® »ç¿ëÀÚ ¼³Á¤ ±ÔÄ¢ Ãß°¡"
 
-#: src/sbin/oops-firewall:321
+#: src/sbin/oops-firewall:311
 #, sh-format
 msgid "${NB}. Forwarding Configuration"
-msgstr "${NB}. í¬ì›Œë”© ì„¤ì •"
+msgstr "${NB}. Æ÷¿öµù ¼³Á¤"
 
-#: src/sbin/oops-firewall:117
+#: src/sbin/oops-firewall:94
 #, sh-format
 msgid "${NB}. IP address Check"
-msgstr "${NB}. IP ì£¼ì†Œ ì²´í¬"
+msgstr "${NB}. IP ÁÖ¼Ò Ã¼Å©"
 
-#: src/sbin/oops-firewall:201
+#: src/sbin/oops-firewall:197
 #, sh-format
 msgid "${NB}. Init Bridge Mode"
-msgstr "${NB}. Bridge ëª¨ë“œ ì´ˆê¸°í™”"
+msgstr "${NB}. Bridge ¸ğµå ÃÊ±âÈ­"
 
-#: src/sbin/oops-firewall:159
+#: src/sbin/oops-firewall:156
 #, sh-format
 msgid "${NB}. Interface Information"
-msgstr "${NB}. ì¸í„°í˜ì´ìŠ¤ ì •ë³´"
+msgstr "${NB}. ÀÎÅÍÆäÀÌ½º Á¤º¸"
 
-#: src/sbin/oops-firewall:71
+#: src/sbin/oops-firewall:69
 #, sh-format
 msgid "${NB}. Kernel version check"
-msgstr "${NB}. ì»¤ë„ ë²„ì „ ê²€ì‚¬"
+msgstr "${NB}. Ä¿³Î ¹öÀü °Ë»ç"
 
-#: src/sbin/oops-firewall:309
+#: src/sbin/oops-firewall:299
 #, sh-format
 msgid "${NB}. Masqurade Configuration"
-msgstr "${NB}. ë§¤ìŠ¤ì¿¼ë ˆì´ë“œ ì„¤ì •"
+msgstr "${NB}. ¸Å½ºÄõ·¹ÀÌµå ¼³Á¤"
 
-#: src/sbin/oops-firewall:184
+#: src/sbin/oops-firewall:182
 #, sh-format
 msgid "${NB}. Reset Netfilter"
-msgstr "${NB}. ë„·í•„í„° ì´ˆê¸°í™”"
+msgstr "${NB}. ³İÇÊÅÍ ÃÊ±âÈ­"
 
-#: src/sbin/oops-firewall:344
+#: src/sbin/oops-firewall:334
 #, sh-format
 msgid "${NB}. TOS Configuration"
-msgstr "${NB}. TOS ì„¤ì •"
+msgstr "${NB}. TOS ¼³Á¤"
 
 #: src/include/masq.h:19
 #, sh-format
 msgid "${i} is Deprecated."
-msgstr "${i} ì€/ëŠ” ë§Œë£Œë˜ì—ˆìŠµë‹ˆë‹¤."
+msgstr "${i} Àº/´Â ¸¸·áµÇ¾ú½À´Ï´Ù."
 
-#: src/include/modules.h:62 src/include/modules.h:85
+#: src/include/modules.h:56 src/include/modules.h:77
 msgid "Already Loading"
-msgstr "ì¡´ì¬í•¨"
+msgstr "Á¸ÀçÇÔ"
 
-#: contrib/oops-firewall.init.debian:131 contrib/oops-firewall.init.redhat:120
+#: contrib/oops-firewall.init.debian:130 contrib/oops-firewall.init.redhat:120
 msgid "Destory Firewall Tables: "
-msgstr "OOPS Firewall ì¢…ë£Œ: "
+msgstr "OOPS Firewall Á¾·á: "
 
-#: src/sbin/oops-firewall:76
+#: src/sbin/oops-firewall:74
 msgid "Enable to use over kernel 2.4.0"
-msgstr "ì»¤ë„ 2.4.0 ë²„ì „ ë¶€í„° ì‚¬ìš©ì´ ê°€ëŠ¥í•©ë‹ˆë‹¤."
+msgstr "Ä¿³Î 2.4.0 ¹öÀü ºÎÅÍ »ç¿ëÀÌ °¡´ÉÇÕ´Ï´Ù."
 
-#: src/include/forward.h:32
+#: src/include/forward.h:30
 msgid "FORWARD_MASTER is Deprecated."
-msgstr "FORWARD_MASTER ëŠ” ì‚¬ìš©ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤."
+msgstr "FORWARD_MASTER ´Â »ç¿ëµÇÁö ¾Ê½À´Ï´Ù."
 
 #: src/include/print.h:19
 msgid "Options:"
-msgstr "ì˜µì…˜:"
+msgstr "¿É¼Ç:"
 
-#: contrib/oops-firewall.init.debian:55 contrib/oops-firewall.init.redhat:43
+#: contrib/oops-firewall.init.debian:53 contrib/oops-firewall.init.redhat:43
 msgid "Starting OOPS Firewall: "
-msgstr "OOPS Firewall ì‹œì‘: "
+msgstr "OOPS Firewall ½ÃÀÛ: "
 
-#: src/sbin/oops-firewall:58
+#: src/sbin/oops-firewall:56
 msgid "U are not super user!"
-msgstr "ìˆ˜í¼ ìœ ì € ê¶Œí•œìœ¼ë¡œ ì‹¤í–‰ì„ í•´ì•¼ í•©ë‹ˆë‹¤."
+msgstr "¼öÆÛ À¯Àú ±ÇÇÑÀ¸·Î ½ÇÇàÀ» ÇØ¾ß ÇÕ´Ï´Ù."
 
-#: contrib/oops-firewall.init.debian:174 contrib/oops-firewall.init.redhat:164
+#: contrib/oops-firewall.init.debian:172 contrib/oops-firewall.init.redhat:162
 msgid "Usage: $0 {start|right-stop|stop|restart|status}"
-msgstr "ì‚¬ìš©ë²•: $0 {start|right-stop|stop|restart|status}"
+msgstr "»ç¿ë¹ı: $0 {start|right-stop|stop|restart|status}"
 
 #: src/include/print.h:18
 msgid "Usage: oops-firewall -[option]"
-msgstr "ì‚¬ìš©ë²•: oops-firewall -[ì˜µì…˜]"
+msgstr "»ç¿ë¹ı: oops-firewall -[¿É¼Ç]"
 
-#: contrib/oops-firewall.init.debian:151 contrib/oops-firewall.init.redhat:141
+#: contrib/oops-firewall.init.debian:149 contrib/oops-firewall.init.redhat:139
 msgid "[ Legualar Table ]"
-msgstr "[ ê¸°ë³¸ í…Œì´ë¸” ]"
+msgstr "[ ±âº» Å×ÀÌºí ]"
 
-#: contrib/oops-firewall.init.debian:167 contrib/oops-firewall.init.redhat:157
+#: contrib/oops-firewall.init.debian:165 contrib/oops-firewall.init.redhat:155
 msgid "[ MANGLE Table ]"
-msgstr "[ MANGLE í…Œì´ë¸” ]"
+msgstr "[ MANGLE Å×ÀÌºí ]"
 
-#: contrib/oops-firewall.init.debian:159 contrib/oops-firewall.init.redhat:149
+#: contrib/oops-firewall.init.debian:157 contrib/oops-firewall.init.redhat:147
 msgid "[ NAT Table ]"
-msgstr "[ NAT í…Œì´ë¸” ]"
-
+msgstr "[ NAT Å×ÀÌºí ]"

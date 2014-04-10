@@ -3,78 +3,76 @@ OOPS Firewall README
 $Id$
 
 
-This document is for OOPS Firewall 7.x tree.
+ÀÌ ¹®¼­´Â OOPS Firewall 6.x Æ®¸®¿¡ °ü·ÃµÈ ¹®¼­ÀÌ´Ù.
 
 
-OOPS Firewall is the iptables frontend for a simple-to-use firewall
-configuration that controls packet filtering, bridge firewall, masquerade
-system, port forwarding, etc on the Linux kernel 2.4 or late.
+OOPS Firewall Àº ¸®´ª½º Ä¿³Î 2.4 ÀÌ»ó¿¡¼­ »ç¿ëÀÌ µÇ´Â iptables¸¦ ÀÌ¿ëÇÑ
+¹æÈ­º® ±¸¼º, Bridge ¹æÈ­º®, Masquerade ½Ã½ºÅÛ, Æ÷Æ® Æ÷¿öµù µîÀ» ½±°í °£
+ÆíÇÏ°Ô »ç¿ëÇÏ±â À§ÇÑ iptables frontend ÀÌ´Ù.
 
-This is default firewall on AnNyung LInux, and support Redhat compatible
-distributions and debian compatible distirbutions over kernel 2.4.
+¾È³ç ¸®´ª½ºÀÇ ±âº» ¹æÈ­º® ½Ã½ºÅÛÀÌ¸ç, Ä¿³Î 2.4ÀÌ»óÀÇ Redhat È£È¯ ¹èÆ÷º»
+À» À§ÇÏ¿© ¼³°è°¡ µÇ¾î ÀÖ´Ù.
 
-
-OOPS Firewall 7.x tree is as follows.
-
-
-1. enhanced input / output processing
-2. support bridge firewall
-3. support transparent proxy (Masquerading)
-4. support port forwarding
-5. support user define rules
+OOPS Firewall 6.x Æ®¸®ÀÇ Æ¯Â¡Àº ´ÙÀ½°ú °°´Ù.
 
 
-By current design, WAN conenction is not limited. Bridge mode is composed
-1 WAN device and 1 LAN device and Masquerade mode is same with Bridge mode.
+1. inboud/outbound Ã³¸®ÀÇ Çâ»ó
+2. network device ÀÇ È®Àå (ppp, bond, bridge Áö¿ø)
+3. Bridge ¹æÈ­º® Áö¿ø
+4. Masquerade ¹æÈ­º® Áö¿ø
+5. Æ÷Æ® Æ÷¿öµù Áö¿ø
+6. ¿©·¯°³ÀÇ (ÃÖ´ë 9°³±îÁöÀÇ) µ¿ÀÏ device Áö¿ø
 
-Composition as an example, as follow.
+
+ÇöÀçÀÇ ¼³°è»óÀ¸·Î´Â WAN ¿¬°áÀº Á¦ÇÑÀÌ ¾øÀ¸¸ç, Bridge mode ´Â 1°³ÀÇ WAN °ú
+1°³ÀÇ LOCAL ÀÌ Áö¿øÀÌ µÇ°í MASQ ¿ª½Ã 1 °³ÀÇ WAN °ú 1 °³ÀÇ LOCAL ÀÌ Áö¿øµÈ
+´Ù.
+
+ÃÖ´ë·Î ±¸¼ºÇÒ ¼ö ÀÖ´Â °æ¿ì´Â, ´ÙÀ½°ú °°´Ù.
 
 
-              FIREWALL
+                      FIREWALL
 
-            â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-        â”Œâ”€â”´â”€â”            â”Œâ”€â”´â”€â”
-  WAN â”€â”¤eth0  â”œâ”€ BRIDGE â”€â”¤ eth2 â”œâ”€ Bridge Zone
-        â””â”€â”¬â”€â”˜    (br0)   â””â”€â”¬â”€â”˜    (Public Network)
-            â”‚                    â”‚
-        â”Œâ”€â”´â”€â”            â”Œâ”€â”´â”€â”
-  WAN â”€â”¤ eth1 â”œâ”€ MASQ   â”€â”¤ eth3 â”œâ”€ Transparant proxy Zone
-        â””â”€â”¬â”€â”˜            â””â”€â”¬â”€â”˜    (Private Network)
-            â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+               ¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤
+               ¦¢                ¦£¦¡¦¡¦ª¦¡¦¤
+               ¦¢                ¦¢  ETH3  ¦§¦¡ Bridge Zone
+         ¦£¦¡¦¡¦ª¦¡¦¡¦¤          ¦¦¦¡¦¡¦¨¦¡¦¥   (Public Network)
+  WAN  ¦¡¦© ETH0/1/2 ¦¢  BRIDGE        ¦¢
+         ¦¦¦¡¦¡¦¨¦¡¦¡¦¥          ¦£¦¡¦¡¦ª¦¡¦¤
+               ¦¢eth0            ¦¢  ETH4  ¦§¦¡ Masq Zone
+               ¦¢                ¦¦¦¡¦¡¦¨¦¡¦¥   (Private Network)
+               ¦¦¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¥
 
-  * Example fo interface.conf configuration:
-     FIREWALL_WAN = br0 eth1
+     % BRIDGE ´Â BRIDGE interface ÀÌ¸ç, ETH0 °ú ETH3 À» °ü¸®ÇÔ.
+
+
+     FIREWALL_WAN = eth0 eth1 eth2
      MASQUERADE_WAN = eth1
-     MASQUERADE_LOC = eth3
-     BRIDGE_DEVNAME = br0
-     BRIDGE_WANDEV  = eth0
-     BRIDGE_LANDEV  = eth2
+     MASQUERADE_LOC = eth4
+     BRIDGE_WANDEV = eth0
+     BRIDGE_LOCDEV = eth3
 
 
-If you have multiple interfaces, you can set multiple interface to
-FIREWALL_WAN directive with separated by a white space. And the value
-of same is not available on BRIDGE_LANDEV and MASQUERADE_LOC directive.
+¿Í °°ÀÌ ±¸¼ºÀ» ÇÒ ¼ö ÀÖ´Ù. FIREWALL_WAN ÀÇ °æ¿ì, ¿©·Á ÀÎÅÍÆäÀÌ½º°¡ Á¸ÀçÇÒ
+°æ¿ì °ø¹é¹®ÀÚ¸¦ ±¸ºĞÀÚ·Î ³ª¿­ÇÏ¸é µÈ´Ù. ÁÖÀÇÇÒ°ÍÀº BRIDGE Local ±¸°£ÀÇ ÀÎ
+ÅÍÆäÀÌ½º¿Í MASQ Local ±¸°£ÀÇ ÀÎÅÍÆäÀÌ½º´Â µ¿ÀÏÇÏ°Ô »ç¿ëÇÒ ¼ö ¾ø´Ù.
 
-If Bridge WAN device and Masquerading WAN device are same, in other words,
-a structure like following figures:
+¸¸¾à, Bridge WAN device ¿Í MASQ WAN device °¡ µ¿ÀÏÇÒ °æ¿ì, Áï ´ÙÀ½ÀÇ ±×¸²
+°ú °°Àº ±¸Á¶¶ó¸é..
 
-              FIREWALL
+                      FIREWALL
 
-            â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-        â”Œâ”€â”´â”€â”          â”Œâ”€â”´â”€â”
-  WAN â”€â”¤eth0  â”œ BRIDGE â”€â”¤eth1  â”œâ”€ Bridge Zone
-        â””â”€â”¬â”¬â”˜  (br0)   â””â”€â”¬â”€â”˜    (Public Network)
-            â”‚â”‚                â”‚
-            â”‚â”‚            â”Œâ”€â”´â”€â”
-            â”‚â””â”€ MASQ   â”€â”¤eth2  â”œâ”€ Transparant proxy Zone
-            â”‚              â””â”€â”¬â”€â”˜    (Private Network)
-            â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+               ¦£¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¤
+               ¦¢                ¦£¦¡¦¡¦ª¦¡¦¤
+               ¦¢                ¦¢  ETH1  ¦§¦¡ Bridge Zone
+         ¦£¦¡¦¡¦ª¦¡¦¡¦¤          ¦¦¦¡¦¡¦¨¦¡¦¥   (Public Network)
+  WAN  ¦¡¦©   ETH0   ¦¢  BRIDGE        ¦¢
+         ¦¦¦¡¦¡¦¨¦¡¦¡¦¥          ¦£¦¡¦¡¦ª¦¡¦¤
+               ¦¢                ¦¢  ETH2  ¦§¦¡ Masq Zone
+               ¦¢                ¦¦¦¡¦¡¦¨¦¡¦¥   (Private Network)
+               ¦¦¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¥
 
-  * Example fo interface.conf configuration:
-     FIREWALL_WAN = br0
-     MASQUERADE_WAN = br0
-     MASQUERADE_LOC = eth2
-     BRIDGE_DEVNAME = br0
-     BRIDGE_WANDEV  = eth0
-     BRIDGE_LANDEV  = eth1
-
+MASQUERADE_WAN Àº ÁÖÀÇÇØ¾ß ÇÒ Á¡ÀÌ ÀÖ´Ù. oops-firewall Àº bridge interface
+¸¦ Á÷Á¢ ´Ù·ç±â ¶§¹®¿¡, Bridge ¸¦ ¼³Á¤ÇÏ´Â ¼ø°£, MASQUERADE_WAN À¸·Î »ç¿ëÇÒ
+eth0 ÀÌ brg0 À¸·Î º¯°æµÈ ÈÄ¿¡ MASQ ¸¦ Ã³¸®ÇÏ°Ô µÈ´Ù. ±×·¯¹Ç·Î ÀÌ °æ¿ì MASQ
+ÀÇ WAN device ¸¦ brg0 À¸·Î ÁöÁ¤À» ÇØ ÁÖ¾î¾ß ÇÑ´Ù.

@@ -6,7 +6,7 @@ $Id$
 First, sorry for my poor english :-)
 
 
-This document gives a description of OOPS Firewall 7.x installation.
+This document gives a description of OOPS Firewall 6.x installation.
 
 
 1. Attention
@@ -57,7 +57,7 @@ read README.debian document.
 OOPS Firewall is recommanded that install as rpm package. For make RPM
 package, use follow command.
 
-shell> rpmbuild -tb oops-firewall-7.0.3.tar.bz2
+shell> rpmbuild -tb oops-firewall-6.2.8.tar.bz2
 
 After building, you can find new package on /usr/src/redhat/RPMS/noarch.
 
@@ -68,7 +68,7 @@ shell> rpm -qlv oops-firewall
 If oops-firewall is not installed, you can get file list of rpm package
 with follow command.
 
-shell> rpm -qlvp oops-firewall-7.0.3-1.noarch.rpm
+shell> rpm -qlvp oops-firewall-6.2.8-1.noarch.rpm
 
 
 
@@ -97,7 +97,6 @@ Configuration:
   --initdir=DIR     redhat init script path [/etc/rc.d/init.d]
   --destdir=DIR     Absulute path !! for needed packaging
   --userpath=DIR,.. Additional PATH environment varibles
-  --langenv=VAL     install configuration files with src/conf/VAL
 
 Check Utility:
   --perl=PATH       path of perl
