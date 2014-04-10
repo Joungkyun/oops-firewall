@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
+* Thu Apr 10 2014 JoungKyun.Kim <http://oops.org> 47:7.0.2-1
+- fixed always allows all udp session
+
 * Sat Nov  9 2013 JoungKyun.Kim <http://oops.org> 46:7.0.1-1
 - update 7.0.1
 - support i18n configuration with langenv option of configure
