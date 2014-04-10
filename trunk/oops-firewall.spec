@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 0
 Summary: Individaul Firewall with IPTABLES
 Name: oops-firewall
-Version: 7.0.3
+Version: 7.0.2
 Release: 1
 Epoch: 46
 License: GPL
@@ -106,7 +106,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Thu Apr 10 2014 JoungKyun.Kim <http://oops.org> 47:7.0.2-1
-- fixed always allows all udp session
+- 
 
 * Sat Nov  9 2013 JoungKyun.Kim <http://oops.org> 46:7.0.1-1
 - update 7.0.1
