@@ -1,33 +1,29 @@
 # $Id$
 
 :sumline
-# Case that the last character of ther line is '/'
+# 줄 마지막이 \ (줄넘김 문자) 일 경우 처리
 /\\[ \t]*$/ {
-	# input next line to patern space.
-	N
+  # 다음 줄을 패턴 스페이스에 넣는다.
+  N
 
-	# removed next line comment
-	s/\([[:space:]]\+\)\?#.*\|"//g
+  # 줄넘김 문자와 두 라인간의 개행 문자를 삭제하여 한줄로 붙인다.
+  s/[ \t]*\\[ \t]*\n[ \t]*/ /g
 
-	# remove '/' character and newline
-	s/[ \t]*\\[ \t]*[\r\n]\+[ \t]*/ /g
-
-	# repeat Until '/' character don't exists.
-	t sumline
+  # 반복한다.
+  t sumline
 }
 
-# remove first space each lines.
+# 각 라인 처음의 공백을 제거
 s/^[ \t]\+//g
 
-# if iptables command is exists after separator,
-# remove iptables command
+# 구분자 다음에 IPTABLES 명령이 있을 경우 제거
 s/@.*iptables[ \t]/@/g
 
-# removed comment
+# 주석 제거
 s/[ \t]*#.*//g
 
-# remove blank line
+# 공백 라인 삭제
 /^$/d
 
-# print
+# 출력
 /^@/p

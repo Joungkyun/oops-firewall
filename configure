@@ -1,16 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 # $Id$
 
 NAME=oops-firewall
 GCOL=40
-version=7.0.3
+version=5.1.0
 OS=$(uname)
 LOCALDIR=/usr/local
 CHKDIR="/bin /sbin /usr/bin /usr/sbin ${LOCALDIR}/bin ${LOCALDIR}/sbin"
 
 _command="depmod lsmod rmmod modprobe sed grep awk cat uname"
 _command="${_command} ipcalc cut getopt ifconfig ls rm mkdir"
-_command="${_command} msgfmt install cp touch route find"
+_command="${_command} msgfmt install cp touch"
 
 
 usage() {
@@ -27,7 +27,6 @@ Configuration:
   --initdir=DIR     redhat init script path [/etc/rc.d/init.d]
   --destdir=DIR     Absulute path !! for needed packaging
   --userpath=DIR,.. Additional PATH environment varibles
-  --langenv=VAL     install configuration files with src/conf/VAL
 
 Check Utility:
   --perl=PATH       path of perl
@@ -39,148 +38,234 @@ EOF
 }
 
 print_result() {
-	opt=$1
-	cstart="1;32m"
-	cend="7;0m"
+  opt=$1
+  cstart="1;32m"
+  cend="7;0m"
 
-	[ -n "$2" ] && result=$2 || eval "result=\$${opt}"
-	[ -n "$3" ] && cstart=$3
+  if [ -n "$2" ]; then
+    result=$2
+  else
+    eval "result=\$${opt}"
+  fi
 
-	[ -z "$4" ] && \
-		echo -n "${opt} check" || \
-		echo -n "${opt}"
+  if [ -n "$3" ]; then
+    cstart=$3
+  fi
 
-	echo -ne "\\033[${GCOL}G"
-	echo -n ".... "
-	echo -ne "[${cstart}${result}[${cend}\n"
+  if [ -z "$4" ]; then
+    echo -n "${opt} check"
+  else
+    echo -n "${opt}"
+  fi
+
+  echo -ne "\\033[${GCOL}G"
+  echo -n ".... "
+  echo -ne "[${cstart}${result}[${cend}\n"
 }
 
 check_command() {
-	__progs=${1}
-	chkpath=${2}
+  progs=${1}
+  chkpath=${2}
 
-	progs=${__progs%%:*}
-	cmode=${__progs##*:}
+  [ -z "${chkpath}" ] && chkpath=${CHKDIR}
 
-	[ -z "${chkpath}" ] && chkpath=${CHKDIR}
+  _progs=$(which ${progs} 2> /dev/null)
 
-	_progs=$(which ${progs} 2> /dev/null)
+  if [ -z "${_progs}" ]; then
+    for ${chkpath} in
+    do
+      if [ -f "${i}/${progs}" ]; then
+        _progs=${i}/${progs}
+        break
+      fi
+    done
+  fi
 
-	if [ -z "${_progs}" ]; then
-		for i in ${chkpath}
-		do
-			if [ -f "${i}/${progs}" ]; then
-				_progs=${i}/${progs}
-				break
-			fi
-		done
-	fi
-
-	if [ -z "${_progs}" ]; then
-		print_result "${progs}" "can not found ${progs}" "1;31m"
-		[ "${cmode}" != "pass" ] && exit 1
-	else
-		if [ -f "${_progs}" ]; then
-			eval "${progs}=${_progs}"
-			print_result "${progs}"
-		else
-			print_result "${progs}" "can not found ${progs}" "1;31m"
-			[ "${cmode}" != "pass" ] && exit 1
-		fi
-	fi
+  if [ -z "${_progs}" ]; then
+    print_result "${progs}" "can not found ${progs}" "1;31m"
+    exit 1
+  else
+    if [ -f "${_progs}" ]; then
+      eval "${progs}=${_progs}"
+      print_result "${progs}"
+    else
+      print_result "${progs}" "can not found ${progs}" "1;31m"
+      exit 1
+    fi
+  fi
 }
 
 if [ "${OS}" = "Linux" ]; then
-	HEADCHK=/usr/include
+  HEADCHK=/usr/include
 fi
 
 for i in $*
 do
-	case "${i}" in
-		--prefix=*)
-			prefix=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--bindir=*)
-			bindir=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--initdir=*)
-			initdir=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--includedir=*)
-			includedir=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--confdir=*)
-			confdir=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--shareddir=*)
-			shareddir=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--destdir=*)
-			destdir=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--perl=*)
-			perl=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--iptables=*)
-			iptables=$(echo ${i} | sed 's/.*=//g')
-			;;
-		--userpath=*)
-			userpath=$(echo ${i} + sed 's/.*=//g')
-			userpath=$(echo ${userpath} | sed 's/,/ /g')
-			CHKDIR="${CHKDIR} ${userpath}"
-			;;
-		--langenv=*)
-			langenv=$(echo ${i} | sed 's/.*=//g')
-			;;
-		-h|--h*)
-			usage $0
-			;;
-	esac
+  case "${i}" in
+    --prefix=*)
+      prefix=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --bindir=*)
+      bindir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --initdir=*)
+      initdir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --includedir=*)
+      includedir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --confdir=*)
+      confdir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --shareddir=*)
+      shareddir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --destdir=*)
+      destdir=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --perl=*)
+      perl=$(echo ${i} | sed 's/.*=//g')
+      ;;
+    --iptables=*)
+      iptables=$(echo ${i} | sed 's/.*=//g')
+      ;;
+	--userpath=*)
+      userpath=$(echo ${i} + sed 's/.*=//g')
+      userpath=$(echo ${userpath} | sed 's/,/ /g')
+      CHKDIR="${CHKDIR} ${userpath}"
+      ;;
+    -h|--h*)
+      usage $0
+      ;;
+  esac
 done
 
 echo "Directory Check"
 echo "............................................."
 echo
 
-[ -z "${prefix}" ] && prefix=${LOCALDIR}
+if [ -z "${prefix}" ]; then
+  prefix=${LOCALDIR}
+fi
 
 prefixchk=$(echo ${prefix} | sed -e 's/.*\/\([^\/]*\)$/\1/g')
-[ "${prefixchk}" = "oops-firewall" ] && prefixchk=1
+if [ "${prefixchk}" = "oops-firewall" ]; then
+  prefixchk=1
+fi
 
 print_result "prefix"
 
-[ -z "${bindir}" ] && bindir=${prefix}/bin
+if [ -z "${bindir}" ]; then
+  bindir=${prefix}/bin
+fi
 
 print_result "bindir"
 
-[ -z "${initdir}" ] && initdir=/etc/rc.d/init.d
+if [ -z "${initdir}" ]; then
+  initdir=/etc/rc.d/init.d
+fi
 
 print_result "initdir"
 
 if [ -z "${confdir}" ]; then
-	[ "${prefixchk}" = 1 ] && \
-		confdir=${prefix}/etc || \
-		confdir=${prefix}/etc/oops-firewall
+  if [ "${prefixchk}" = 1 ]; then
+    confdir=${prefix}/etc
+  else
+    confdir=${prefix}/etc/oops-firewall
+  fi
 fi
 
 print_result "confdir"
 
 if [ -z "${includedir}" ]; then
-	[ "${prefixchk}" = 1 ] && \
-		includedir=${prefix}/include || \
-		includedir=${prefix}/include/oops-firewall
+  if [ "${prefixchk}" = 1 ]; then
+    includedir=${prefix}/include
+  else
+    includedir=${prefix}/include/oops-firewall
+  fi
 fi
 
 print_result "includedir"
 
-[ -z "${shareddir}" ] && shareddir=${prefix}/share
+if [ -z "${shareddir}" ]; then
+  shareddir=${prefix}/share
+fi
 
 print_result "shareddir"
 
-[ -n "${DESTDIR}" ] && destdir=${DESTDIR}
-[ -z "${destdir}" ] && destdir=
+if [ -n "${DESTDIR}" ]; then
+  destdir=${DESTDIR}
+fi
+
+if [ -z "${destdir}" ]; then
+  destdir=
+fi
 
 print_result "destdir"
+
+
+echo
+echo "Compiler Check"
+echo "............................................."
+echo
+cc=$(which gcc)
+if [ -z "${cc}" ]; then
+  for i in ${CHKDIR} ${LOCALDIR}/gcc/bin ${LOCALDIR}/gcc/sbin
+  do
+    if [ -f "${i}/cc" ]; then
+      install=${i}/cc
+      break;
+    fi
+  done
+fi
+
+if [ -z "${cc}" ]; then
+  print_result "compiler" "failed" "1;31m"
+  exit 1
+else
+  if [ -f "${cc}" ]; then
+    print_result "compiler" "${cc}"
+  else
+    print_result "compiler" "failed"
+    exit 1
+  fi
+fi
+
+ccver=$(${cc} --version)
+print_result "compiler version" "${ccver}"
+
+echo
+echo "Header file Check"
+echo "............................................."
+echo
+HEADERS="stdio.h stdlib.h string.h stdarg.h ctype.h unistd.h sys/stat.h grp.h time.h libintl.h locale.h"
+HCHK=0
+
+for i in ${HEADERS}
+do
+
+  cat > oops-firewall_header_check.c << EOF
+#include <${i}>
+
+main()
+{
+    printf("");
+}
+EOF
+
+  ${cc} -o oops-firewall_header_check oops-firewall_header_check.c 2> /dev/null
+  HCHK=$?
+
+  rm -f oops-firewall_header_check*
+
+  echo -ne
+  if [ "${HCHK}" = 0 ]; then
+    print_result "${i} header" "ok"
+  else
+    print_result "${i} header" "failed" "1;31m"
+    exit 1
+  fi
+done
 
 
 echo
@@ -189,30 +274,30 @@ echo "............................................."
 echo
 
 if [ -z "${perl}" ]; then
-	check_command perl "${CHKDIR} ${LOCALDIR}/perl/bin ${LOCALDIR}/perl/sbin"
+  check_command perl "${CHKDIR} ${LOCALDIR}/perl/bin ${LOCALDIR}/perl/sbin"
 else
-	if [ ! -f "${perl}" ]; then
-		print_result "perl" "can not found perl" "1;31m"
-		exit 1
-	fi
-
-	print_result "perl"
+  if [ ! -f "${perl}" ]; then
+    print_result "perl" "can not found perl" "1;31m"
+    exit 1
+  else
+    print_result "perl"
+  fi
 fi
 
 if [ -z "${iptables}" ]; then
-	check_command iptables
+  check_command iptables
 else
-	if [ ! -f "${perl}" ]; then
-		print_result "perl" "can not found perl" "1;31m"
-		exit 1
-	fi
-
-	print_result "perl"
+  if [ ! -f "${perl}" ]; then
+    print_result "perl" "can not found perl" "1;31m"
+    exit 1
+  else
+    print_result "perl"
+  fi
 fi
 
 for i in ${_command}
 do
-	check_command ${i}
+  check_command ${i}
 done
 
 
@@ -225,29 +310,19 @@ echo
 ${rm} -rf ./temp
 ${mkdir} -p ./temp
 ${cp} -af src/* ./temp/
-if [ -n "${langenv}" -a -d "./src/conf/${langenv}" ]; then
-	${rm} -rf ./temp/conf/
-	${cp} -af src/conf/${langenv}/ ./temp/conf
-fi
-
-${mkdir} -p ./temp/contrib
-[ -f "/etc/debian_version" ] && os=debian || os=redhat
-${cp} -af contrib/*.${os} ./temp/contrib/oops-firewall.init
-
-${find} ./temp -name ".svn" -exec rm -rf {} \; >& /dev/null
+${cp} -af contrib ./temp/
 
 _target="awk bindir cat confdir cut depmod getopt grep"
 _target="${_target} ifconfig includedir initdir ipcalc"
 _target="${_target} iptables lsmod modprobe rm rmmod"
 _target="${_target} sed shareddir touch uname version"
-_target="${_target} route langenv"
 
 for i in ${_target}
 do
-	eval "_change=\$${i}"
-	${perl} -pi -e "s!\@${i}\@!${_change}!g" ./temp/include/*
-	${perl} -pi -e "s!\@${i}\@!${_change}!g" ./temp/sbin/*
-	${perl} -pi -e "s!\@${i}\@!${_change}!g" ./temp/contrib/*
+  eval "_change=\$${i}"
+  ${perl} -pi -e "s!\@${i}\@!${_change}!g" ./temp/include/*
+  ${perl} -pi -e "s!\@${i}\@!${_change}!g" ./temp/sbin/*
+  ${perl} -pi -e "s!\@${i}\@!${_change}!g" ./temp/contrib/*
 done
 
 for i in oops-firewall.init command.h version.h oops-firewall
@@ -261,22 +336,24 @@ echo "Create make file"
 echo "............................................."
 echo
 
-[ -z "${CFLAGS}" ] && \
-	cfargs="-march=i386" || \
-	cfargs="${CFLAGS}"
+if [ -z "${CFLAGS}" ]; then
+  cfargs="-march=i386"
+else
+  cfargs="${CFLAGS}"
+fi
 
 ${install} -m 644 Makefile.in Makefile
 ${install} -m 644  po/Makefile.in po/Makefile
 
 _target="bindir cc confdir destdir includedir initdir install"
 _target="${_target} ls mkdir msgfmt prefix rm sed shareddir"
-_target="${_target} version cflags langenv"
+_target="${_target} version cflags"
 
 for i in $_target
 do
-	eval "_change=\$${i}"
-	${perl} -pi -e "s!\@${i}\@!${_change}!g" ./Makefile
-	${perl} -pi -e "s!\@${i}\@!${_change}!g" ./po/Makefile
+  eval "_change=\$${i}"
+  ${perl} -pi -e "s!\@${i}\@!${_change}!g" ./Makefile
+  ${perl} -pi -e "s!\@${i}\@!${_change}!g" ./po/Makefile
 done
 
 print_result "Create Makefile" "OK" "" "1"

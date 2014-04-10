@@ -1,80 +1,38 @@
-OOPS Firewall README
+OOPS Firewall
 
 $Id$
 
+This is the source of oops firewall v5.0.x
 
-This document is for OOPS Firewall 7.x tree.
+oops firewall is frontend utility of iptables.
 
+See the Changelog file for a detailed listing of all changes.  See the INSTALL
+file for information on building and installing oops firewall.
 
-OOPS Firewall is the iptables frontend for a simple-to-use firewall
-configuration that controls packet filtering, bridge firewall, masquerade
-system, port forwarding, etc on the Linux kernel 2.4 or late.
+This program is used iptables package and kernel 2.4.x or 2.6.x
 
-This is default firewall on AnNyung LInux, and support Redhat compatible
-distributions and debian compatible distirbutions over kernel 2.4.
-
-
-OOPS Firewall 7.x tree is as follows.
+Even if you get any problem, I don't have any sense of responsibility.
+All Problems are your destiny :-)
 
 
-1. enhanced input / output processing
-2. support bridge firewall
-3. support transparent proxy (Masquerading)
-4. support port forwarding
-5. support user define rules
+** oops-firewall directive order
 
+ 1. ALLOWSELF             (filter.conf)
+ 2. ALLOWALL              (filter.conf)
+ 3. pre user define rule  (user.conf % directive)
+ 4. OUT_TCP_ALLOWPORT     (filter.conf)
+ 5. OUT_UDP_ALLOWPORT     (filter.conf)
+ 6. TCP_ALLOWPORT         (filter.conf)
+ 7. TCP_HOSTPERPORT       (filter.conf)
+ 8. UDP_ALLOWPORT         (filter.conf)
+ 9. UDP_HOSTPERPORT       (filter.conf)
+10. masquerading rule     (masq.conf)
+11. TCP_FORWARD_TO        (forward.conf)
+12. TCP_FORWARD_TO_S      (forward.conf)
+13. UDP_FORWARD_TO        (forward.conf)
+14. UDP_FORWARD_TO_S      (forward.conf)
+15. ALL_FORWARD_TO        (forward.conf)
+16. post user define rule (user.conf @ directive)
+17. USE_TOS               (tos.conf)
 
-By current design, WAN conenction is not limited. Bridge mode is composed
-1 WAN device and 1 LAN device and Masquerade mode is same with Bridge mode.
-
-Composition as an example, as follow.
-
-
-              FIREWALL
-
-            ┌──────────┐
-        ┌─┴─┐            ┌─┴─┐
-  WAN ─┤eth0  ├─ BRIDGE ─┤ eth2 ├─ Bridge Zone
-        └─┬─┘    (br0)   └─┬─┘    (Public Network)
-            │                    │
-        ┌─┴─┐            ┌─┴─┐
-  WAN ─┤ eth1 ├─ MASQ   ─┤ eth3 ├─ Transparant proxy Zone
-        └─┬─┘            └─┬─┘    (Private Network)
-            └──────────┘
-
-  * Example fo interface.conf configuration:
-     FIREWALL_WAN = br0 eth1
-     MASQUERADE_WAN = eth1
-     MASQUERADE_LOC = eth3
-     BRIDGE_DEVNAME = br0
-     BRIDGE_WANDEV  = eth0
-     BRIDGE_LANDEV  = eth2
-
-
-If you have multiple interfaces, you can set multiple interface to
-FIREWALL_WAN directive with separated by a white space. And the value
-of same is not available on BRIDGE_LANDEV and MASQUERADE_LOC directive.
-
-If Bridge WAN device and Masquerading WAN device are same, in other words,
-a structure like following figures:
-
-              FIREWALL
-
-            ┌─────────┐
-        ┌─┴─┐          ┌─┴─┐
-  WAN ─┤eth0  ├ BRIDGE ─┤eth1  ├─ Bridge Zone
-        └─┬┬┘  (br0)   └─┬─┘    (Public Network)
-            ││                │
-            ││            ┌─┴─┐
-            │└─ MASQ   ─┤eth2  ├─ Transparant proxy Zone
-            │              └─┬─┘    (Private Network)
-            └─────────┘
-
-  * Example fo interface.conf configuration:
-     FIREWALL_WAN = br0
-     MASQUERADE_WAN = br0
-     MASQUERADE_LOC = eth2
-     BRIDGE_DEVNAME = br0
-     BRIDGE_WANDEV  = eth0
-     BRIDGE_LANDEV  = eth1
 

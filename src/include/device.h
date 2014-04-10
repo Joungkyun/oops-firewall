@@ -3,18 +3,17 @@
 # $Id$
 #
 
-# ë„¤íŠ¸ì›Œí¬ ë””ë°”ì´ìŠ¤ (eth/ppp/bridge) ëª©ë¡ì„ ì–»ì–´ì˜¤ëŠ” í•¨ìˆ˜
-# getDeviceList ëª©ë¡ë³€ìˆ˜ëª… ì²´í¬ë””ë°”ì´ìŠ¤ì´ë¦„
+# ³×Æ®¿öÅ© µð¹ÙÀÌ½º (eth/ppp) ¸ñ·ÏÀ» ¾ò¾î¿À´Â ÇÔ¼ö
+# getDeviceList ¸ñ·Ïº¯¼ö¸í Ã¼Å©µð¹ÙÀÌ½ºÀÌ¸§
 #
-# ëª©ë¡ ë³€ìˆ˜ëª…ì€ ë””ë°”ì´ìŠ¤ ë¦¬ìŠ¤íŠ¸ë¥¼ ê°€ì§ˆ ë³€ìˆ˜ ì´ë¦„ì„ ì§€ì •
-# ì²´í¬ ë””ë°”ì´ìŠ¤ì´ë¦„ì„ ì§€ì •í•  ê²½ìš° í•´ë‹¹ ë””ë°”ì´ìŠ¤ê°€ ì¡´ìž¬í•˜ë©´ 0ì„ ë¦¬í„´
-# ì¡´ìž¬í•˜ì§€ ì•Šìœ¼ë©´ 1ì„ ë¦¬í„´í•¨ìœ¼ë¡œì„œ ë””ë°”ì´ìŠ¤ ì¡´ìž¬ì—¬ë¶€ë¥¼ ì²´í¬í•  ìˆ˜ ìžˆìŒ
+# ¸ñ·Ï º¯¼ö¸íÀº µð¹ÙÀÌ½º ¸®½ºÆ®¸¦ °¡Áú º¯¼ö ÀÌ¸§À» ÁöÁ¤
+# Ã¼Å© µð¹ÙÀÌ½ºÀÌ¸§À» ÁöÁ¤ÇÒ °æ¿ì ÇØ´ç µð¹ÙÀÌ½º°¡ Á¸ÀçÇÏ¸é 0À» ¸®ÅÏ
+# Á¸ÀçÇÏÁö ¾ÊÀ¸¸é 1À» ¸®ÅÏÇÔÀ¸·Î¼­ µð¹ÙÀÌ½º Á¸Àç¿©ºÎ¸¦ Ã¼Å©ÇÒ ¼ö ÀÖÀ½
 #
 getDeviceList() {
 	devVarName=$1
 	devCheckVar=$2
-
-	devGetVar=$(${c_awk} -F ':' "/(eth|ppp|${BRIDGE_DEVNAME}|bond)[0-9]*:/ {print \$1}" /proc/net/dev)
+	devGetVar=$(${c_awk} -F ':' '/(eth|ppp)[0-9]+:/ {print $1}' /proc/net/dev)
 
 	if [ -z "${devGetVar}" ]; then
 		return 1
@@ -37,24 +36,6 @@ getDeviceList() {
 	return 0
 }
 
-getDeviceCheck() {
-	for i in $*
-	do
-		gDC=0
-		for j in ${devlist}
-		do
-			if [ "${i}" = "${j}" ]; then
-				gDC=1
-				break
-			fi
-		done
-
-		[ $gDC -eq 1 ] && return 0
-	done
-
-	return 1
-}
-
 makeDeviceEnv() {
 	devEnvDevName=$1
 
@@ -65,19 +46,14 @@ makeDeviceEnv() {
 	getDeviceIP "${devEnvDevName}" devEnvVar_IP
 	getDeviceMask "${devEnvDevName}" devEnvVar_MASK
 	getDeviceNetwork "${devEnvVar_IP}" "${devEnvVar_MASK}" devEnvVar_NW
-	getDevicePrefix "${devEnvVar_IP}" "${devEnvVar_MASK}" devEnvVar_PF
 
 	devTmpVar="${devEnvVar_NAME}${devEnvVar_NUMBER}"
 	devTmpIP="${devTmpVar}_IPADDR=${devEnvVar_IP}"
 	devTmpSM="${devTmpVar}_SUBNET=${devEnvVar_MASK}"
 	devTmpNW="${devTmpVar}_NET=${devEnvVar_NW}"
-	devTmpPF="${devTmpVar}_PREFIX=${devEnvVar_PF}"
-	devTmpPP="${devTmpVar}_NETPX=\"${devEnvVar_NW}/${devEnvVar_PF}\""
 	eval ${devTmpIP}
 	eval ${devTmpSM}
 	eval ${devTmpNW}
-	eval ${devTmpPF}
-	eval ${devTmpPP}
 }
 
 parseDevice() {
@@ -86,16 +62,12 @@ parseDevice() {
 	parseDevNum=$3
 
 	parseTmpName=$(echo ${parseDevDeviceName} | ${c_sed} 's/[0-9]\+//g')
-	parseTmpNum=$(echo ${parseDevDeviceName} | ${c_sed} 's/eth\|ppp\|bond\|br\|tun\|tap//g')
-
-	if [ "$parseTmpName" = "$parseTmpNum" ]; then
-		eval "${parseDevNum}=\"\""
-	else
-		eval "${parseDevNum}=\"${parseTmpNum}\""
-	fi
+	parseTmpNum=$(echo ${parseDevDeviceName} | ${c_sed} 's/eth\|ppp//g')
 
 	WordToUpper ${parseTmpName} parseTmpName
+
 	eval "${parseDevName}=\"${parseTmpName}\""
+	eval "${parseDevNum}=\"${parseTmpNum}\""
 }
 
 getDeviceIP() {
@@ -126,46 +98,15 @@ getDeviceMask() {
 	fi
 }
 
-getDevicePrefix() {
-	getDevicePfDevIP=$1
-	getDevicePfVarMask=$2
-	getDevicePfVarName=$3
-
-	[ -z "$getDevicePfDevIP" -o -z "$getDevicePfVarMask" ] && return
-
-	if [ "${distribution}" = "debian" ]; then
-		getDevicePfTmp=$(${c_ipcalc} -n -b \
-						${getDevicePfDevIP}/${getDevicePfVarMask} | \
-						${c_grep} 'Netmask:' | \
-						${c_awk} '{print $4}' 2> /dev/null)
-	else
-		getDevicePfTmp=$(${c_ipcalc} -p ${getDevicePfDevIP} \
-						${getDevicePfVarMask} 2> /dev/null | \
-						${c_awk} -F '=' '{print $2}')
-	fi
-
-	if [ -n "${getDevicePfVarName}" ]; then
-		getDevicePfTmpVar="${getDevicePfVarName}=\"${getDevicePfTmp}\""
-		eval ${getDevicePfTmpVar}
-	fi
-}
-
 getDeviceNetwork() {
 	getDeviceNwDevIP=$1
 	getDeviceNwDevMask=$2
 	getDeviceNwVarName=$3
 
-	if [ "${distribution}" = "debian" ]; then
-		getDeviceNwTmp=$(${c_ipcalc} -n -b \
-					${getDeviceNwDevIP}/${getDeviceNwDevMask} | \
-					${c_grep} 'Network:' | \
-					${c_awk} '{print $2}' | ${c_sed} 's!/.*!!g')
-	else
-		getDeviceNwTmp=$(${c_ipcalc} -s -n \
+	getDeviceNwTmp=$(${c_ipcalc} -s -n \
 					${getDeviceNwDevIP} \
 					${getDeviceNwDevMask} | \
 					${c_awk} -F '=' '{print $2}')
-	fi
 
 	if [ -n "${getDeviceNwVarName}" ]; then
 		getDeviceNwTmpVar="${getDeviceNwVarName}=\"${getDeviceNwTmp}\""
@@ -173,47 +114,3 @@ getDeviceNetwork() {
 	fi
 }
 
-initInterfaceList() {
-	intName=$1
-	shift
-	intList=$*
-	TSTR=
-
-	for i in $intList
-	do
-		WordToUpper $i TMPSTR
-		TSTR="${TSTR} ${TMPSTR}"
-	done
-	TSTR=$(echo ${TSTR} | ${c_sed} 's/^[ ]\+\|[ ]\+$//g')
-
-	eval "$intName=\"${TSTR}\""
-}
-
-firewall_wan_check() {
-	[ -n "${FIREWALL_WAN}" ] && return
-
-	_donelist=
-	for i in BRIDGE_DEVNAME MASQ_DEVICE FORWARD_MASTER
-	do
-		eval "chkinter=\$${i}"
-		[ -z "${chkinter}" ] && continue
-		[ -n "$(echo ${_donelist} | ${c_grep} "-${chkinter}-")" ] && continue
-
-		FILEWALL_WAN="${FIREWALL_WAN} ${chkinter}"
-		_donelist="${_donelist} -${chkinter}-"
-	done
-
-	[ -z "${FIREWALL_WAN}" ] && FIREWALL_WAN="eth0"
-	FIREWALL_WAN=$(echo ${FIREWALL_WAN} | ${c_sed} 's/^[ ]\+\|[ ]\+$//g')
-
-	export FIREWALL_WAN
-}
-
-#
-# Local variables:
-# tab-width: 4
-# c-basic-offset: 4
-# End:
-# vim: set filetype=sh noet sw=4 ts=4 fdm=marker:
-# vim<600: noet sw=4 ts=4:
-#

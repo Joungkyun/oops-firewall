@@ -1,17 +1,13 @@
-#!/bin/bash
-### BEGIN INIT INFO
-# Provides:          oops-firewall
-# Required-Start:    $remote_fs $network $syslog
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Startup script for the OOPS Firewall
-# Description:       OOPS Firewall is firewall that used IPTABLES in kernel 2.4 or 2.6
-### END INIT INFO
+#!/bin/sh
 #
-# Author:   JoungKyun Kim <admin@oops.org>
 # $Id$
 #
+# Startup script for the OOPS FireWall
+#
+# chkconfig: 345 99 10
+# description: OOPS Firewall is firewall that used IPTABLES in kernel 2.4.x
+# processname: oops-firewall
+# config: /etc/oops-firewall
 
 ERR_FILE=/tmp/oops_firewall_err
 IPTABLES=@iptables@
@@ -26,18 +22,10 @@ touch=@touch@
 rm=@rm@
 sed=@sed@
 
-DAEMON=$IPTABLES
-
-test -x $DAEMON || exit 0
-
 _includes="@includedir@"
 
 # Source function library.
-. /lib/lsb/init-functions
-
-SUCCESS=0
-FAILED=1
-
+. @initdir@/functions
 . ${_includes}/oops-firewall.h
 
 TEXTDOMAIN=oops-firewall
@@ -52,11 +40,11 @@ KERNLIBPATH="/lib/modules/${KERNLIB}/kernel/net/ipv4/netfilter"
 
 case "$1" in
   start)
-    log_daemon_msg $"Starting OOPS Firewall: "
+    echo -n $"Starting OOPS Firewall: "
     ${command} > /dev/null 2> ${ERR_FILE}
 
     if [ "$(${cat} ${ERR_FILE} 2>/dev/null)" != "" ]; then
-      log_end_msg $FAILED
+      echo_failure
       ${IPTABLES} -Z
       ${IPTABLES} -P INPUT ACCEPT
       ${IPTABLES} -F INPUT
@@ -90,12 +78,13 @@ case "$1" in
       fi
       rm_mod 1
     else
-      log_end_msg $SUCCESS
-      ${touch} /var/lock/oops-firewall
+      echo_success
+      ${touch} /var/lock/subsys/oops-firewall
     fi
     rm -rf $ERR_FILE > /dev/null 2>&1
+    echo
     ;;
-  right-stop)
+  stop)
     ${IPTABLES} -Z
     ${IPTABLES} -P INPUT ACCEPT
     ${IPTABLES} -F INPUT
@@ -125,23 +114,18 @@ case "$1" in
       ${IPTABLES} -t mangle -F FORWARD
     fi
 
-    ${rm} -rf /var/lock/oops-firewall
-
-    rm_mod 1
-    log_daemon_msg $"Destory Firewall Tables: "
-    log_end_msg $SUCCESS
-    ;;
-  stop)
-    $0 right-stop
     if [ -f "/proc/sys/net/ipv4/ip_forward" ]; then
       echo 0 > /proc/sys/net/ipv4/ip_forward
     fi
+    ${rm} -rf /var/lock/subsys/oops-firewall
 
-    sysctl -w "net.bridge.bridge-nf-call-iptables=0" >& /dev/null || true
-    sysctl -w "net.bridge.bridge-nf-call-arptables=0" >& /dev/null || true
+    rm_mod 1
+    echo -n $"Destory Firewall Tables: "
+    echo_success
+    echo
     ;;
-  force-reload|restart)
-    $0 right-stop
+  restart)
+    $0 stop
     $0 start
     ;;
   status)
@@ -171,7 +155,7 @@ case "$1" in
     ${IPTABLES} -t mangle -L -v -n
     ;;
   *)
-    echo $"Usage: $0 {start|right-stop|stop|restart|status}"
+    echo $"Usage: $0 {start|stop|restart|status}"
 esac
 
 exit 0

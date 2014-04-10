@@ -3,25 +3,12 @@
 #
 
 # Default kernel module lists
-##########################################################################
-#
 # Don't touch follow configurations.
-#
 ip_conntrack
 ip_tables
 ip_conntrack_ftp
 
-# If you want to add module options, use follows
-#
-# ip_conntrack_ftp:unload
-# ip_conntrack_ftp:ports=21,2121
-#
-# Config option used with module_name:module_option format.
-# module_option "unload" is removed this module.
-#
 # use define kernel module lists. If you want to some moduels,
 # regist kernel module name per line.
-#
 #ipt_geoip
 #ipt_layer7
-
