@@ -1,0 +1,184 @@
+OOPS Firewall Installation Document
+
+$Id$
+
+
+First, sorry for my poor english :-)
+
+
+This document gives a description of OOPS Firewall 7.x installation.
+
+
+1. Attention
+2. The production of RPM package
+3. Build with byhand
+4. Operation init script
+5. oops-firewall options
+6. Compatibility with old version
+
+
+
+1. Attention
+------------
+
+OOPS Firewall is server side packet filtering firewall (or bridge firewall)
+for Redhat or Redhat compatibility distributions. Also this is frontend that
+easly used iptables. So, It needs kernel 2.4 or kernel 2.6 and, iptables
+package.
+
+On Redhat or Redhat compatibility distributions, they support basic fireall
+that has same purpose with oops-firewall. For example, there is lokkit or
+/etc/init.d/iptables and /etc/sysconfig/iptables of iptables package.
+
+OOPS Firewall conflicts with this basic firewall of Redhat distribution, and
+needs follow steps.
+
+1. stop iptables init script
+   shell> service iptables stop
+   or
+   shell> /etc/init.d/iptables stop
+
+2. remove booting process on ntsysv or chkconfig list
+   shell> chkconfig --del iptables
+
+
+OOPS Firewall is basic firewall on AnNyung LInux and developed
+on AnNyung LInux.
+
+
+
+2. The production of RPM package
+--------------------------------
+
+OOPS Firewall is designed on Redhat compatible distribution. So on other
+distributions, needs code modifying. If you Debian or Ubuntu distribution,
+read README.debian document.
+
+OOPS Firewall is recommanded that install as rpm package. For make RPM
+package, use follow command.
+
+shell> rpmbuild -tb oops-firewall-7.0.2.tar.bz2
+
+After building, you can find new package on /usr/src/redhat/RPMS/noarch.
+
+If you want to know installed file list, you can use follow command.
+
+shell> rpm -qlv oops-firewall
+
+If oops-firewall is not installed, you can get file list of rpm package
+with follow command.
+
+shell> rpm -qlvp oops-firewall-7.0.2-1.noarch.rpm
+
+
+
+3. Build with byhand
+--------------------
+
+OOPS Firewall support configure and make since version 4.0.0. (This don't
+means that use autoconf/automake.) So, you can install easily following process.
+
+./configure
+make
+make install
+
+If you want to know detail options, can use `./configure --help` command.
+
+[oops@main oops-firewall]$ ./configure --help
+
+Usage: ./configure [option]
+Options: [defaults in brackets after descriptions]
+Configuration:
+  --prefix=PREFIX   install architecture-independent files in PREFIX [/usr/local/]
+  --bindir=DIR      user executables in DIR [PREFIX/bin]
+  --confdir=DIR     default path of *.conf in DIR [PREFIX/etc/oops-firewall]
+  --includedir=DIR  header files [PREFIX/include/oops-firewall]
+  --shareddir=DIR   modifiable architecture-independent data in DIR [PREFIX/share]
+  --initdir=DIR     redhat init script path [/etc/rc.d/init.d]
+  --destdir=DIR     Absulute path !! for needed packaging
+  --userpath=DIR,.. Additional PATH environment varibles
+  --langenv=VAL     install configuration files with src/conf/VAL
+
+Check Utility:
+  --perl=PATH       path of perl
+  --iptables=PATH   path of iptables
+
+When make install, you can use DESTDIR environment variable.
+
+make DESTDIR=/path install
+
+If you excute upper command, install files are located under /path.
+
+
+
+4. Operation init script
+------------------------
+
+If you can use Redhat init script. When you built by hand, copy init file
+to /etc/init.d
+
+shell> cp -af contrib/oops-firewall.init.redhat /etc/init.d/oops-firewall
+
+For auto start oops-firewall on booting time, you can use ntsysv or chkconfig
+command.
+
+First, execute ntsysv by root privileges:
+
+shell> ntsysv
+
+And then, check oops-firewall.
+
+If you use chkconfig instead of ntsysv, execute follow commands.
+
+shell> chkconfig --add oops-firewall
+shell> chkconfig --level 35 oops-firewall on
+
+For start or stop operation:
+
+shell> /sbin/service oops-firewall {start|stop|restart}
+
+or
+
+shell> /etc/init.d/oops-firewall {start|stop|restart}
+
+
+Attention!
+On bridge mode, stop action of init script is down bridge interface. This
+time, network connection is lost for several seconds. If you want to regist
+only new ruleset, you can use restart of right-stop action. (restart action
+is composed right-stop and start)
+
+On no brkdge mode, stop is same with right-stop.
+
+
+
+5. oops-firewall options
+------------------------
+
+When start OOPS firewall, existed ruleset is initialized and then added
+new ruleset. So, even if occured changing ruleset, you don't need init
+script stop/start process. You can execute 'oops-fierwall -v' command on
+shell prompt.
+
+
+Usage: oops-firewall -[actvVh]
+Options:
+         -a                     Bridge interface force down
+         -c config_directory    user define configuration directory
+         -t                     test mode (actually don't execute)
+         -v                     verbose mode
+         -V                     print current oops-firewall version
+         -h                     help messages (this messages)
+
+
+
+6. Compatibility with old version
+---------------------------------
+
+By default, configuration between 5.x and 6.x has been designed to be
+compatible. But, I don't care some missing. So, I recommand that you
+should be reconfiguration.
+
+If you update with rpm from 5.x to 6.x, first remove or rename old
+configuration directory or files and then, update rpm to 6.x.
+
