@@ -1,0 +1,177 @@
+OOPS Firewall Installation 문서
+
+$Id$
+
+
+이 문서는 OOPS Firewall 6.x 설치에 대한 설명을 기술한다.
+
+
+1. 주의 사항
+2. RPM 으로 제작하기
+3. 직접 빌드하기
+4. init 구동하기
+5. oops-firewall 옵션
+6. 하위 호환성
+
+
+
+1. 주의 사항
+------------
+
+OOPS Firewall 은 Redhat 호환 배포본을위한 iptables 를 이용한 서버 개별 방
+화벽(또는 Bridge 방화벽)이다. 그러므로 커널 2.4 와 redhat 자체의 방화벽과
+의 충돌을 피해야 한다.
+
+이런 이유로,  Redhat 에서 제공하는 iptables package 와 특정 버전에 포함이
+되어 있는 redhat lokkit 과 충돌을 할 수가 있다.
+
+그러므로, OOPS Firewall 을 사용하기 위해서는 다음의 작업을 해 주어야 한다.
+
+1. iptables init script 를 중지한다.
+   shell> /etc/init.d/iptables stop
+
+2. ntsysv 에서 iptables 제외
+   shell> chkconfig --del iptables
+
+위의 과정을 거친 상태에서 OOPS Firewall 을 운영해야 한다.
+
+OOPS Firewall 은 안녕 리눅스(AnNyung LInux) 에서 개발이 되었고, 기본 방화
+벽이기 때문에 가장 궁합이 좋다.
+
+
+
+
+2. RPM 으로 제작하기
+--------------------
+
+OOPS Firewall 은 Redhat 호환 시스템 (/etc/init.d 와 RPM) 을 겨냥하여 제작
+된 iptables frontend program 이다. 그러므로 다른 배포본에서의 작동은 변경
+이 필요할 수도 있으니 확인을 하기 바란다.
+
+또한, Redhat 호환으로 제작이 되었기 때문에 스스로 빌드를 하지 말고 RPM 으
+로 제작을 해서 설치를 하는 것을 권장한다. RPM 제작은
+
+shell> rpmbuild -tb oops-firewall-6.2.8.tar.bz2
+
+와 같은 명령으로 제작할 수 있으며, /usr/src/redhat/RPMS/noarch/ 에 제작된
+RPM 이 생성이 된다. 설치된 파일 리스트는 패키지가 설치 되어 있을 경우
+
+shell> rpm -qlv oops-firewall
+
+또는, 패키지가 설치가 되어 있지 않을 경우
+
+shell> rpm -qlvp oops-firewall-6.2.8-1.noarch.rpm
+
+으로 확인을 할 수 있다.
+
+
+
+
+3. 직접 빌드하기
+----------------
+
+OOPS Firewall 은 4.0.0 부터 configure/make 를 이용하여 설치를 하도록 변경
+이 되었다. (이는 autoconf/automake 를 사용한다는 의미는 아니다.) 그러므로
+간단하게 다음의 과정으로 설치가 가능하다.
+
+./configure
+make
+make install
+
+설치 관련하여 좀 더 자세한 옵션은 `./configure --help` 명령을 이용하여 확
+인을 할 수 있다.
+
+[oops@main oops-firewall]$ ./configure --help
+
+Usage: ./configure [option]
+Options: [defaults in brackets after descriptions]
+Configuration:
+  --prefix=PREFIX   install architecture-independent files in PREFIX [/usr/local/]
+  --bindir=DIR      user executables in DIR [PREFIX/bin]
+  --confdir=DIR     default path of *.conf in DIR [PREFIX/etc/oops-firewall]
+  --includedir=DIR  header files [PREFIX/include/oops-firewall]
+  --shareddir=DIR   modifiable architecture-independent data in DIR [PREFIX/share]
+  --initdir=DIR     redhat init script path [/etc/rc.d/init.d]
+  --destdir=DIR     Absulute path !! for needed packaging
+  --userpath=DIR,.. Additional PATH environment varibles
+
+Check Utility:
+  --perl=PATH       path of perl
+  --iptables=PATH   path of iptables
+
+또한, make install 시에는 패키징을 위하여 DESTDIR 이라는 환경 변수를 제공
+한다.
+
+make DESTDIR=/path install
+
+과 같이 실행을 하면, /path 아래에 실제 / 를 기준으로 설치되는 위치로 파일
+들이 설치가 된다.
+
+
+
+4. init 구동하기
+-----------
+
+구동을 쉽게 하기 위하여 Redhat 의 init system 을 이용한다. 부팅시, 반영이
+되게 하기 위해서는 chkconfig 와 ntsysv 를 이용한다.
+
+부팅시에 반영을 하기 위해서는
+
+shell> chkconfig --add oops-firewall
+shell> chkconfig --level 35 oops-firewall on
+
+명령으로 ntsysv 에서 관리할 수 있도록 등록을 한 후, ntsysv 에서 체크를 하
+면 부팅시에 oops-firewall 이 구동이 된다.
+
+또한, 수동으로 시작과 끝을 하려면
+
+shell> /sbin/service oops-firewall {start|stop|restart}
+
+또는
+
+shell> /etc/init.d/oops-firewall {start|stop|restart}
+
+를 이용할 수 있다.
+
+주의할 것은, Bridge mode 를 사용할 경우, init script 의 stop action 은 주
+의해서 사용해야 한다.  Bridge mode 사용시에는 oops-firewall 에서 brctl 을
+관리하기 때문에 stop 을 할 경우 network interface 가 내려가는 문제가 발생
+할 수 있다. 그러므로, 종료를 하거나 또는 network interface 를 Bridge mode
+사용하기 전으로 초기화 할 목적이 아니라면 stop 을 사용해서는 안된다.
+
+단지 룰셋을 재적용 하려면 restart 를 이용해야 하며,  Network 단절 없이 룰
+셋을 내리려면 right-stop 을 이용한다. (restart 는 right-stop and start 이
+다.)
+
+Bridge mode 를 사용하지 않을 경우에는 stop 이나 right-stop 이나 동일하다.
+
+
+
+5. oops-firewall 옵션
+---------------------
+
+OOPS Firewall 은 재 구동시에 항상 기존의 ruleset 을 초기화 하고선 재 등록
+을 한다. 그러므로 굳이 변경 사항에 대해서 init script 를 이용하여 적용 할
+필요는 없다.
+
+
+사용법: oops-firewall -[옵션]
+옵션:
+         -a                     Bridge interface 를 down
+         -c config_directory    설정 파일 디렉토리 지정
+         -t                     테스트 모드로 실행
+         -v                     상세 모드
+         -V                     현재 버전 출력
+         -h                     도움말
+
+
+
+6. 하위 호환성
+--------------
+
+OOPS Firewall 6.x 는 기본적으로 5.x 의 설정과 호환이 가능하도록 설계가 되
+었으나 부족한 부분이 있을 것이라 생각된다. 그러므로, 왠만하면 설정을 다시
+하도록 하는 것을 권장한다. (RPM 으로 관리 시, 기존의 설정파일을 삭제(또는
+이동)을 하고 업그레이드를 하라는 것을 의미한다.)
+
+
