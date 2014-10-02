@@ -390,12 +390,12 @@ init_deny() {
 
 		[ "${USE_LOG}" = "1" ] && {
 			[ $_verbose -eq 1 ] && {
-				printf "    iptables -A %-7s -p tcp ${_logformat} \\" ${_tb}
+				printf "    iptables -A %-7s -p tcp ${_logformat} \\ \n" ${_tb}
 				printf "             --log-prefix 'Drop %-8s TCP request'\n" ${_tbv}
 			}
 			[ ${_testmode} -eq 0 ] && \
 				${c_iptables} -A ${_tb} -p tcp ${_logformat} \
-							--log-prefix "Drop ${_tbv} TCP request refuse"
+							--log-prefix "Drop ${_tbv} TCP request"
 		}
 		[ $_verbose -eq 1 ] && {
 			printf "    iptables -A %-7s -p tcp  -j DROP\n" ${_tb}
@@ -415,11 +415,11 @@ init_deny() {
 
 		[ "${USE_LOG}" = "1" ] && {
 			[ $_verbose -eq 1 ] && {
-				printf "    iptables -A %-7s -p udp ${_logformat} \\" ${_tb}
+				printf "    iptables -A %-7s -p udp ${_logformat} \\ \n" ${_tb}
 				printf "             --log-prefix 'Drop %-8s UDP request'\n" ${_tbv}
 			}
 			[ ${_testmode} -eq 0 ] && \
-				${c_iptables} -A ${_tb} -p udp ${_logformat} --log-prefix "Drop ${_tbv} UDP Refuse"
+				${c_iptables} -A ${_tb} -p udp ${_logformat} --log-prefix "Drop ${_tbv} UDP request"
 		}
 		[ $_verbose -eq 1 ] && {
 			printf "    iptables -A %-7s -p udp  -j DROP\n" ${_tb}
@@ -441,13 +441,13 @@ init_deny() {
 		# ICMP block
 		[ "{USE_LOG}" = "1" ] && {
 			[ $_verbose -eq 1 ] && {
-				printf "    iptables -A %-7s -p icmp ${_logformat} \\" ${_tb}
-				printf "             --log-prefix '%-8s ICMP request refuse'\n" ${_tbv}
+				printf "    iptables -A %-7s -p icmp ${_logformat} \\ \n" ${_tb}
+				printf "             --log-prefix '%-8s ICMP request'\n" ${_tbv}
 			}
 
 			[ ${_testmode} -eq 0 ] && \
 				${c_iptables} -A ${_tb} -p icmp ${_logformat} \
-							--log-prefix "${_tbv} ICMP request refuse"
+							--log-prefix "${_tbv} ICMP request"
 		}
 
 		[ $_verbose -eq 1 ] && {
