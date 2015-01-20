@@ -7,6 +7,7 @@ $Id$
 ---------------------------------------------------------------------
 + 2015.01.20
 	- fixed output buffer problems on RHEL 7 environment
+	- support systemd
 
 + 2014.10.02
 	- fixed log syntax error

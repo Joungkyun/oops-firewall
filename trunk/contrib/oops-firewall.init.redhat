@@ -25,7 +25,7 @@ sed=@sed@
 _includes="@includedir@"
 
 # Source function library.
-. @initdir@/functions
+. /etc/rc.d/init.d/functions
 . ${_includes}/oops-firewall.h
 
 TEXTDOMAIN=oops-firewall

@@ -32,11 +32,15 @@ Documentation for oops firewall
 %setup -q
 
 ./configure --prefix=/usr \
-	--bindir=/usr/sbin \
-	--confdir=/etc/oops-firewall \
-	--includedir=/usr/include/oops-firewall \
-	--shareddir=/usr/share \
-	--initdir=/etc/rc.d/init.d \
+	--bindir=%{_sbindir} \
+	--confdir=%{_sysconfdir}/oops-firewall \
+	--includedir=%{_includedir}/oops-firewall \
+	--shareddir=%{_datadir} \
+%if 0${?rhel} >= 7 || 0%{?fedora} >= 17
+	--systemdunitdir=%{_unitdir} \
+%else
+	--initdir=%{_sysconfdir}/rc.d/init.d \
+%endif
 	--destdir=%{buildroot} \
 #	--langenv=ko
 
@@ -55,10 +59,17 @@ fi
 %{__install} -m644 doc/%{name}.8 %{buildroot}%{_mandir}/man8/%{name}.8
 
 %post
+%if 0${?rhel} >= 7 || 0%{?fedora} >= 17
+%systemd_post oops-firewall.service
+if [ $1 = 1 ]; then
+	/usr/bin/systemctl enable oops-firewall
+fi
+%else
 /sbin/chkconfig --add %{name}
-if [ $1 = 0 ]; then
+if [ $1 = 1 ]; then
   /sbin/chkconfig --level 35 %{name} on
 fi
+%fi
 
 %pre
 if [ -f /etc/init.d/iptables ]; then
@@ -74,31 +85,40 @@ if [ -f /etc/init.d/iptables ]; then
 fi
 
 %preun
+%if 0${?rhel} >= 7 || 0%{?fedora} >= 17
+%systemd_preun oops-firewall.service
+%else
 if [ $1 = 0 ]; then
-   /sbin/chkconfig --del %{name}
+	/sbin/chkconfig --del %{name}
 fi
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%attr(755,root,root) /etc/rc.d/init.d/oops-firewall
-%attr(755,root,root) /usr/sbin/oops-firewall
-/usr/include/oops-firewall/*.h
-/usr/include/oops-firewall/*.sed
-/usr/share/locale/ko/LC_MESSAGES/oops-firewall.mo
-%config(noreplace) /etc/oops-firewall/application.conf
-%config(noreplace) /etc/oops-firewall/bridge.conf
-%config(noreplace) /etc/oops-firewall/filter.conf
-%config(noreplace) /etc/oops-firewall/interface.conf
-%config(noreplace) /etc/oops-firewall/masq.conf
-%config(noreplace) /etc/oops-firewall/forward.conf
-%config(noreplace) /etc/oops-firewall/tos.conf
-%config(noreplace) /etc/oops-firewall/user.conf
-%config(noreplace) /etc/oops-firewall/modules.list
+%if 0${?rhel} >= 7 || 0%{?fedora} >= 17
+%{_unitdir}/oops-firewall
+%attr(755,root,root) %{_sbindir}/init.d/oops-firewall
+%else
+%attr(755,root,root) %{_sysconfdir}/rc.d/init.d/oops-firewall
+%endif
+%attr(755,root,root) %{_sbindir}/oops-firewall
+%{_includedir}/oops-firewall/*.h
+%{_includedir}/oops-firewall/*.sed
+%{_datadir}/locale/ko/LC_MESSAGES/oops-firewall.mo
+%config(noreplace) %{_sysconfdir}/oops-firewall/application.conf
+%config(noreplace) %{_sysconfdir}/oops-firewall/bridge.conf
+%config(noreplace) %{_sysconfdir}/oops-firewall/filter.conf
+%config(noreplace) %{_sysconfdir}/oops-firewall/interface.conf
+%config(noreplace) %{_sysconfdir}/oops-firewall/masq.conf
+%config(noreplace) %{_sysconfdir}/oops-firewall/forward.conf
+%config(noreplace) %{_sysconfdir}/oops-firewall/tos.conf
+%config(noreplace) %{_sysconfdir}/oops-firewall/user.conf
+%config(noreplace) %{_sysconfdir}/oops-firewall/modules.list
 %{_mandir}/man8/%{name}.8*
-%dir /usr/include/oops-firewall
+%dir %{_includedir}/oops-firewall
 
 %files doc
 %doc doc/README doc/CONFIG_SYNTAX doc/ko
