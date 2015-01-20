@@ -28,6 +28,11 @@ install: install-header install-conf install-po install-doc
 	$(MKDIR) $(DESTDIR)$(initdir)
 	$(INSTALL) -m 755 ./temp/sbin/$(PROG) $(DESTDIR)$(bindir)/$(PROG)
 	@echo "installed $(DESTDIR)$(bindir)/$(PROG)"
+	if [ -f ./temp/contrib/$(PROG).systemd ]; then \
+		$(MKDIR) $(DESTDIR)$(systemdunitdir); \
+		$(INSTALL) -m 644 ./temp/contrib/$(PROG).systemd $(DESTDIR)$(systemdunitdir)/$(PROG); \
+		@echo "installed $(DESTDIR)$(systemdunitdir)/$(PROG)"; \
+	fi
 	$(INSTALL) -m 755 ./temp/contrib/$(PROG).init $(DESTDIR)$(initdir)/$(PROG)
 	@echo "installed $(DESTDIR)$(initdir)/$(PROG)"
 	$(INSTALL) -m 644 ./temp/include/config.sed $(DESTDIR)$(includedir)/config.sed

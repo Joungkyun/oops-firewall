@@ -27,6 +27,7 @@ Configuration:
   --initdir=DIR     redhat init script path [/etc/rc.d/init.d]
   --destdir=DIR     Absulute path !! for needed packaging
   --userpath=DIR,.. Additional PATH environment varibles
+  --systemdunitdir=DIR path of systemd unit files [/usr/lib/systemd/system]
   --langenv=VAL     install configuration files with src/conf/VAL
 
 Check Utility:
@@ -106,6 +107,9 @@ do
 		--initdir=*)
 			initdir=$(echo ${i} | sed 's/.*=//g')
 			;;
+		--systemdunitdir=*)
+			systemdunitdir=$(echo ${i} | sed 's/.*=//g')
+			;;
 		--includedir=*)
 			includedir=$(echo ${i} | sed 's/.*=//g')
 			;;
@@ -152,6 +156,19 @@ print_result "prefix"
 [ -z "${bindir}" ] && bindir=${prefix}/bin
 
 print_result "bindir"
+
+#
+# if systemd mode, initdir changed /sbin/oops-firewall
+#
+if [ -z "${systemdunitdir}" ]; then
+	if [ -d "/usr/lib/systemd/system" ]; then
+	   	systemdunitdir=/usr/lib/systemd/system
+		initdir="${bindir}/init.d/oops-firewall"
+		print_result "systemdunitdir"
+	fi
+else
+	initdir="${bindir}/init.d/oops-firewall"
+fi
 
 [ -z "${initdir}" ] && initdir=/etc/rc.d/init.d
 
@@ -233,6 +250,9 @@ fi
 ${mkdir} -p ./temp/contrib
 [ -f "/etc/debian_version" ] && os=debian || os=redhat
 ${cp} -af contrib/*.${os} ./temp/contrib/oops-firewall.init
+if [ -d "${systemdunitdir}" ]; then
+	${cp} -af contrib/oops-firewall.systemd ./temp/contrib/oops-firewall.systemd
+fi
 
 ${find} ./temp -name ".svn" -exec rm -rf {} \; >& /dev/null
 
