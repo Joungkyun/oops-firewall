@@ -85,6 +85,7 @@ ins_mod() {
 			print_result 1 $"Already Loading" "yellow"
 		fi
 	fi
+	printf " \b"
 }
 
 rm_mod() {
