@@ -31,8 +31,8 @@ install: install-header install-conf install-po install-doc
 	@echo "installed $(DESTDIR)$(bindir)/$(PROG)"
 	if [ -f ./temp/contrib/$(PROG).systemd ]; then \
 		$(MKDIR) $(DESTDIR)$(systemdunitdir); \
-		$(INSTALL) -m 644 ./temp/contrib/$(PROG).systemd $(DESTDIR)$(systemdunitdir)/$(PROG); \
-		echo "installed $(DESTDIR)$(systemdunitdir)/$(PROG)"; \
+		$(INSTALL) -m 644 ./temp/contrib/$(PROG).systemd $(DESTDIR)$(systemdunitdir)/$(PROG).service; \
+		echo "installed $(DESTDIR)$(systemdunitdir)/$(PROG).service"; \
 	fi
 	$(INSTALL) -m 755 ./temp/contrib/$(PROG).init $(DESTDIR)$(initdir)/$(PROG)
 	@echo "installed $(DESTDIR)$(initdir)/$(PROG)"
