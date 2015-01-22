@@ -118,7 +118,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/oops-firewall/user.conf
 %config(noreplace) %{_sysconfdir}/oops-firewall/modules.list
 %{_mandir}/man8/%{name}.8*
-%dir %{_includedir}/oops-firewall
+%dir %{_includedir}/oops-firewall.service
 
 %files doc
 %doc doc/README doc/CONFIG_SYNTAX doc/ko
