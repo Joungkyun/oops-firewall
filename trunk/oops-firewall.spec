@@ -99,7 +99,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
-%{_unitdir}/oops-firewall
+%{_unitdir}/oops-firewall.service
 %attr(755,root,root) %{_sbindir}/init.d/oops-firewall
 %else
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/oops-firewall
@@ -118,7 +118,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/oops-firewall/user.conf
 %config(noreplace) %{_sysconfdir}/oops-firewall/modules.list
 %{_mandir}/man8/%{name}.8*
-%dir %{_includedir}/oops-firewall.service
+%dir %{_includedir}/oops-firewall
 
 %files doc
 %doc doc/README doc/CONFIG_SYNTAX doc/ko
