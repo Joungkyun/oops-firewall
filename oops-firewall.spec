@@ -36,7 +36,7 @@ Documentation for oops firewall
 	--confdir=%{_sysconfdir}/oops-firewall \
 	--includedir=%{_includedir}/oops-firewall \
 	--shareddir=%{_datadir} \
-%if 0${?rhel} >= 7 || 0%{?fedora} >= 17
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
 	--systemdunitdir=%{_unitdir} \
 %else
 	--initdir=%{_sysconfdir}/rc.d/init.d \
@@ -59,7 +59,7 @@ fi
 %{__install} -m644 doc/%{name}.8 %{buildroot}%{_mandir}/man8/%{name}.8
 
 %post
-%if 0${?rhel} >= 7 || 0%{?fedora} >= 17
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
 %systemd_post oops-firewall.service
 if [ $1 = 1 ]; then
 	/usr/bin/systemctl enable oops-firewall
@@ -85,7 +85,7 @@ if [ -f /etc/init.d/iptables ]; then
 fi
 
 %preun
-%if 0${?rhel} >= 7 || 0%{?fedora} >= 17
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
 %systemd_preun oops-firewall.service
 %else
 if [ $1 = 0 ]; then
@@ -98,7 +98,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%if 0${?rhel} >= 7 || 0%{?fedora} >= 17
+%if 0%{?rhel} >= 7 || 0%{?fedora} >= 17
 %{_unitdir}/oops-firewall
 %attr(755,root,root) %{_sbindir}/init.d/oops-firewall
 %else
