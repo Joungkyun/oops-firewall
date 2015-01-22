@@ -13,6 +13,7 @@ shareddir	= @shareddir@
 includedir	= @includedir@
 confdir		= @confdir@
 initdir		= @initdir@
+systemdunitdir = @systemdunitdir@
 
 INSTALL		= @install@
 RM			= @rm@
@@ -31,7 +32,7 @@ install: install-header install-conf install-po install-doc
 	if [ -f ./temp/contrib/$(PROG).systemd ]; then \
 		$(MKDIR) $(DESTDIR)$(systemdunitdir); \
 		$(INSTALL) -m 644 ./temp/contrib/$(PROG).systemd $(DESTDIR)$(systemdunitdir)/$(PROG); \
-		@echo "installed $(DESTDIR)$(systemdunitdir)/$(PROG)"; \
+		echo "installed $(DESTDIR)$(systemdunitdir)/$(PROG)"; \
 	fi
 	$(INSTALL) -m 755 ./temp/contrib/$(PROG).init $(DESTDIR)$(initdir)/$(PROG)
 	@echo "installed $(DESTDIR)$(initdir)/$(PROG)"
