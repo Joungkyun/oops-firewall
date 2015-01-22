@@ -1,6 +1,6 @@
 # Init function
 #
-# $Id$
+# $Id: init.h 359 2014-10-02 07:37:48Z oops $
 #
 
 # {{{ init_service()

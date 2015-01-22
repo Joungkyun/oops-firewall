@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# $Id$
+# $Id: oops-firewall 316 2013-01-02 21:17:37Z oops $
 #
 # OOPS Firewall : Very Easy Iptables frontend
 # Copyright by JoungKyun.Kim

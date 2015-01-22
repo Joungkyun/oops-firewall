@@ -1,6 +1,6 @@
 # Rule function
 #
-# $Id$
+# $Id: rule.h 349 2013-11-08 09:08:51Z oops $
 #
 
 # {{{ add_all_rule

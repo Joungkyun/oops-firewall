@@ -1,4 +1,4 @@
-# $Id$
+# $Id: user_post.sed 308 2012-03-26 18:44:55Z oops $
 
 :sumline
 # Case that the last character of ther line is '/'

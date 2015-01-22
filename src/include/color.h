@@ -1,6 +1,6 @@
 # Color function
 #
-# $Id$
+# $Id: color.h 302 2012-03-26 16:22:36Z oops $
 #
 
 conv_color() {

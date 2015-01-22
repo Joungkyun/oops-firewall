@@ -10,7 +10,7 @@
 ### END INIT INFO
 #
 # Author:   JoungKyun Kim <admin@oops.org>
-# $Id$
+# $Id: oops-firewall.init.debian 316 2013-01-02 21:17:37Z oops $
 #
 
 ERR_FILE=/tmp/oops_firewall_err

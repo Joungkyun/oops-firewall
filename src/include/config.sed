@@ -1,4 +1,4 @@
-# $Id$
+# $Id: config.sed 316 2013-01-02 21:17:37Z oops $
 
 # removed comment
 s/\([[:space:]]\+\)\?#.*\|"//g

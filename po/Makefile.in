@@ -1,4 +1,4 @@
-# $Id$
+# $Id: Makefile.in 292 2011-05-01 15:21:51Z oops $
 
 CC		= @cc@
 CFLAGS	= @cflags@

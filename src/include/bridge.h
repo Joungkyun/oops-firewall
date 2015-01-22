@@ -1,6 +1,6 @@
 # Bridge rule function
 #
-# $Id$
+# $Id: bridge.h 321 2013-01-03 18:21:06Z oops $
 #
 
 bridge_wan_info() {

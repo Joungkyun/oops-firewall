@@ -1,6 +1,6 @@
 # Default variables define
 #
-# $Id$
+# $Id: default.h 316 2013-01-02 21:17:37Z oops $
 #
 
 _ver=$(${c_cat} ${_includes}/version.h)

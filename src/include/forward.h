@@ -1,6 +1,6 @@
 # Forward rule function
 #
-# $Id$
+# $Id: forward.h 321 2013-01-03 18:21:06Z oops $
 #
 
 add_forward_init() {

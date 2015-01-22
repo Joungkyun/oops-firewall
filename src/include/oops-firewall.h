@@ -1,6 +1,6 @@
 # header include file
 #
-# $Id$
+# $Id: oops-firewall.h 316 2013-01-02 21:17:37Z oops $
 #
 
 if [ -f "/etc/redhat-relase" ]; then

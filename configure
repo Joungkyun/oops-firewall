@@ -1,5 +1,5 @@
 #!/bin/bash
-# $Id$
+# $Id: configure 371 2015-01-22 07:25:09Z oops $
 
 NAME=oops-firewall
 GCOL=40

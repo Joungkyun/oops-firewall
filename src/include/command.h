@@ -1,6 +1,6 @@
 # Command line variables
 #
-# $Id$
+# $Id: command.h 322 2013-01-04 08:30:19Z oops $
 #
 
 # command line command
