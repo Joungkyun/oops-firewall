@@ -167,7 +167,7 @@ if [ -z "${systemdunitdir}" ]; then
 		print_result "systemdunitdir"
 	fi
 else
-	initdir="${bindir}/init.d/oops-firewall"
+	initdir="${bindir}/init.d"
 fi
 
 [ -z "${initdir}" ] && initdir=/etc/rc.d/init.d
