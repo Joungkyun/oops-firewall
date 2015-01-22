@@ -1,0 +1,80 @@
+OOPS Firewall README
+
+$Id: README 346 2013-01-05 15:25:57Z oops $
+
+
+This document is for OOPS Firewall 7.x tree.
+
+
+OOPS Firewall is the iptables frontend for a simple-to-use firewall
+configuration that controls packet filtering, bridge firewall, masquerade
+system, port forwarding, etc on the Linux kernel 2.4 or late.
+
+This is default firewall on AnNyung LInux, and support Redhat compatible
+distributions and debian compatible distirbutions over kernel 2.4.
+
+
+OOPS Firewall 7.x tree is as follows.
+
+
+1. enhanced input / output processing
+2. support bridge firewall
+3. support transparent proxy (Masquerading)
+4. support port forwarding
+5. support user define rules
+
+
+By current design, WAN conenction is not limited. Bridge mode is composed
+1 WAN device and 1 LAN device and Masquerade mode is same with Bridge mode.
+
+Composition as an example, as follow.
+
+
+              FIREWALL
+
+            ┌──────────┐
+        ┌─┴─┐            ┌─┴─┐
+  WAN ─┤eth0  ├─ BRIDGE ─┤ eth2 ├─ Bridge Zone
+        └─┬─┘    (br0)   └─┬─┘    (Public Network)
+            │                    │
+        ┌─┴─┐            ┌─┴─┐
+  WAN ─┤ eth1 ├─ MASQ   ─┤ eth3 ├─ Transparant proxy Zone
+        └─┬─┘            └─┬─┘    (Private Network)
+            └──────────┘
+
+  * Example fo interface.conf configuration:
+     FIREWALL_WAN = br0 eth1
+     MASQUERADE_WAN = eth1
+     MASQUERADE_LOC = eth3
+     BRIDGE_DEVNAME = br0
+     BRIDGE_WANDEV  = eth0
+     BRIDGE_LANDEV  = eth2
+
+
+If you have multiple interfaces, you can set multiple interface to
+FIREWALL_WAN directive with separated by a white space. And the value
+of same is not available on BRIDGE_LANDEV and MASQUERADE_LOC directive.
+
+If Bridge WAN device and Masquerading WAN device are same, in other words,
+a structure like following figures:
+
+              FIREWALL
+
+            ┌─────────┐
+        ┌─┴─┐          ┌─┴─┐
+  WAN ─┤eth0  ├ BRIDGE ─┤eth1  ├─ Bridge Zone
+        └─┬┬┘  (br0)   └─┬─┘    (Public Network)
+            ││                │
+            ││            ┌─┴─┐
+            │└─ MASQ   ─┤eth2  ├─ Transparant proxy Zone
+            │              └─┬─┘    (Private Network)
+            └─────────┘
+
+  * Example fo interface.conf configuration:
+     FIREWALL_WAN = br0
+     MASQUERADE_WAN = br0
+     MASQUERADE_LOC = eth2
+     BRIDGE_DEVNAME = br0
+     BRIDGE_WANDEV  = eth0
+     BRIDGE_LANDEV  = eth1
+

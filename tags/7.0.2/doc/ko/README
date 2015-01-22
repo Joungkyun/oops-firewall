@@ -1,0 +1,81 @@
+OOPS Firewall README
+
+$Id: README 327 2013-01-04 12:59:21Z oops $
+
+
+이 문서는 OOPS Firewall 7.x 트리에 관련된 문서이다.
+
+
+OOPS Firewall 은 리눅스 커널 2.4 이상에서 사용이 되는 iptables를 이용한
+방화벽 구성, Bridge 방화벽, Masquerade 시스템, 포트 포워딩 등을 쉽고 간
+편하게 사용하기 위한 iptables frontend 이다.
+
+안녕 리눅스의 기본 방화벽 시스템이며, 커널 2.4이상의 Redhat 호환 배포본
+또는 Debian 호환 배포본을 지원한다.
+
+OOPS Firewall 7.x 트리의 특징은 다음과 같다.
+
+
+1. inboud/outbound 처리의 향상
+2. network device 의 확장 (ppp, bond, bridge 지원)
+3. Bridge 방화벽 지원
+4. Transparent proxy 지원 (Masquerading)
+5. 포트 포워딩 지원
+
+
+현재의 설계상으로는 WAN 연결은 제한이 없으며, Bridge mode 는 1개의 WAN 과
+1개의 LOCAL 이 지원이 되고 MASQ 역시 1 개의 WAN 과 1 개의 LOCAL 이 지원된
+다.
+
+구성예제로는, 다음과 같다.
+
+
+                  FIREWALL
+
+            ┌──────────────────┐
+         ┌──┴──┐            ┌──┴──┐ 
+  WAN   ─┤ eth0├   BRIDGE ─ ┤ eth2├ ─ Bridge Zone
+         └──┬──┘    (br0)   └──┬──┘    (Public Network)
+            │                  │    
+         ┌──┴──┐            ┌──┴──┐ 
+  WAN   ─┤ eth1├   MASQ   ─ ┤ eth3├ ─ Transparant proxy Zone
+         └──┬──┘            └──┬──┘    (Private Network)
+            └──────────────────┘
+
+
+  * interface.conf 설정 예
+     FIREWALL_WAN = br0 eth1
+     MASQUERADE_WAN = eth1
+     MASQUERADE_LOC = eth3
+     BRIDGE_DEVNAME = br0
+     BRIDGE_WANDEV  = eth0
+     BRIDGE_LANDEV  = eth2
+
+
+와 같이 구성을 할 수 있다. FIREWALL_WAN 의 경우, 여려 인터페이스가 존재할
+경우 공백문자를 구분자로 나열하면 된다. 주의할 것은 BRIDGE_LANDEV 값과
+MASQUERADE_LOC의 값을 동일하게 사용할 수 없다.
+
+만약, Bridge WAN device 와 MASQ WAN device 가 동일할 경우, 즉 다음의 그림
+과 같은 구조라면..
+
+                  FIREWALL
+
+            ┌──────────────────┐
+         ┌──┴──┐            ┌──┴──┐ 
+  WAN   ─┤ eth0├   BRIDGE ─ ┤ eth1├ ─ Bridge Zone
+         └──┬─┬┘    (br0)   └──┬──┘    (Public Network)
+            │ │                │    
+            │ │             ┌──┴──┐ 
+            │ └ ─  MASQ ─ ─ ┤ eth2├ ─ Transparant proxy Zone
+            │               └──┬──┘    (Private Network)
+            └──────────────────┘
+
+  * interface.conf 설정 예
+     FIREWALL_WAN = br0
+     MASQUERADE_WAN = br0
+     MASQUERADE_LOC = eth2
+     BRIDGE_DEVNAME = br0
+     BRIDGE_WANDEV  = eth0
+     BRIDGE_LANDEV  = eth1
+
