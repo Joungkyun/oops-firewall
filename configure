@@ -288,7 +288,7 @@ echo
 ${install} -m 644 Makefile.in Makefile
 ${install} -m 644  po/Makefile.in po/Makefile
 
-_target="bindir cc confdir destdir includedir initdir install"
+_target="bindir cc confdir destdir includedir initdir systemdunitdir install"
 _target="${_target} ls mkdir msgfmt prefix rm sed shareddir"
 _target="${_target} version cflags langenv"
 
