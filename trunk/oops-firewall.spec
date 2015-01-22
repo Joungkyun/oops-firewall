@@ -125,8 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
-* Thu Apr 10 2014 JoungKyun.Kim <http://oops.org> 47:7.0.2-1
-- 
+* Thu Jan 22 2015 JoungKyun.Kim <http://oops.org> 47:7.0.2-1
+- release 7.0.2
+- support systemd on RHEL > 6, Fedora > 16
 
 * Sat Nov  9 2013 JoungKyun.Kim <http://oops.org> 46:7.0.1-1
 - update 7.0.1
