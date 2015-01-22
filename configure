@@ -163,7 +163,7 @@ print_result "bindir"
 if [ -z "${systemdunitdir}" ]; then
 	if [ -d "/usr/lib/systemd/system" ]; then
 	   	systemdunitdir=/usr/lib/systemd/system
-		initdir="${bindir}/init.d/oops-firewall"
+		initdir="${bindir}/init.d"
 		print_result "systemdunitdir"
 	fi
 else
