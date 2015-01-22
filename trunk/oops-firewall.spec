@@ -69,7 +69,7 @@ fi
 if [ $1 = 1 ]; then
   /sbin/chkconfig --level 35 %{name} on
 fi
-%fi
+%endif
 
 %pre
 if [ -f /etc/init.d/iptables ]; then
