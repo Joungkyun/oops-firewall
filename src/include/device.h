@@ -103,8 +103,8 @@ getDeviceIP() {
 	getDeviceIPVarName=$2
 
 	getDeviceIPTmp=$(${c_ifconfig} ${getDeviceIPDevName} 2> /dev/null | \
-					${c_awk} -F : '/inet addr:/ {print $2}' | \
-					${c_sed} 's/[ ]\+.*//g')
+					${c_awk} '/inet (addr:)?[0-9]+\./ {print $2}' | \
+					${c_sed} 's/[^:]\+://g')
 
 	if [ -n "${getDeviceIPVarName}" ]; then
 		getDeviceIPTmpVar="${getDeviceIPVarName}=\"${getDeviceIPTmp}\""
@@ -117,8 +117,8 @@ getDeviceMask() {
 	getDeviceMaskVarName=$2
 
 	getDeviceMaskTmp=$(${c_ifconfig} ${getDeviceMaskDevName} 2> /dev/null | \
-					${c_awk} -F : '/inet addr:/ {print $4}' | \
-					${c_sed} 's/[ ]\+.*//g')
+					${c_awk} '/inet (addr:)?[0-9]+\./ {print $4}' | \
+					${c_sed} 's/[^:]\+://g')
 
 	if [ -n "${getDeviceMaskVarName}" ]; then
 		getDeviceMaskTmpVar="${getDeviceMaskVarName}=\"${getDeviceMaskTmp}\""
