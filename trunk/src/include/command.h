@@ -26,7 +26,7 @@ c_route="@route@"
 
 export c_depmod c_lsmod c_rmmod c_modprobe
 export c_sed c_grep c_awk c_cat c_uname c_ipcalc c_cut
-export c_iptables c_ifconfig c_route
+export c_iptables c_ifconfig c_route c_sort
 
 brute_force_set() {
 	local value
