@@ -16,6 +16,7 @@ c_uname="@uname@"
 c_ipcalc="@ipcalc@"
 c_cut="@cut@"
 c_getopt="@getopt@"
+c_sort="@sort@"
 
 c_iptables="@iptables@"
 c_ifconfig="@ifconfig@"

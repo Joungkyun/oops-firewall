@@ -14,7 +14,7 @@ getDeviceList() {
 	devVarName=$1
 	devCheckVar=$2
 
-	devGetVar=$(${c_awk} -F ':' "/(eth|ppp|${BRIDGE_DEVNAME}|bond)[0-9]*:/ {print \$1}" /proc/net/dev)
+	devGetVar=$(${c_awk} -F ':' "/(eth|ppp|${BRIDGE_DEVNAME}|bond)[0-9]*:/ {print \$1}" /proc/net/dev | ${c_sort})
 
 	if [ -z "${devGetVar}" ]; then
 		return 1

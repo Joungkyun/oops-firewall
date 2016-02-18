@@ -10,7 +10,7 @@ CHKDIR="/bin /sbin /usr/bin /usr/sbin ${LOCALDIR}/bin ${LOCALDIR}/sbin"
 
 _command="depmod lsmod rmmod modprobe sed grep awk cat uname"
 _command="${_command} ipcalc cut getopt ifconfig ls rm mkdir"
-_command="${_command} msgfmt install cp touch route find"
+_command="${_command} msgfmt install cp touch route find sort"
 
 
 usage() {
@@ -259,7 +259,7 @@ ${find} ./temp -name ".svn" -exec rm -rf {} \; >& /dev/null
 _target="awk bindir cat confdir cut depmod getopt grep"
 _target="${_target} ifconfig includedir initdir ipcalc"
 _target="${_target} iptables lsmod modprobe rm rmmod"
-_target="${_target} sed shareddir touch uname version"
+_target="${_target} sed shareddir sort touch uname version"
 _target="${_target} route langenv"
 
 for i in ${_target}
