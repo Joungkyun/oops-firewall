@@ -24,6 +24,9 @@ sed=@sed@
 
 _includes="@includedir@"
 
+readlink /proc/1/exe | grep systemd >& /dev/null
+usysd=$?
+
 # Source function library.
 . /etc/rc.d/init.d/functions
 . ${_includes}/oops-firewall.h
@@ -79,6 +82,7 @@ case "$1" in
       rm_mod 1
     else
       echo_success
+    [ $usysd -ne 0 ] && \
       ${touch} /var/lock/subsys/oops-firewall
     fi
     rm -rf $ERR_FILE > /dev/null 2>&1
@@ -114,7 +118,8 @@ case "$1" in
       ${IPTABLES} -t mangle -F FORWARD
     fi
 
-    ${rm} -rf /var/lock/subsys/oops-firewall
+    [ $usysd -ne 0 ] && \
+      ${rm} -rf /var/lock/subsys/oops-firewall
 
     rm_mod 1
     echo -n $"Destory Firewall Tables: "

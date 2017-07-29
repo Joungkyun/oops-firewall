@@ -14,6 +14,9 @@ $Id$
 + 2016.02.18
 	- fixed can't get device information
 
++ 2015.11.13
+	- don't make subsys locking file
+
 + 2015.10.07
 	- close snmp output udp port on default
 	- open ntp output udp port on default
