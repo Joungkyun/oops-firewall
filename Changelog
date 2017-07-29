@@ -5,6 +5,9 @@ $Id$
 
 * 7.0.3
 ---------------------------------------------------------------------
++ 2017.07.29
+	- enhanced systemd control
+
 + 2016.02.18
 	- fixed can't get device information
 
