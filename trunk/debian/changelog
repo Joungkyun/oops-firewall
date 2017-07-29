@@ -1,8 +1,19 @@
+oops-firewall (7.0.3-1) stable; urgency=low
+
+  * open ntp output udp port on default
+  * close snmp output udp port on default
+  * fixed can't get device information
+  * enhanced systemd control
+
+ -- JoungKyun Kim (OOPS Development) <hostmaster@oops.org>  Sat, 29 Jul 2017 17:37:41 +0900
+
 oops-firewall (7.0.2-1) stable; urgency=low
 
-  * 
+  * fixed log syntax error
+  * support systemd
+  * fixed output buffer problems on RHEL 7 environment
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Thu, 10 Apr 2014 23:48:22 +0900
+ -- JoungKyun Kim (OOPS Development) <hostmaster@oops.org>  Tue, 20 Jun 2015 21:48:22 +0900
 
 oops-firewall (7.0.1-1) stable; urgency=low
 
@@ -10,7 +21,7 @@ oops-firewall (7.0.1-1) stable; urgency=low
   * fixed missing subnet no  ALLOWSELF verbose msg
   * fixed iprange function for wrong source or destination on add_port_rule API
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Sat,  9 Nov 2013 01:07:13 +0900
+ -- JoungKyun Kim (OOPS Development) <hostmaster@oops.org>  Sat,  9 Nov 2013 01:07:13 +0900
 
 oops-firewall (7.0.0-1) stable; urgency=low
 
@@ -23,13 +34,13 @@ oops-firewall (7.0.0-1) stable; urgency=low
   * rewrite and redesign bridge filter rule
   * rewrite and redesign iptables rule
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Wed, 28 Mar 2012 19:09:21 +0900
+ -- JoungKyun Kim (OOPS Development) <hostmaster@oops.org>  Wed, 28 Mar 2012 19:09:21 +0900
 
 oops-firewall (6.2.9-1) stable; urgency=low
 
   * fixed MASQ_MATCH_START port bug
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Sat,  5 Jan 2013 01:24:37 +0900
+ -- JoungKyun Kim (OOPS Development) <hostmaster@oops.org>  Sat,  5 Jan 2013 01:24:37 +0900
 
 oops-firewall (6.2.8-1) stable; urgency=low
 
@@ -43,7 +54,7 @@ oops-firewall (6.2.8-1) stable; urgency=low
   * fixed deprecated directive on masq
   * change seperate character ':' to '+' on MASQ_MATCH_START directive
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Tue, 27 Mar 2012 15:36:43 +0900
+ -- JoungKyun Kim (OOPS Development) <hostmaster@oops.org>  Tue, 27 Mar 2012 15:36:43 +0900
 
 oops-firewall (6.2.7-1) stable; urgency=low
 
@@ -53,7 +64,7 @@ oops-firewall (6.2.7-1) stable; urgency=low
   * fixed missing operate add_bricmp_rule when bridge disabled
   * fixed wrong controle ipcalc on debian
 
- -- JoungKyun Kim (OOPS Development) <admin@oops.org>  Fri, 14 Jan 2011 13:31:22 +0900
+ -- JoungKyun Kim (OOPS Development) <hostmaster@oops.org>  Fri, 14 Jan 2011 13:31:22 +0900
 
 oops-firewall (6.2.6-1) stable; urgency=low
 
