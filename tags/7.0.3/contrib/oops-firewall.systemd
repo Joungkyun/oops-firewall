@@ -1,0 +1,15 @@
+[Unit]
+Description=oops-firewall - Individaul Firewall with IPTABLES
+After=network.target syslog.target
+Before=libvirtd.service
+Conflicts=iptables.service ip6tables.service ebtables.service firewalld.service
+
+[Service]
+Type=forking
+RemainAfterExit=yes
+TimeoutSec=0
+ExecStart=/sbin/init.d/oops-firewall start
+ExecStop=/sbin/init.d/oops-firewall stop
+
+[Install]
+WantedBy=basic.target
