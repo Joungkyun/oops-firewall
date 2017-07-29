@@ -13,14 +13,14 @@ follows:
 
 2. untar oops-firewall tar ball.
 
-   shell> tar xvfpj oops-firewall-7.0.2.tar.bz2
+   shell> tar xvfpj oops-firewall-7.0.3.tar.bz2
 
 3. execute debbuild-sh script
 
-   shell> cd oops-firewall-7.0.2
+   shell> cd oops-firewall-7.0.3
    shell> ./debbuild-sh or bash debbuild-sh
 
    If case /bin/sh is soft link that redirect /bin/dash, you must use
    bash instead of sh or dash.
 
-4. create oops-firewall_7.0.2-1_all.deb file parrent directory in current directory
+4. create oops-firewall_7.0.3-1_all.deb file parrent directory in current directory
