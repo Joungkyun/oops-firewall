@@ -214,30 +214,38 @@ add_br_ping() {
 					[ $rangechk -eq 1 ] && dstip="--dst-range ${dstip}" || dstip="-d ${dstip}"
 
 					[ $_verbose -eq 1 ] && {
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type echo-request -m iprange \\"
+						o_echo "      iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \\"
+						o_echo "               -p icmp --icmp-type echo-request -m iprange \\"
 						o_echo "               ${srcip} ${dstip} -j ACCEPT"
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type echo-reply -m iprange \\"
+						o_echo "      iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \\"
+						o_oecho "              -p icmp --icmp-type echo-reply -m iprange \\"
 						o_echo "               ${rdstip} ${rsrcip} -j ACCEPT"
 					}
 
 					[ $_testmode -eq 0 ] && {
-						${c_iptables} -A FORWARD -p icmp --icmp-type echo-request -m iprange \
+						${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \
+									-p icmp --icmp-type echo-request -m iprange \
 									${srcip} ${dstip} -j ACCEPT
-						${c_iptables} -A FORWARD -p icmp --icmp-type echo-reply -m iprange \
+						${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \
+									-p icmp --icmp-type echo-reply -m iprange \
 									${rdstip} ${rsrcip} -j ACCEPT
 					}
 				else
 					[ $_verbose -eq 1 ] && {
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type echo-request \\"
+						o_echo "      iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \\"
+						o_echo "               -p icmp --icmp-type echo-request \\"
 						o_echo "               -s ${srcip} -d ${dstip} -j ACCEPT"
-						o_echo "      iptables -A FORWARD -p icmp --icmp-type echo-reply \\"
+						o_echo "      iptables -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \\"
+						o_echo "               -p icmp --icmp-type echo-reply \\"
 						o_echo "               -s ${dstip} -d ${srcip} -j ACCEPT"
 					}
 
 					[ $_testmode -eq 0 ] && {
-						${c_iptables} -A FORWARD -p icmp --icmp-type echo-request \
+						${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_WANDEV} \
+									-p icmp --icmp-type echo-request \
 									-s ${srcip} -d ${dstip} -j ACCEPT
-						${c_iptables} -A FORWARD -p icmp --icmp-type echo-reply \
+						${c_iptables} -A FORWARD -m physdev --physdev-in ${BRIDGE_LANDEV} \
+									-p icmp --icmp-type echo-reply \
 									-s ${dstip} -d ${srcip} -j ACCEPT
 					}
 				fi
