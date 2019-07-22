@@ -44,6 +44,6 @@ export _logformat _configs
 # tab-width: 4
 # c-basic-offset: 4
 # End:
-# vim: set filetype=sh noet sw=4 ts=4 fdm=marker:
+# vim: filetype=sh noet sw=4 ts=4 fdm=marker
 # vim<600: noet sw=4 ts=4:
 #
