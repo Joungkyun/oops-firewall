@@ -22,8 +22,8 @@ And follows GPL v2
 ### RHEL / CentOS
 
 ```bash
-[root@host ~]# rpmbuild -tb oops-filrewal-7.0.3.tar.bz2
-[root@host ~]# yum localinstall /root/rpmbuild/RPMS/noarch/oops-firewall-7.0.3-1.noarch.rpm
+[root@host ~]# rpmbuild -tb oops-filrewal-7.0.4.tar.bz2
+[root@host ~]# yum localinstall /root/rpmbuild/RPMS/noarch/oops-firewall-7.0.4-1.noarch.rpm
 ```
 
 ### Debian / Ubuntu
@@ -33,12 +33,14 @@ See also [README.debian](https://raw.githubusercontent.com/Joungkyun/oops-firewa
 ### Other distributions
 
 ```bash
-[root@host ~]# tar xvfpj oops-firewall-7.0.3.tar.bz2
-[root@host ~]# cd oops-firewall-7.0.3
+[root@host ~]# tar xvfpj oops-firewall-7.0.4.tar.bz2
+[root@host ~]# cd oops-firewall-7.0.4
 [root@host ~]# ./configure --prefix=/opt/oops-firewall
 [root@host ~]# make
 [root@host ~]# make install
 ```
+
+See the [INSTALL documentation](doc/INSTALL) for details.
 
 ## Usage
 

@@ -1,3 +1,9 @@
+oops-firewall (7.0.2-1) stable; urgency=low
+
+  * fixed #1 xt_iprange: range 1.1.1.55-15.56 is reversed and will never match
+
+ -- JoungKyun Kim (OOPS Development) <hostmaster@oops.org>  Fri, 25 Oct 2019 01:19:22 +0900
+
 oops-firewall (7.0.3-1) stable; urgency=low
 
   * open ntp output udp port on default

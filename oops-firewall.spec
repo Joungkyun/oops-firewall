@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 0
 Summary: Individaul Firewall with IPTABLES
 Name: oops-firewall
-Version: 7.0.3
+Version: 7.0.4
 Release: 1
 Epoch: 46
 License: GPL
@@ -122,14 +122,18 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDIT COPYING Changelog
 
 %changelog
-* Sat Jul 29 2017 JoungKyun.Kim <hostmaster@oops.org> 47:7.0.3-1
+* Fri Oct 25 2019 JoungKyun.Kim <hostmaster@oops.org> 46:7.0.4-1
+- release 7.0.4
+- fixed #1 xt_iprange: range 1.1.1.55-15.56 is reversed and will never match
+
+* Sat Jul 29 2017 JoungKyun.Kim <hostmaster@oops.org> 46:7.0.3-1
 - release 7.0.3
 - close snmp output udp port on default
 - open ntp output udp port on default
 - fixed can't get device information
 - enhanced systemd control
 
-* Thu Jan 22 2015 JoungKyun.Kim <hostmaster@oops.org> 47:7.0.2-1
+* Thu Jan 22 2015 JoungKyun.Kim <hostmaster@oops.org> 46:7.0.2-1
 - release 7.0.2
 - support systemd on RHEL > 6, Fedora > 16
 
