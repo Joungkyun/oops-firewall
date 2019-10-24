@@ -14,7 +14,7 @@ The oops-firewall project was first developed in 2001 and has been under mainten
 
 ## License
 
-Copyright &copy; 2019 JoungKyun.Kim All Rights Reserved.
+Copyright &copy; 2019 JoungKyun.Kim All Rights Reserved.<br>
 And follows GPL v2
 
 ## Installation
