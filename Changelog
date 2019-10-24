@@ -1,6 +1,10 @@
 OOPS Firewall Chnages
 
-$Id$
+
+* 7.0.4
+---------------------------------------------------------------------
++ 2019.10.25
+	- fixed #1 xt_iprange: range 1.1.1.55-15.56 is reversed and will never match
 
 
 * 7.0.3

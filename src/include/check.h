@@ -39,11 +39,21 @@ kernelCheck() {
 
 iprange_mod_check() {
 	ipt="/lib/modules/$(uname -r)/kernel/net/ipv4/netfilter"
-	[ -f "${ipt}/ipt_iprange.ko" ] && return 1
-	[ -f "${ipt}/ipt_iprange.o" ] && return 1
+	for ext in ko o
+	do
+		[ -f "${ipt}/ipt_iprange.${ext}" ] && return 1
+		for ext2 in xz gz bz2
+		do
+			[ -f "${ipt}/ipt_iprange.${ext}.${ext2}" ] && return 1
+		done
+	done
 
 	ipt="/lib/modules/$(uname -r)/kernel/net/netfilter"
 	[ -f "${ipt}/xt_iprange.ko" ] && return 1
+	for ext in xz gz bz2
+	do
+		[ -f "${ipt}/xt_iprange.ko.${ext}" ] && return 1
+	done
 
 	return 0
 }
