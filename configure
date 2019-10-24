@@ -1,5 +1,4 @@
 #!/bin/bash
-# $Id$
 
 NAME=oops-firewall
 GCOL=40

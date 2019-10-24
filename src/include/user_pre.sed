@@ -1,5 +1,3 @@
-# $Id$
-
 :sumline
 # Case that the last character of ther line is '/'
 /\\[ \t]*$/ {

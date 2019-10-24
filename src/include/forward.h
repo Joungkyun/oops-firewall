@@ -1,7 +1,5 @@
 # Forward rule function
 #
-# $Id$
-#
 
 add_forward_init() {
 	[ -n "${TCP_FORWARD_TO}" ] && __finit=0 || __finit=1

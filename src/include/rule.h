@@ -1,7 +1,5 @@
 # Rule function
 #
-# $Id$
-#
 
 # {{{ add_all_rule
 add_all_rule() {

@@ -1,7 +1,5 @@
 # Check function
 #
-# $Id$
-#
 
 isroot() {
 	[ "${UID}" != "0" ] && return 1 || return 0

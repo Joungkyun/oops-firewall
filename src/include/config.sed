@@ -1,5 +1,3 @@
-# $Id$
-
 # removed comment
 s/\([[:space:]]\+\)\?#.*\|"//g
 

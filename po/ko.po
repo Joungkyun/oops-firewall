@@ -9,8 +9,6 @@
 # if you merge new version, msgmerge -U old.po new.po
 # xgettext 0.13 support shell script
 #
-# $Id$
-#
 #, fuzzy
 msgid ""
 msgstr ""

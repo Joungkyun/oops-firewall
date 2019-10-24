@@ -1,7 +1,5 @@
 # Init function
 #
-# $Id$
-#
 
 # {{{ init_service()
 init_service() {

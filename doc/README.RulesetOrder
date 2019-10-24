@@ -1,7 +1,5 @@
 OOPS Firewall Ruleset Order
 
-$9d: README.RulesetOrder 292 2011-05-01 15:21:51Z oops $
-
 
 The rule of iptables controls by the order of registration. For example:
 

@@ -1,7 +1,5 @@
 # Default variables define
 #
-# $Id$
-#
 
 _ver=$(${c_cat} ${_includes}/version.h)
 _gcol=50

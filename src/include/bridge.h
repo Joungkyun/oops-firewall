@@ -1,7 +1,5 @@
 # Bridge rule function
 #
-# $Id$
-#
 
 bridge_wan_info() {
 	_dev=$1

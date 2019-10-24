@@ -1,7 +1,5 @@
 # IPTables Modules function
 #
-# $Id$
-#
 
 # {{{ ins_mod
 ins_mod() {

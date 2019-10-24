@@ -1,7 +1,5 @@
 # Masq rule function
 #
-# $Id$
-#
 
 add_masq_init() {
 	[ "${MASQ_USED}" = "0" ] && return 1

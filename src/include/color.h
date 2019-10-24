@@ -1,7 +1,5 @@
 # Color function
 #
-# $Id$
-#
 
 conv_color() {
 	[ -z "${1}" ] && __input="green" || __input=${1}

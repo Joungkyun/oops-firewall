@@ -1,7 +1,5 @@
 # header include file
 #
-# $Id$
-#
 
 if [ -f "/etc/redhat-relase" ]; then
 	export distribution="redhat"

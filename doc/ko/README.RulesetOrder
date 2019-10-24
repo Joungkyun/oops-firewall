@@ -1,7 +1,5 @@
 OOPS Firewall Ruleset Order
 
-$Id$
-
 
 iptables 는 선 등록된 ruleset 이 나중에 등록된 ruleset 보다 우선하는 특징
 이 있다. 예를 들어,

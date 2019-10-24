@@ -10,7 +10,6 @@
 ### END INIT INFO
 #
 # Author:   JoungKyun Kim <admin@oops.org>
-# $Id$
 #
 
 ERR_FILE=/tmp/oops_firewall_err

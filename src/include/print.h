@@ -1,7 +1,5 @@
 # Print function
 #
-# $Id$
-#
 
 printBanner() {
 	[ "${1}" = "clear" ] && clear || echo

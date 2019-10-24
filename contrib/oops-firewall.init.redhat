@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# $Id$
-#
 # Startup script for the OOPS FireWall
 #
 # chkconfig: 345 99 10

@@ -1,7 +1,5 @@
 # Device function
 #
-# $Id$
-#
 
 # 네트워크 디바이스 (eth/ppp/bridge) 목록을 얻어오는 함수
 # getDeviceList 목록변수명 체크디바이스이름

@@ -1,7 +1,5 @@
 # Command line variables
 #
-# $Id$
-#
 
 # command line command
 c_depmod="@depmod@"
